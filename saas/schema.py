@@ -1,21 +1,13 @@
 # schema.py
-from ariadne import QueryType, make_executable_schema, gql
+import os
+from ariadne import QueryType, MutationType, make_executable_schema, load_schema_from_path, gql
 
-type_defs = gql(
-    """
-    type Query {
-        hello: String!
-    }
-    """
-)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+schema_path = os.path.join(BASE_DIR, 'schema.graphql')
+
+type_defs = gql(load_schema_from_path(schema_path))
 
 query = QueryType()
+mutation = MutationType()
 
-@query.field("hello")
-def resolve_hello(_, info):
-
-    request = info.context["request"]
-
-    return request.user
-
-schema = make_executable_schema(type_defs, query)
+schema = make_executable_schema(type_defs, query, mutation)
