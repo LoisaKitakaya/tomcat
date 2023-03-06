@@ -1,0 +1,163 @@
+type Account {
+  account_id: ID!
+  account_name: String!
+  account_type: String!
+  currency_code: String!
+  account_balance: Float!
+  created_at: String!
+  updated_at: String!
+}
+
+type Transaction {
+  transaction_id: ID!
+  transaction_date: String!
+  transaction_type: String!
+  transaction_amount: Float!
+  currency_code: String!
+  description: String!
+  created_at: String!
+  updated_at: String!
+  account: Account!
+  categories: [Category!]!
+}
+
+type Category {
+  category_id: ID!
+  category_name: String!
+  category_description: String
+}
+
+type Budget {
+  budget_id: ID!
+  budget_name: String!
+  budget_description: String
+  budget_start_date: String!
+  budget_end_date: String!
+  budget_amount: Float!
+  created_at: String!
+  updated_at: String!
+  categories: [Category!]!
+}
+
+type Report {
+  report_id: ID!
+  report_name: String!
+  report_description: String
+  report_start_date: String!
+  report_end_date: String!
+  created_at: String!
+  updated_at: String!
+  categories: [Category!]!
+  accounts: [Account!]!
+  transactions: [Transaction!]!
+}
+
+type Query {
+  accounts: [Account!]!
+  account(id: ID!): Account
+  transactions: [Transaction!]!
+  transaction(id: ID!): Transaction
+  categories: [Category!]!
+  category(id: ID!): Category
+  budgets: [Budget!]!
+  budget(id: ID!): Budget
+  reports: [Report!]!
+  report(id: ID!): Report
+}
+
+type Mutation {
+  createAccount(
+    account_name: String!
+    account_type: String!
+    currency_code: String!
+    account_balance: Float!
+  ): Account!
+
+  updateAccount(
+    id: ID!
+    account_name: String
+    account_type: String
+    currency_code: String
+    account_balance: Float
+  ): Account!
+
+  deleteAccount(id: ID!): Account
+
+  createTransaction(
+    transaction_date: String!
+    transaction_type: String!
+    transaction_amount: Float!
+    currency_code: String!
+    description: String!
+    account_id: ID!
+    category_ids: [ID!]!
+  ): Transaction!
+
+  updateTransaction(
+    id: ID!
+    transaction_date: String
+    transaction_type: String
+    transaction_amount: Float
+    currency_code: String
+    description: String
+    account_id: ID
+    category_ids: [ID!]
+  ): Transaction!
+
+  deleteTransaction(id: ID!): Transaction
+
+  createCategory(
+    category_name: String!
+    category_description: String
+  ): Category!
+
+  updateCategory(
+    id: ID!
+    category_name: String
+    category_description: String
+  ): Category!
+
+  deleteCategory(id: ID!): Category
+
+  createBudget(
+    budget_name: String!
+    budget_description: String
+    budget_start_date: String!
+    budget_end_date: String!
+    budget_amount: Float!
+    category_ids: [ID!]!
+  ): Budget!
+
+  updateBudget(
+    id: ID!
+    budget_name: String
+    budget_description: String
+    budget_start_date: String
+    budget_end_date: String
+    budget_amount: Float
+    category_ids: [ID!]
+  ): Budget!
+
+  deleteBudget(id: ID!): Budget
+
+  createReport(
+    report_name: String!
+    report_description: String
+    report_start_date: String!
+    report_end_date: String!
+    category_ids: [ID!]
+    account_ids: [ID!]
+    transaction_ids: [ID!]
+  ): Report!
+  
+  updateReport(
+    id: ID!
+    report_name: String
+    report_description: String
+    report_start_date: String
+    report_end_date: String
+    category_ids: [ID!]
+    account_ids: [ID!]
+    transaction_ids: [ID!]
+  ): Report!
+}
