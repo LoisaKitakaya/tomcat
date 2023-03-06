@@ -107,7 +107,8 @@ type Query {
   getAllUsers: [User!]!
   getUserById(id: ID!): User
   getUserByUsername(username: String!): User
-  getProfileById(id: ID!): Profile
+  getAllProfiles: [Profile!]!
+  getProfileByPublicId(publicId: String!): Profile
   getUserLogsByUserId(userId: ID!): [UserLog!]!
   getWorkspaceById(id: ID!): Workspace
   getWorkspaceByPublicId(publicId: String!): Workspace

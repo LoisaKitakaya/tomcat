@@ -3,7 +3,7 @@ import os
 from ariadne import QueryType, MutationType, make_executable_schema, load_schema_from_path, gql
 
 # app models
-from users.models import User
+from users.models import User, Profile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, 'schema.graphql')
@@ -53,5 +53,31 @@ def getUserByUsername(*_, username):
         raise Exception(str(e))
     
     return user
+
+@query.field('getAllProfiles')
+def resolve_getAllProfiles(*_):
+
+    try:
+
+        profiles = Profile.objects.all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return profiles
+
+@query.field('getProfileByPublicId')
+def resolve_getProfileByPublicId(*_, publicId):
+
+    try:
+
+        profile = Profile.objects.get(public_id=publicId)
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return profile
 
 schema = make_executable_schema(type_defs, query, mutation)
