@@ -28,6 +28,7 @@ class Profile(models.Model):
     
 class UserLog(models.Model):
 
+    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     log = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)

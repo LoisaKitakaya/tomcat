@@ -6,9 +6,29 @@ from users.models import WorkSpace
 
 class Account(models.Model):
 
+    CHECKING = 'checking'
+    SAVING = 'saving'
+    CREDIT = 'credit'
+    INVESTMENT = 'investment'
+    RETIREMENT = 'retirement'
+    LOAN = 'loan'
+    INSURANCE = 'insurance'
+    MORTGAGE = 'mortgage'
+
+    ACCOUNT_TYPES = (
+        (CHECKING, 'Checking'),
+        (SAVING, 'Saving'),
+        (CREDIT, 'Credit'),
+        (INVESTMENT, 'Investment'),
+        (RETIREMENT, 'Retirement'),
+        (LOAN, 'Loan'),
+        (INSURANCE, 'Insurance'),
+        (MORTGAGE, 'Mortgage'),
+    )
+
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     account_name = models.CharField(max_length=100)
-    account_type = models.CharField(max_length=50)
+    account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPES, default=CHECKING)
     currency_code = models.CharField(max_length=3)
     account_balance = models.DecimalField(max_digits=15, decimal_places=2)
     workspace = models.ForeignKey(WorkSpace, on_delete=models.CASCADE)
@@ -46,9 +66,9 @@ class Transaction(models.Model):
     currency_code = models.CharField(max_length=3)
     description = models.CharField(max_length=255)
     transaction_date = models.DateField()
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     class Meta:
 
@@ -85,9 +105,9 @@ class Budget(models.Model):
     budget_start_date = models.DateField()
     budget_end_date = models.DateField()
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    categories = models.ManyToManyField(Category)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    categories = models.ManyToManyField(Category)
 
     class Meta:
 
@@ -137,14 +157,11 @@ class Report(models.Model):
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     report_name = models.CharField(max_length=100)
     report_description = models.CharField(max_length=255)
-    report_start_date = models.DateField()
-    report_end_date = models.DateField()
+    workspace = models.ForeignKey(WorkSpace, on_delete=models.CASCADE)
+    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
+    transactions = models.ManyToManyField(Transaction)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    categories = models.ManyToManyField(Category)
-    accounts = models.ManyToManyField(Account)
-    workspace = models.ForeignKey(WorkSpace, on_delete=models.CASCADE)
-    transactions = models.ManyToManyField(Transaction)
 
     class Meta:
 
@@ -168,38 +185,6 @@ class ReportCategory(models.Model):
         verbose_name = 'report category'
         verbose_name_plural = 'report categories'
         db_table = 'ReportCategories'
-
-    def __str__(self) -> str:
-        
-        return self.report.report_name
-
-class ReportAccount(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-
-    class Meta:
-
-        verbose_name = 'report account'
-        verbose_name_plural = 'report accounts'
-        db_table = 'ReportAccounts'
-
-    def __str__(self) -> str:
-        
-        return self.report.report_name
-
-class ReportTransaction(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-
-    class Meta:
-
-        verbose_name = 'report transaction'
-        verbose_name_plural = 'report transactions'
-        db_table = 'ReportTransactions'
 
     def __str__(self) -> str:
         

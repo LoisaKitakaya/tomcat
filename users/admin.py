@@ -20,3 +20,15 @@ class UserLogAdminView(admin.ModelAdmin):
 class WorkSpaceAdminView(admin.ModelAdmin):
 
     model = WorkSpace
+
+    list_display = (
+        'workspace_name',
+        'public_id',
+        'workspace_tier',
+    )
+
+    list_filter = (
+        'workspace_tier',
+        'created_at',
+        'updated_at',
+    )
