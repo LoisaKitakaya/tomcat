@@ -1,163 +1,211 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+}
+
+type Profile {
+  id: ID!
+  publicId: String!
+  user: User!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type UserLog {
+  id: ID!
+  publicId: String!
+  user: User!
+  log: String!
+  createdAt: String!
+}
+
+enum WorkspaceTier {
+  BASIC
+  STANDARD
+  PRO
+}
+
+type Workspace {
+  id: ID!
+  publicId: String!
+  workspaceName: String!
+  workspaceTier: WorkspaceTier!
+  owner: User!
+  members: [Profile!]!
+  logs: [UserLog!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum AccountType {
+  CHECKING
+  SAVING
+  CREDIT
+  INVESTMENT
+  RETIREMENT
+  LOAN
+  INSURANCE
+  MORTGAGE
+}
+
 type Account {
-  account_id: ID!
-  account_name: String!
-  account_type: String!
-  currency_code: String!
-  account_balance: Float!
-  created_at: String!
-  updated_at: String!
+  id: ID!
+  publicId: String!
+  accountName: String!
+  accountType: AccountType!
+  currencyCode: String!
+  accountBalance: Float!
+  workspace: Workspace!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+  PAYMENT
 }
 
 type Transaction {
-  transaction_id: ID!
-  transaction_date: String!
-  transaction_type: String!
-  transaction_amount: Float!
-  currency_code: String!
+  id: ID!
+  publicId: String!
+  transactionType: TransactionType!
+  transactionAmount: Float!
+  currencyCode: String!
   description: String!
-  created_at: String!
-  updated_at: String!
+  transactionDate: String!
   account: Account!
-  categories: [Category!]!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type Category {
-  category_id: ID!
-  category_name: String!
-  category_description: String
+  id: ID!
+  publicId: String!
+  categoryName: String!
+  categoryDescription: String!
 }
 
 type Budget {
-  budget_id: ID!
-  budget_name: String!
-  budget_description: String
-  budget_start_date: String!
-  budget_end_date: String!
-  budget_amount: Float!
-  created_at: String!
-  updated_at: String!
+  id: ID!
+  publicId: String!
+  budgetName: String!
+  budgetDescription: String!
+  budgetStartDate: String!
+  budgetEndDate: String!
+  budgetAmount: Float!
   categories: [Category!]!
-}
-
-type Report {
-  report_id: ID!
-  report_name: String!
-  report_description: String
-  report_start_date: String!
-  report_end_date: String!
-  created_at: String!
-  updated_at: String!
-  categories: [Category!]!
-  accounts: [Account!]!
-  transactions: [Transaction!]!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type Query {
-  accounts: [Account!]!
-  account(id: ID!): Account
-  transactions: [Transaction!]!
-  transaction(id: ID!): Transaction
-  categories: [Category!]!
-  category(id: ID!): Category
-  budgets: [Budget!]!
-  budget(id: ID!): Budget
-  reports: [Report!]!
-  report(id: ID!): Report
+  getAllUsers: [User!]!
+  getUserById(id: ID!): User
+  getUserByUsername(username: String!): User
+  getProfileById(id: ID!): Profile
+  getUserLogsByUserId(userId: ID!): [UserLog!]!
+  getWorkspaceById(id: ID!): Workspace
+  getWorkspaceByPublicId(publicId: String!): Workspace
+  getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
+  getTransactionsByAccountId(accountId: ID!): [Transaction!]!
+  getCategoryById(id: ID!): Category
+  getBudgetById(id: ID!): Budget
 }
 
 type Mutation {
+  createUser(
+    username: String!
+    email: String!
+    firstName: String
+    lastName: String
+  ): User
+  updateUser(
+    id: ID!
+    username: String!
+    email: String!
+    firstName: String
+    lastName: String
+  ): User
+  deleteUser(id: ID!): Boolean
+  createProfile(userId: ID!): Profile
+  updateProfile(id: ID!, userId: ID!): Profile
+  deleteProfile(id: ID!): Boolean
+  createUserLog(userId: ID!, log: String!): UserLog
+  updateUserLog(id: ID!, userId: ID!, log: String!): UserLog
+  deleteUserLog(id: ID!): Boolean
+  createWorkspace(
+    workspaceName: String!
+    workspaceTier: WorkspaceTier!
+    ownerId: ID!
+  ): Workspace
+  updateWorkspace(
+    id: ID!
+    workspaceName: String!
+    workspaceTier: WorkspaceTier!
+  ): Workspace
+  deleteWorkspace(id: ID!): Boolean
+  addMemberToWorkspace(workspaceId: ID!, profileId: ID!): Workspace
+  removeMemberFromWorkspace(workspaceId: ID!, profileId: ID!): Workspace
   createAccount(
-    account_name: String!
-    account_type: String!
-    currency_code: String!
-    account_balance: Float!
-  ): Account!
-
+    accountName: String!
+    accountType: AccountType!
+    currencyCode: String!
+    accountBalance: Float!
+    workspaceId: ID!
+  ): Account
   updateAccount(
     id: ID!
-    account_name: String
-    account_type: String
-    currency_code: String
-    account_balance: Float
-  ): Account!
-
-  deleteAccount(id: ID!): Account
-
+    accountName: String!
+    accountType: AccountType!
+    currencyCode: String!
+    accountBalance: Float!
+  ): Account
+  deleteAccount(id: ID!): Boolean
   createTransaction(
-    transaction_date: String!
-    transaction_type: String!
-    transaction_amount: Float!
-    currency_code: String!
+    transactionType: TransactionType!
+    transactionAmount: Float!
+    currencyCode: String!
     description: String!
-    account_id: ID!
-    category_ids: [ID!]!
-  ): Transaction!
-
+    transactionDate: String!
+    accountId: ID!
+  ): Transaction
   updateTransaction(
     id: ID!
-    transaction_date: String
-    transaction_type: String
-    transaction_amount: Float
-    currency_code: String
-    description: String
-    account_id: ID
-    category_ids: [ID!]
-  ): Transaction!
-
-  deleteTransaction(id: ID!): Transaction
-
-  createCategory(
-    category_name: String!
-    category_description: String
-  ): Category!
-
+    transactionType: TransactionType!
+    transactionAmount: Float!
+    currencyCode: String!
+    description: String!
+    transactionDate: String!
+  ): Transaction
+  deleteTransaction(id: ID!): Boolean
+  createCategory(categoryName: String!, categoryDescription: String!): Category
   updateCategory(
     id: ID!
-    category_name: String
-    category_description: String
-  ): Category!
-
-  deleteCategory(id: ID!): Category
-
+    categoryName: String!
+    categoryDescription: String!
+  ): Category
+  deleteCategory(id: ID!): Boolean
   createBudget(
-    budget_name: String!
-    budget_description: String
-    budget_start_date: String!
-    budget_end_date: String!
-    budget_amount: Float!
-    category_ids: [ID!]!
-  ): Budget!
-
+    budgetName: String!
+    budgetDescription: String!
+    budgetStartDate: String!
+    budgetEndDate: String!
+    budgetAmount: Float!
+  ): Budget
   updateBudget(
     id: ID!
-    budget_name: String
-    budget_description: String
-    budget_start_date: String
-    budget_end_date: String
-    budget_amount: Float
-    category_ids: [ID!]
-  ): Budget!
-
-  deleteBudget(id: ID!): Budget
-
-  createReport(
-    report_name: String!
-    report_description: String
-    report_start_date: String!
-    report_end_date: String!
-    category_ids: [ID!]
-    account_ids: [ID!]
-    transaction_ids: [ID!]
-  ): Report!
-  
-  updateReport(
-    id: ID!
-    report_name: String
-    report_description: String
-    report_start_date: String
-    report_end_date: String
-    category_ids: [ID!]
-    account_ids: [ID!]
-    transaction_ids: [ID!]
-  ): Report!
+    budgetName: String!
+    budgetDescription: String!
+    budgetStartDate: String!
+    budgetEndDate: String!
+    budgetAmount: Float!
+  ): Budget
+  deleteBudget(id: ID!): Boolean
+  addCategoryToBudget(budgetId: ID!, categoryId: ID!): Budget
+  removeCategoryFromBudget(budgetId: ID!, categoryId: ID!): Budget
 }
