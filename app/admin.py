@@ -10,7 +10,6 @@ class AccountAdminView(admin.ModelAdmin):
 
     list_display = (
         'account_name',
-        'public_id',
         'account_type',
     )
 
@@ -27,7 +26,6 @@ class BudgetAdminView(admin.ModelAdmin):
 
     list_display = (
         'budget_name',
-        'public_id',
     )
 
     list_filter = (
@@ -52,7 +50,6 @@ class ReportAdminView(admin.ModelAdmin):
 
     list_display = (
         'report_name',
-        'public_id',
     )
 
     list_filter = (
@@ -71,7 +68,6 @@ class TransactionAdminView(admin.ModelAdmin):
     model = Transaction
 
     list_display = (
-        'public_id',
         'transaction_type',
     )
 

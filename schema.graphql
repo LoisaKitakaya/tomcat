@@ -1,3 +1,5 @@
+scalar Datetime
+
 type User {
   id: ID!
   username: String!
@@ -8,7 +10,6 @@ type User {
 
 type Profile {
   id: ID!
-  publicId: String!
   user: User!
   createdAt: String!
   updatedAt: String!
@@ -16,10 +17,9 @@ type Profile {
 
 type UserLog {
   id: ID!
-  publicId: String!
   user: User!
   log: String!
-  createdAt: String!
+  createdAt: Datetime!
 }
 
 enum WorkspaceTier {
@@ -30,7 +30,6 @@ enum WorkspaceTier {
 
 type Workspace {
   id: ID!
-  publicId: String!
   workspaceName: String!
   workspaceTier: WorkspaceTier!
   owner: User!
@@ -53,7 +52,6 @@ enum AccountType {
 
 type Account {
   id: ID!
-  publicId: String!
   accountName: String!
   accountType: AccountType!
   currencyCode: String!
@@ -72,7 +70,6 @@ enum TransactionType {
 
 type Transaction {
   id: ID!
-  publicId: String!
   transactionType: TransactionType!
   transactionAmount: Float!
   currencyCode: String!
@@ -85,14 +82,12 @@ type Transaction {
 
 type Category {
   id: ID!
-  publicId: String!
   categoryName: String!
   categoryDescription: String!
 }
 
 type Budget {
   id: ID!
-  publicId: String!
   budgetName: String!
   budgetDescription: String!
   budgetStartDate: String!
@@ -108,10 +103,10 @@ type Query {
   getUserById(id: ID!): User
   getUserByUsername(username: String!): User
   getAllProfiles: [Profile!]!
-  getProfileByPublicId(publicId: String!): Profile
+  getProfileById(id: ID!): Profile
+  getAllUserLogs: [UserLog!]!
   getUserLogsByUserId(userId: ID!): [UserLog!]!
   getWorkspaceById(id: ID!): Workspace
-  getWorkspaceByPublicId(publicId: String!): Workspace
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
   getCategoryById(id: ID!): Category

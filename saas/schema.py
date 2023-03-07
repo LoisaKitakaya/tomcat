@@ -1,11 +1,13 @@
 # schema.py
 import os
-from ariadne import QueryType, MutationType, make_executable_schema, load_schema_from_path, gql
+from ariadne import QueryType, MutationType, make_executable_schema,\
+      load_schema_from_path, gql, ScalarType
 from users.query_resolvers import (
     resolve_getAllUsers,
     resolve_getUserById,
-    resolve_getProfileByPublicId,
+    resolve_getProfileById,
     resolve_getAllProfiles,
+    resolve_getAllUserLogs,
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +22,12 @@ mutation = MutationType()
 
 query.set_field('getAllUsers', resolve_getAllUsers)
 query.set_field('getUserById', resolve_getUserById)
-query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
+query.set_field('getProfileById', resolve_getProfileById)
 query.set_field('getAllProfiles', resolve_getAllProfiles)
+query.set_field('getAllUserLogs', resolve_getAllUserLogs)   
 
-schema = make_executable_schema(type_defs, query, mutation)
+schema = make_executable_schema(
+    type_defs,
+    query, 
+    mutation
+)

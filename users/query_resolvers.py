@@ -1,4 +1,4 @@
-from users.models import User, Profile
+from users.models import User, Profile, UserLog
 
 # User model query resolvers
 
@@ -52,11 +52,11 @@ def resolve_getAllProfiles(*_):
     
     return profiles
 
-def resolve_getProfileByPublicId(*_, publicId):
+def resolve_getProfileById(*_, id):
 
     try:
 
-        profile = Profile.objects.get(public_id=publicId)
+        profile = Profile.objects.get(id=id)
 
     except Exception as e:
 
@@ -64,7 +64,16 @@ def resolve_getProfileByPublicId(*_, publicId):
     
     return profile
 
-# 
+# UserLog model query resolver
 
+def resolve_getAllUserLogs(*_,):
 
+    try:
 
+        logs = UserLog.objects.all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return logs

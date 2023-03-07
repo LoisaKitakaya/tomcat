@@ -26,7 +26,6 @@ class Account(models.Model):
         (MORTGAGE, 'Mortgage'),
     )
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     account_name = models.CharField(max_length=100)
     account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPES, default=CHECKING)
     currency_code = models.CharField(max_length=3)
@@ -60,12 +59,11 @@ class Transaction(models.Model):
         (PAYMENT, 'Payment')
     )
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
     transaction_amount = models.DecimalField(max_digits=15, decimal_places=2)
     currency_code = models.CharField(max_length=3)
     description = models.CharField(max_length=255)
-    transaction_date = models.DateField()
+    transaction_date = models.CharField(max_length=50)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -83,7 +81,6 @@ class Transaction(models.Model):
 
 class Category(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     category_name = models.CharField(max_length=100)
     category_description = models.CharField(max_length=255)
 
@@ -99,11 +96,10 @@ class Category(models.Model):
 
 class Budget(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     budget_name = models.CharField(max_length=100)
     budget_description = models.CharField(max_length=255)
-    budget_start_date = models.DateField()
-    budget_end_date = models.DateField()
+    budget_start_date = models.CharField(max_length=50)
+    budget_end_date = models.CharField(max_length=50)
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
     categories = models.ManyToManyField(Category)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -122,7 +118,6 @@ class Budget(models.Model):
 
 class BudgetCategory(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -138,7 +133,6 @@ class BudgetCategory(models.Model):
 
 class TransactionCategory(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -154,7 +148,6 @@ class TransactionCategory(models.Model):
 
 class Report(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     report_name = models.CharField(max_length=100)
     report_description = models.CharField(max_length=255)
     workspace = models.ForeignKey(WorkSpace, on_delete=models.CASCADE)
@@ -176,7 +169,6 @@ class Report(models.Model):
 
 class ReportCategory(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 

@@ -1,4 +1,3 @@
-from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -10,7 +9,6 @@ class User(AbstractUser):
 
 class Profile(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -28,7 +26,6 @@ class Profile(models.Model):
     
 class UserLog(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     log = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -56,7 +53,6 @@ class WorkSpace(models.Model):
         (PRO, 'Pro'),
     )
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     workspace_name = models.CharField(max_length=50)
     workspace_tier = models.CharField(max_length=50, choices=WORKSPACE_TIERS, default=BASIC)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)

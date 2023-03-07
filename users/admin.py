@@ -23,7 +23,6 @@ class WorkSpaceAdminView(admin.ModelAdmin):
 
     list_display = (
         'workspace_name',
-        'public_id',
         'workspace_tier',
     )
 
