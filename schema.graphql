@@ -2,100 +2,84 @@ scalar Datetime
 
 type User {
   id: ID!
+  public_id: String!
+  first_name: String!
+  last_name: String!
   username: String!
   email: String!
-  firstName: String!
-  lastName: String!
 }
 
 type Profile {
   id: ID!
+  public_id: String!
   user: User!
-  createdAt: String!
-  updatedAt: String!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type UserLog {
   id: ID!
+  public_id: String!
   user: User!
   log: String!
-  createdAt: Datetime!
-}
-
-enum WorkspaceTier {
-  BASIC
-  STANDARD
-  PRO
+  created_at: Datetime!
 }
 
 type Workspace {
   id: ID!
-  workspaceName: String!
-  workspaceTier: WorkspaceTier!
+  public_id: String!
+  workspace_name: String!
+  workspace_tier: String!
   owner: User!
   members: [Profile!]!
   logs: [UserLog!]!
-  createdAt: String!
-  updatedAt: String!
-}
-
-enum AccountType {
-  CHECKING
-  SAVING
-  CREDIT
-  INVESTMENT
-  RETIREMENT
-  LOAN
-  INSURANCE
-  MORTGAGE
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type Account {
   id: ID!
-  accountName: String!
-  accountType: AccountType!
-  currencyCode: String!
-  accountBalance: Float!
+  public_id: String!
+  account_name: String!
+  account_type: String!
+  currency_code: String!
+  account_balance: Float!
   workspace: Workspace!
-  createdAt: String!
-  updatedAt: String!
-}
-
-enum TransactionType {
-  DEPOSIT
-  WITHDRAWAL
-  TRANSFER
-  PAYMENT
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type Transaction {
   id: ID!
-  transactionType: TransactionType!
-  transactionAmount: Float!
-  currencyCode: String!
+  public_id: String!
+  transaction_type: String!
+  transaction_amount: Float!
+  currency_code: String!
   description: String!
-  transactionDate: String!
+  transaction_date: String!
   account: Account!
-  createdAt: String!
-  updatedAt: String!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type Category {
   id: ID!
-  categoryName: String!
-  categoryDescription: String!
+  public_id: String!
+  category_name: String!
+  category_description: String!
 }
 
 type Budget {
   id: ID!
-  budgetName: String!
-  budgetDescription: String!
-  budgetStartDate: String!
-  budgetEndDate: String!
-  budgetAmount: Float!
+  public_id: String!
+  budget_name: String!
+  budget_description: String!
+  budget_startDate: String!
+  budget_endDate: String!
+  budget_amount: Float!
   categories: [Category!]!
-  createdAt: String!
-  updatedAt: String!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type Query {
@@ -105,7 +89,7 @@ type Query {
   getAllProfiles: [Profile!]!
   getProfileById(id: ID!): Profile
   getAllUserLogs: [UserLog!]!
-  getUserLogsByUserId(userId: ID!): [UserLog!]!
+  getUserLogsByUserId(id: ID!): [UserLog!]!
   getWorkspaceById(id: ID!): Workspace
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
@@ -136,20 +120,20 @@ type Mutation {
   deleteUserLog(id: ID!): Boolean
   createWorkspace(
     workspaceName: String!
-    workspaceTier: WorkspaceTier!
+    workspaceTier: String!
     ownerId: ID!
   ): Workspace
   updateWorkspace(
     id: ID!
     workspaceName: String!
-    workspaceTier: WorkspaceTier!
+    workspaceTier: String!
   ): Workspace
   deleteWorkspace(id: ID!): Boolean
   addMemberToWorkspace(workspaceId: ID!, profileId: ID!): Workspace
   removeMemberFromWorkspace(workspaceId: ID!, profileId: ID!): Workspace
   createAccount(
     accountName: String!
-    accountType: AccountType!
+    accountType: String!
     currencyCode: String!
     accountBalance: Float!
     workspaceId: ID!
@@ -157,13 +141,13 @@ type Mutation {
   updateAccount(
     id: ID!
     accountName: String!
-    accountType: AccountType!
+    accountType: String!
     currencyCode: String!
     accountBalance: Float!
   ): Account
   deleteAccount(id: ID!): Boolean
   createTransaction(
-    transactionType: TransactionType!
+    transactionType: String!
     transactionAmount: Float!
     currencyCode: String!
     description: String!
@@ -172,7 +156,7 @@ type Mutation {
   ): Transaction
   updateTransaction(
     id: ID!
-    transactionType: TransactionType!
+    transactionType: String!
     transactionAmount: Float!
     currencyCode: String!
     description: String!

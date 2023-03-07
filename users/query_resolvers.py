@@ -1,4 +1,4 @@
-from users.models import User, Profile, UserLog
+from users.models import User, Profile, UserLog, WorkSpace
 
 # User model query resolvers
 
@@ -77,3 +77,31 @@ def resolve_getAllUserLogs(*_,):
         raise Exception(str(e))
     
     return logs
+
+def resolve_getUserLogsByUserId(*_, id):
+
+    try:
+
+        user = User.objects.get(id=id)
+
+        log = UserLog.objects.filter(user__id=user.id)
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return log
+
+# Workspace model query resolvers
+
+def resolve_getWorkspaceById(*_, id):
+
+    try:
+
+        workspace = WorkSpace.objects.get(id=id)
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return workspace
