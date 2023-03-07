@@ -14,11 +14,11 @@ def resolve_getAllUsers(*_):
 
     return all_users
 
-def resolve_getUserById(*_, id):
+def resolve_getUserByPublicId(*_, public_id):
 
     try:
 
-        user = User.objects.get(id=id)
+        user = User.objects.get(public_id=public_id)
 
     except Exception as e:
 
@@ -26,7 +26,7 @@ def resolve_getUserById(*_, id):
 
     return user
 
-def getUserByUsername(*_, username):
+def resolve_getUserByUsername(*_, username):
 
     try:
 
@@ -52,11 +52,11 @@ def resolve_getAllProfiles(*_):
     
     return profiles
 
-def resolve_getProfileById(*_, id):
+def resolve_getProfileByPublicId(*_, public_id):
 
     try:
 
-        profile = Profile.objects.get(id=id)
+        profile = Profile.objects.get(public_id=public_id)
 
     except Exception as e:
 
@@ -78,11 +78,11 @@ def resolve_getAllUserLogs(*_,):
     
     return logs
 
-def resolve_getUserLogsByUserId(*_, id):
+def resolve_getUserLogsByUserPublicId(*_, public_id):
 
     try:
 
-        user = User.objects.get(id=id)
+        user = User.objects.get(public_id=public_id)
 
         log = UserLog.objects.filter(user__id=user.id)
 
@@ -94,11 +94,23 @@ def resolve_getUserLogsByUserId(*_, id):
 
 # Workspace model query resolvers
 
-def resolve_getWorkspaceById(*_, id):
+def resolve_getAllWorkspaces(*_):
 
     try:
 
-        workspace = WorkSpace.objects.get(id=id)
+        workspaces = WorkSpace.objects.all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return workspaces
+
+def resolve_getWorkspaceByPublicId(*_, public_id):
+
+    try:
+
+        workspace = WorkSpace.objects.prefetch_related('members', 'logs').get(public_id=public_id)
 
     except Exception as e:
 

@@ -1,5 +1,7 @@
 # schema.py
 import os
+import time
+
 from ariadne import (
     QueryType,
     ScalarType,
@@ -11,12 +13,14 @@ from ariadne import (
 
 from users.query_resolvers import (
     resolve_getAllUsers,
-    resolve_getUserById,
-    resolve_getProfileById,
+    resolve_getUserByUsername,
+    resolve_getUserByPublicId,
+    resolve_getProfileByPublicId,
     resolve_getAllProfiles,
     resolve_getAllUserLogs,
-    resolve_getUserLogsByUserId,
-    resolve_getWorkspaceById
+    resolve_getUserLogsByUserPublicId,
+    resolve_getAllWorkspaces,
+    resolve_getWorkspaceByPublicId
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +35,9 @@ datetime_scalar = ScalarType("Datetime")
 @datetime_scalar.serializer
 def serialize_datetime(value):
 
-    return value.isoformat()
+    date = time.mktime(value.timetuple())
+
+    return str(date)
 
 # query and mutation types
 
@@ -41,15 +47,17 @@ mutation = MutationType()
 # resolvers
 
 query.set_field('getAllUsers', resolve_getAllUsers)
-query.set_field('getUserById', resolve_getUserById)
+query.set_field('getUserByPublicId', resolve_getUserByPublicId)
+query.set_field('getUserByUsername', resolve_getUserByUsername)
 
-query.set_field('getProfileById', resolve_getProfileById)
 query.set_field('getAllProfiles', resolve_getAllProfiles)
+query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
 
 query.set_field('getAllUserLogs', resolve_getAllUserLogs)
-query.set_field('getUserLogsByUserId', resolve_getUserLogsByUserId)
+query.set_field('getUserLogsByUserPublicId', resolve_getUserLogsByUserPublicId)
 
-query.set_field('getWorkspaceById', resolve_getWorkspaceById)   
+query.set_field('getAllWorkspaces', resolve_getAllWorkspaces)
+query.set_field('getWorkspaceByPublicId', resolve_getWorkspaceByPublicId)   
 
 schema = make_executable_schema(
     type_defs,

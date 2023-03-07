@@ -2,7 +2,7 @@ scalar Datetime
 
 type User {
   id: ID!
-  public_id: String!
+  public_id: ID!
   first_name: String!
   last_name: String!
   username: String!
@@ -11,7 +11,7 @@ type User {
 
 type Profile {
   id: ID!
-  public_id: String!
+  public_id: ID!
   user: User!
   created_at: Datetime!
   updated_at: Datetime!
@@ -19,7 +19,7 @@ type Profile {
 
 type UserLog {
   id: ID!
-  public_id: String!
+  public_id: ID!
   user: User!
   log: String!
   created_at: Datetime!
@@ -27,7 +27,7 @@ type UserLog {
 
 type Workspace {
   id: ID!
-  public_id: String!
+  public_id: ID!
   workspace_name: String!
   workspace_tier: String!
   owner: User!
@@ -39,7 +39,7 @@ type Workspace {
 
 type Account {
   id: ID!
-  public_id: String!
+  public_id: ID!
   account_name: String!
   account_type: String!
   currency_code: String!
@@ -51,7 +51,7 @@ type Account {
 
 type Transaction {
   id: ID!
-  public_id: String!
+  public_id: ID!
   transaction_type: String!
   transaction_amount: Float!
   currency_code: String!
@@ -64,14 +64,14 @@ type Transaction {
 
 type Category {
   id: ID!
-  public_id: String!
+  public_id: ID!
   category_name: String!
   category_description: String!
 }
 
 type Budget {
   id: ID!
-  public_id: String!
+  public_id: ID!
   budget_name: String!
   budget_description: String!
   budget_startDate: String!
@@ -84,13 +84,18 @@ type Budget {
 
 type Query {
   getAllUsers: [User!]!
-  getUserById(id: ID!): User
+  getUserByPublicId(public_id: ID!): User
   getUserByUsername(username: String!): User
+
   getAllProfiles: [Profile!]!
-  getProfileById(id: ID!): Profile
+  getProfileByPublicId(public_id: ID!): Profile
+
   getAllUserLogs: [UserLog!]!
-  getUserLogsByUserId(id: ID!): [UserLog!]!
-  getWorkspaceById(id: ID!): Workspace
+  getUserLogsByUserPublicId(public_id: ID!): [UserLog!]!
+
+  getAllWorkspaces: [Workspace!]!
+  getWorkspaceByPublicId(public_id: ID!): Workspace
+
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
   getCategoryById(id: ID!): Category
