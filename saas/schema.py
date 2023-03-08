@@ -19,6 +19,10 @@ from users.query_resolvers import (
     resolve_getAllProfiles
 )
 
+from app.query_resolvers import (
+    resolve_getAllAccounts
+)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, 'schema.graphql')
 
@@ -50,12 +54,21 @@ mutation = MutationType()
 
 # resolvers
 
+# #query resolvers
+
+# # # user app query resolvers
+
 query.set_field('getAllUsers', resolve_getAllUsers)
 query.set_field('getUserByPublicId', resolve_getUserByPublicId)
 query.set_field('getUserByUsername', resolve_getUserByUsername)
 
 query.set_field('getAllProfiles', resolve_getAllProfiles)
 query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
+
+# # # app app query resolvers
+
+query.set_field('getAllAccounts', resolve_getAllAccounts)
+
 
 schema = make_executable_schema(
     type_defs,[

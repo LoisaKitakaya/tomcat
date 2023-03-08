@@ -31,9 +31,10 @@ type Account {
   public_id: String!
   account_name: String!
   account_type: String!
+  owner: Profile!
   currency_code: String!
   account_balance: Float!
-  created_at: String!
+  created_at: Datetime!
   updated_at: String!
 }
 
@@ -46,7 +47,7 @@ type Transaction {
   description: String!
   transaction_date: String!
   account: Account!
-  created_at: String!
+  created_at: Datetime!
   updated_at: String!
 }
 
@@ -66,7 +67,7 @@ type Budget {
   budget_end_date: String!
   budget_amount: Float!
   categories: [Category]!
-  created_at: String!
+  created_at: Datetime!
   updated_at: String!
 }
 
@@ -84,7 +85,7 @@ type Report {
   report_description: String!
   accounts: Account!
   transactions: [Transaction]!
-  created_at: String!
+  created_at: Datetime!
   updated_at: String!
 }
 
@@ -103,6 +104,7 @@ type Query {
   getAllProfiles: [Profile!]!
   getProfileByPublicId(public_id: ID!): Profile
 
+  getAllAccounts: [Account!]!
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
   getCategoryById(id: ID!): Category

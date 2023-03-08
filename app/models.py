@@ -1,5 +1,6 @@
 from uuid import uuid4
 from django.db import models
+from users.models import Profile
 
 # Create your models here.
 
@@ -44,6 +45,7 @@ class Account(models.Model):
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     account_name = models.CharField(max_length=100)
     account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPES, default=CHECKING)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     currency_code = models.CharField(max_length=3)
     account_balance = models.DecimalField(max_digits=15, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
