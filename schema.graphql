@@ -98,13 +98,15 @@ type ReportCategory {
 
 type Query {
   getAllUsers: [User!]!
-  getUserByPublicId(public_id: ID!): User
-  getUserByUsername(username: String!): User
+  getUserByPublicId(public_id: ID!): User!
+  getUserByUsername(username: String!): User!
 
   getAllProfiles: [Profile!]!
-  getProfileByPublicId(public_id: ID!): Profile
+  getProfileByPublicId(public_id: ID!): Profile!
 
   getAllAccounts: [Account!]!
+  getAccountByPublicId(public_id: ID): Account!
+
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
   getCategoryById(id: ID!): Category

@@ -20,7 +20,8 @@ from users.query_resolvers import (
 )
 
 from app.query_resolvers import (
-    resolve_getAllAccounts
+    resolve_getAllAccounts,
+    resolve_getAccountByPublicId
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,6 +69,7 @@ query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
 # # # app app query resolvers
 
 query.set_field('getAllAccounts', resolve_getAllAccounts)
+query.set_field('getAccountByPublicId', resolve_getAccountByPublicId)
 
 
 schema = make_executable_schema(
