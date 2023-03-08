@@ -17,69 +17,80 @@ type Profile {
   updated_at: Datetime!
 }
 
-type UserLog {
+type Category {
   id: ID!
-  public_id: ID!
-  user: User!
-  log: String!
-  created_at: Datetime!
-}
-
-type Workspace {
-  id: ID!
-  public_id: ID!
-  workspace_name: String!
-  workspace_tier: String!
-  owner: User!
-  members: [Profile!]!
-  logs: [UserLog!]!
-  created_at: Datetime!
-  updated_at: Datetime!
+  public_id: String!
+  category_name: String!
+  category_description: String!
 }
 
 type Account {
   id: ID!
-  public_id: ID!
+  public_id: String!
   account_name: String!
   account_type: String!
   currency_code: String!
   account_balance: Float!
-  workspace: Workspace!
-  created_at: Datetime!
-  updated_at: Datetime!
+  created_at: String!
+  updated_at: String!
 }
 
 type Transaction {
   id: ID!
-  public_id: ID!
+  public_id: String!
   transaction_type: String!
   transaction_amount: Float!
   currency_code: String!
   description: String!
   transaction_date: String!
   account: Account!
-  created_at: Datetime!
-  updated_at: Datetime!
+  created_at: String!
+  updated_at: String!
 }
 
-type Category {
+type TransactionCategory {
   id: ID!
-  public_id: ID!
-  category_name: String!
-  category_description: String!
+  public_id: String!
+  transaction: Transaction!
+  category: Category!
 }
 
 type Budget {
   id: ID!
-  public_id: ID!
+  public_id: String!
   budget_name: String!
   budget_description: String!
-  budget_startDate: String!
-  budget_endDate: String!
+  budget_start_date: String!
+  budget_end_date: String!
   budget_amount: Float!
-  categories: [Category!]!
-  created_at: Datetime!
-  updated_at: Datetime!
+  categories: [Category]!
+  created_at: String!
+  updated_at: String!
+}
+
+type BudgetCategory {
+  id: ID!
+  public_id: String!
+  budget: Budget!
+  category: Category!
+}
+
+type Report {
+  id: ID!
+  public_id: String!
+  report_name: String!
+  report_description: String!
+  accounts: Account!
+  transactions: [Transaction]!
+  created_at: String!
+  updated_at: String!
+}
+
+type ReportCategory {
+  id: ID!
+  public_id: String!
+  report: Report!
+  category: Category!
 }
 
 type Query {
@@ -89,12 +100,6 @@ type Query {
 
   getAllProfiles: [Profile!]!
   getProfileByPublicId(public_id: ID!): Profile
-
-  getAllUserLogs: [UserLog!]!
-  getUserLogsByUserPublicId(public_id: ID!): [UserLog!]!
-
-  getAllWorkspaces: [Workspace!]!
-  getWorkspaceByPublicId(public_id: ID!): Workspace
 
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
@@ -120,29 +125,6 @@ type Mutation {
   createProfile(userId: ID!): Profile
   updateProfile(id: ID!, userId: ID!): Profile
   deleteProfile(id: ID!): Boolean
-  createUserLog(userId: ID!, log: String!): UserLog
-  updateUserLog(id: ID!, userId: ID!, log: String!): UserLog
-  deleteUserLog(id: ID!): Boolean
-  createWorkspace(
-    workspaceName: String!
-    workspaceTier: String!
-    ownerId: ID!
-  ): Workspace
-  updateWorkspace(
-    id: ID!
-    workspaceName: String!
-    workspaceTier: String!
-  ): Workspace
-  deleteWorkspace(id: ID!): Boolean
-  addMemberToWorkspace(workspaceId: ID!, profileId: ID!): Workspace
-  removeMemberFromWorkspace(workspaceId: ID!, profileId: ID!): Workspace
-  createAccount(
-    accountName: String!
-    accountType: String!
-    currencyCode: String!
-    accountBalance: Float!
-    workspaceId: ID!
-  ): Account
   updateAccount(
     id: ID!
     accountName: String!

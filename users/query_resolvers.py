@@ -1,4 +1,4 @@
-from users.models import User, Profile, UserLog, WorkSpace
+from users.models import User, Profile
 
 # User model query resolvers
 
@@ -63,57 +63,3 @@ def resolve_getProfileByPublicId(*_, public_id):
         raise Exception(str(e))
     
     return profile
-
-# UserLog model query resolver
-
-def resolve_getAllUserLogs(*_,):
-
-    try:
-
-        logs = UserLog.objects.all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-    
-    return logs
-
-def resolve_getUserLogsByUserPublicId(*_, public_id):
-
-    try:
-
-        user = User.objects.get(public_id=public_id)
-
-        log = UserLog.objects.filter(user__id=user.id)
-
-    except Exception as e:
-
-        raise Exception(str(e))
-    
-    return log
-
-# Workspace model query resolvers
-
-def resolve_getAllWorkspaces(*_):
-
-    try:
-
-        workspaces = WorkSpace.objects.all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-    
-    return workspaces
-
-def resolve_getWorkspaceByPublicId(*_, public_id):
-
-    try:
-
-        workspace = WorkSpace.objects.prefetch_related('members', 'logs').get(public_id=public_id)
-
-    except Exception as e:
-
-        raise Exception(str(e))
-    
-    return workspace

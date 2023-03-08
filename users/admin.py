@@ -1,4 +1,4 @@
-from .models import User, Profile, UserLog, WorkSpace
+from .models import User, Profile
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -11,23 +11,7 @@ class ProfileAdminView(admin.ModelAdmin):
 
     model = Profile
 
-@admin.register(UserLog)
-class UserLogAdminView(admin.ModelAdmin):
-
-    model = UserLog
-
-@admin.register(WorkSpace)
-class WorkSpaceAdminView(admin.ModelAdmin):
-
-    model = WorkSpace
-
-    list_display = (
-        'workspace_name',
-        'workspace_tier',
-    )
-
     list_filter = (
-        'workspace_tier',
         'created_at',
         'updated_at',
     )

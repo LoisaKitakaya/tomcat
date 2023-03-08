@@ -16,11 +16,7 @@ from users.query_resolvers import (
     resolve_getUserByUsername,
     resolve_getUserByPublicId,
     resolve_getProfileByPublicId,
-    resolve_getAllProfiles,
-    resolve_getAllUserLogs,
-    resolve_getUserLogsByUserPublicId,
-    resolve_getAllWorkspaces,
-    resolve_getWorkspaceByPublicId
+    resolve_getAllProfiles
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,12 +48,6 @@ query.set_field('getUserByUsername', resolve_getUserByUsername)
 
 query.set_field('getAllProfiles', resolve_getAllProfiles)
 query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
-
-query.set_field('getAllUserLogs', resolve_getAllUserLogs)
-query.set_field('getUserLogsByUserPublicId', resolve_getUserLogsByUserPublicId)
-
-query.set_field('getAllWorkspaces', resolve_getAllWorkspaces)
-query.set_field('getWorkspaceByPublicId', resolve_getWorkspaceByPublicId)   
 
 schema = make_executable_schema(
     type_defs,

@@ -1,8 +1,23 @@
 from uuid import uuid4
 from django.db import models
-from users.models import WorkSpace
 
 # Create your models here.
+
+class Category(models.Model):
+
+    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
+    category_name = models.CharField(max_length=100)
+    category_description = models.CharField(max_length=255)
+
+    class Meta:
+
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+        db_table = 'Categories'
+
+    def __str__(self) -> str:
+        
+        return self.category_name
 
 class Account(models.Model):
 
@@ -31,7 +46,6 @@ class Account(models.Model):
     account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPES, default=CHECKING)
     currency_code = models.CharField(max_length=3)
     account_balance = models.DecimalField(max_digits=15, decimal_places=2)
-    workspace = models.ForeignKey(WorkSpace, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -80,22 +94,22 @@ class Transaction(models.Model):
     def __str__(self) -> str:
         
         return self.transaction_type
-
-class Category(models.Model):
+    
+class TransactionCategory(models.Model):
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    category_name = models.CharField(max_length=100)
-    category_description = models.CharField(max_length=255)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
 
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
-        db_table = 'Categories'
+        verbose_name = 'transaction category'
+        verbose_name_plural = 'transaction categories'
+        db_table = 'TransactionCategories'
 
     def __str__(self) -> str:
         
-        return self.category_name
+        return self.transaction.transaction_type
 
 class Budget(models.Model):
 
@@ -136,28 +150,11 @@ class BudgetCategory(models.Model):
         
         return self.budget.budget_name
 
-class TransactionCategory(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta:
-
-        verbose_name = 'transaction category'
-        verbose_name_plural = 'transaction categories'
-        db_table = 'TransactionCategories'
-
-    def __str__(self) -> str:
-        
-        return self.transaction.transaction_type
-
 class Report(models.Model):
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     report_name = models.CharField(max_length=100)
     report_description = models.CharField(max_length=255)
-    workspace = models.ForeignKey(WorkSpace, on_delete=models.CASCADE)
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     transactions = models.ManyToManyField(Transaction)
     created_at = models.DateTimeField(auto_now_add=True)
