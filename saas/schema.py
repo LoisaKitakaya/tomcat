@@ -21,7 +21,9 @@ from users.query_resolvers import (
 
 from app.query_resolvers import (
     resolve_getAllAccounts,
-    resolve_getAccountByPublicId
+    resolve_getAccountByPublicId,
+    resolve_getAllCategories,
+    resolve_getCategoryByPublicId
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -70,6 +72,9 @@ query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
 
 query.set_field('getAllAccounts', resolve_getAllAccounts)
 query.set_field('getAccountByPublicId', resolve_getAccountByPublicId)
+
+query.set_field('getAllCategories', resolve_getAllCategories)
+query.set_field('getCategoryByPublicId', resolve_getCategoryByPublicId)
 
 
 schema = make_executable_schema(

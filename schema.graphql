@@ -105,7 +105,10 @@ type Query {
   getProfileByPublicId(public_id: ID!): Profile!
 
   getAllAccounts: [Account!]!
-  getAccountByPublicId(public_id: ID): Account!
+  getAccountByPublicId(public_id: ID!): Account!
+
+  getAllCategories: [Category!]!
+  getCategoryByPublicId(public_id: ID!): Category!
 
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!

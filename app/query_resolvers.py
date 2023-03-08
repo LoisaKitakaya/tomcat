@@ -1,4 +1,30 @@
-from app.models import Account
+from app.models import Account, Category
+
+# Category model query resolvers
+
+def resolve_getAllCategories(*_):
+
+    try:
+
+        categories = Category.objects.all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return categories
+
+def resolve_getCategoryByPublicId(*_, public_id):
+
+    try:
+
+        category = Category.objects.filter(public_id=public_id).first()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return category
 
 # Account model query resolvers
 
