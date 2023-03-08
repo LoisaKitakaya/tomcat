@@ -57,7 +57,7 @@ mutation = MutationType()
 
 # resolvers
 
-# #query resolvers
+# # query resolvers
 
 # # # user app query resolvers
 

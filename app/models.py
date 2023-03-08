@@ -121,7 +121,7 @@ class Budget(models.Model):
     budget_start_date = models.DateTimeField()
     budget_end_date = models.DateTimeField()
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
-    categories = models.ManyToManyField(Category)
+    categories = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
