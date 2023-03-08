@@ -12,6 +12,7 @@ class Profile(models.Model):
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

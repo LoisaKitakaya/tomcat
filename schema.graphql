@@ -1,4 +1,5 @@
 scalar Datetime
+scalar Image
 
 type User {
   id: ID!
@@ -13,6 +14,7 @@ type Profile {
   id: ID!
   public_id: ID!
   user: User!
+  image: Image!
   created_at: Datetime!
   updated_at: Datetime!
 }

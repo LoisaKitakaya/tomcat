@@ -27,6 +27,7 @@ type_defs = gql(load_schema_from_path(schema_path))
 # scaler types
 
 datetime_scalar = ScalarType("Datetime")
+image_scalar = ScalarType("Image")
 
 @datetime_scalar.serializer
 def serialize_datetime(value):
@@ -34,6 +35,11 @@ def serialize_datetime(value):
     date = time.mktime(value.timetuple())
 
     return str(date)
+
+@image_scalar.serializer
+def serialize_image(value):
+
+    return value.url
 
 # query and mutation types
 
@@ -50,8 +56,10 @@ query.set_field('getAllProfiles', resolve_getAllProfiles)
 query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
 
 schema = make_executable_schema(
-    type_defs,
+    type_defs,[
     query, 
     mutation,
-    datetime_scalar
+    datetime_scalar,
+    image_scalar
+    ]
 )
