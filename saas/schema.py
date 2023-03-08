@@ -39,7 +39,9 @@ def serialize_datetime(value):
 @image_scalar.serializer
 def serialize_image(value):
 
-    return value.url
+    image = value.url
+
+    return image
 
 # query and mutation types
 
