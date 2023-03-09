@@ -94,17 +94,14 @@ type Query {
   getAllBudgets: [Budget!]!
   getBudgetByPublicId(public_id: ID!): Budget!
   getBudgetByProfilePublicId(public_id: ID!): Budget!
-  getBudgetByCategoryPublicId(public_id: ID!): Budget!
 
   getAllTransactions: [Transaction!]!
   getTransactionByPublicId(public_id: ID!): Transaction!
   getTransactionByAccountPublicId(public_id: ID!): Transaction!
-  getTransactionByCategoryPublicId(public_id: ID!): Transaction!
 
   getAllReports: [Report!]!
   getReportByPublicId(public_id: ID!): Report!
   getReportByAccountPublicId(public_id: ID!): Report!
-  getReportByCategoryPublicId(public_id: ID!): Report!
 }
 
 type Mutation {

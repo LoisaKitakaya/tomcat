@@ -65,7 +65,7 @@ def resolve_getAccountByProfilePublicId(*_, public_id):
 
         profile = Profile.objects.get(public_id=public_id)
 
-        accounts = Account.objects.filter(profile__public_id=profile.public_id).all()
+        accounts = Account.objects.filter(owner__public_id=profile.public_id).first()
 
     except Exception as e:
 
@@ -109,22 +109,7 @@ def resolve_getBudgetByProfilePublicId(*_, public_id):
 
         profile = Profile.objects.get(public_id=public_id)
 
-        budgets = Budget.objects.filter(profile__public_id=profile.public_id).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return budgets
-
-
-def resolve_getBudgetByCategoryPublicId(*_, public_id):
-
-    try:
-
-        category = Category.objects.get(public_id=public_id)
-
-        budgets = Budget.objects.filter(category__public_id=category.public_id).all()
+        budgets = Budget.objects.filter(owner__public_id=profile.public_id).first()
 
     except Exception as e:
 
@@ -179,23 +164,6 @@ def resolve_getTransactionByAccountPublicId(*_, public_id):
     return transactions
 
 
-def resolve_getTransactionByCategoryPublicId(*_, public_id):
-
-    try:
-
-        category = Category.objects.get(public_id=public_id)
-
-        transactions = Transaction.objects.filter(
-            category__public_id=category.public_id
-        ).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return transactions
-
-
 # Report model query resolvers
 
 
@@ -232,21 +200,6 @@ def resolve_getReportByAccountPublicId(*_, public_id):
         account = Account.objects.get(public_id=public_id)
 
         reports = Report.objects.filter(account__public_id=account.public_id).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return reports
-
-
-def resolve_getReportByCategoryPublicId(*_, public_id):
-
-    try:
-
-        category = Category.objects.get(public_id=public_id)
-
-        reports = Report.objects.filter(category__public_id=category.public_id).all()
 
     except Exception as e:
 
