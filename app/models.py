@@ -83,6 +83,7 @@ class Transaction(models.Model):
     description = models.CharField(max_length=255)
     transaction_date = models.DateTimeField()
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -96,22 +97,6 @@ class Transaction(models.Model):
     def __str__(self) -> str:
         
         return self.transaction_type
-    
-class TransactionCategory(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta:
-
-        verbose_name = 'transaction category'
-        verbose_name_plural = 'transaction categories'
-        db_table = 'TransactionCategories'
-
-    def __str__(self) -> str:
-        
-        return self.transaction.transaction_type
 
 class Budget(models.Model):
 
@@ -121,7 +106,8 @@ class Budget(models.Model):
     budget_start_date = models.DateTimeField()
     budget_end_date = models.DateTimeField()
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
-    categories = models.ForeignKey(Category, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -136,28 +122,11 @@ class Budget(models.Model):
         
         return self.budget_name
 
-class BudgetCategory(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta:
-
-        verbose_name = 'budget category'
-        verbose_name_plural = 'budget categories'
-        db_table = 'BudgetCategories'
-
-    def __str__(self) -> str:
-        
-        return self.budget.budget_name
-
 class Report(models.Model):
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     report_name = models.CharField(max_length=100)
-    report_description = models.CharField(max_length=255)
-    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     transactions = models.ManyToManyField(Transaction)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -172,19 +141,3 @@ class Report(models.Model):
     def __str__(self) -> str:
         
         return self.report_name
-
-class ReportCategory(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta:
-
-        verbose_name = 'report category'
-        verbose_name_plural = 'report categories'
-        db_table = 'ReportCategories'
-
-    def __str__(self) -> str:
-        
-        return self.report.report_name

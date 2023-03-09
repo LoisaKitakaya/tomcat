@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, Budget, BudgetCategory, Category, Report, ReportCategory, Transaction, TransactionCategory
+from .models import Account, Budget, Category, Report, Transaction
 
 # Register your models here.
 
@@ -33,11 +33,6 @@ class BudgetAdminView(admin.ModelAdmin):
         'updated_at',
     )
 
-@admin.register(BudgetCategory)
-class BudgetCategoryAdminView(admin.ModelAdmin):
-
-    model = BudgetCategory
-
 @admin.register(Category)
 class CategoryAdminView(admin.ModelAdmin):
 
@@ -57,11 +52,6 @@ class ReportAdminView(admin.ModelAdmin):
         'updated_at',
     )
 
-@admin.register(ReportCategory)
-class ReportCategoryAdminView(admin.ModelAdmin):
-
-    model = ReportCategory
-
 @admin.register(Transaction)
 class TransactionAdminView(admin.ModelAdmin):
 
@@ -76,8 +66,3 @@ class TransactionAdminView(admin.ModelAdmin):
         'created_at',
         'updated_at',
     )
-
-@admin.register(TransactionCategory)
-class TransactionCategoryAdminView(admin.ModelAdmin):
-
-    model = TransactionCategory

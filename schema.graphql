@@ -21,14 +21,14 @@ type Profile {
 
 type Category {
   id: ID!
-  public_id: String!
+  public_id: ID!
   category_name: String!
   category_description: String!
 }
 
 type Account {
   id: ID!
-  public_id: String!
+  public_id: ID!
   account_name: String!
   account_type: String!
   owner: Profile!
@@ -40,60 +40,40 @@ type Account {
 
 type Transaction {
   id: ID!
-  public_id: String!
+  public_id: ID!
   transaction_type: String!
   transaction_amount: Float!
   currency_code: String!
   description: String!
   transaction_date: String!
   account: Account!
+  category: Category!
   created_at: Datetime!
   updated_at: String!
 }
 
-type TransactionCategory {
-  id: ID!
-  public_id: String!
-  transaction: Transaction!
-  category: Category!
-}
-
 type Budget {
   id: ID!
-  public_id: String!
+  public_id: ID!
   budget_name: String!
   budget_description: String!
   budget_start_date: Datetime!
   budget_end_date: Datetime!
   budget_amount: Float!
-  categories: Category!
+  owner: Profile!
+  category: Category!
   created_at: Datetime!
   updated_at: String!
-}
-
-type BudgetCategory {
-  id: ID!
-  public_id: String!
-  budget: Budget!
-  category: Category!
 }
 
 type Report {
   id: ID!
-  public_id: String!
+  public_id: ID!
   report_name: String!
-  report_description: String!
-  accounts: Account!
+  account: Account!
   transactions: [Transaction]!
   created_at: Datetime!
   updated_at: String!
-}
-
-type ReportCategory {
-  id: ID!
-  public_id: String!
-  report: Report!
-  category: Category!
 }
 
 type Query {
@@ -131,9 +111,11 @@ type Mutation {
     lastName: String
   ): User
   deleteUser(id: ID!): Boolean
+
   createProfile(userId: ID!): Profile
   updateProfile(id: ID!, userId: ID!): Profile
   deleteProfile(id: ID!): Boolean
+
   updateAccount(
     id: ID!
     accountName: String!
@@ -142,6 +124,7 @@ type Mutation {
     accountBalance: Float!
   ): Account
   deleteAccount(id: ID!): Boolean
+
   createTransaction(
     transactionType: String!
     transactionAmount: Float!
@@ -159,13 +142,7 @@ type Mutation {
     transactionDate: String!
   ): Transaction
   deleteTransaction(id: ID!): Boolean
-  createCategory(categoryName: String!, categoryDescription: String!): Category
-  updateCategory(
-    id: ID!
-    categoryName: String!
-    categoryDescription: String!
-  ): Category
-  deleteCategory(id: ID!): Boolean
+
   createBudget(
     budgetName: String!
     budgetDescription: String!
@@ -182,6 +159,4 @@ type Mutation {
     budgetAmount: Float!
   ): Budget
   deleteBudget(id: ID!): Boolean
-  addCategoryToBudget(budgetId: ID!, categoryId: ID!): Budget
-  removeCategoryFromBudget(budgetId: ID!, categoryId: ID!): Budget
 }
