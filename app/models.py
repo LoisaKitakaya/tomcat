@@ -132,9 +132,8 @@ class Budget(models.Model):
 class Report(models.Model):
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    report_name = models.CharField(max_length=100)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    transactions = models.ManyToManyField(Transaction)
+    transactions = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -147,4 +146,4 @@ class Report(models.Model):
 
     def __str__(self) -> str:
 
-        return self.report_name
+        return self.account.account_name

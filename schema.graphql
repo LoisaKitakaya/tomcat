@@ -14,6 +14,9 @@ type Profile {
   id: ID!
   public_id: ID!
   user: User!
+  tier: String!
+  account_limit: Int!
+  ai_predictions: Boolean!
   image: Image!
   created_at: Datetime!
   updated_at: Datetime!
@@ -69,9 +72,8 @@ type Budget {
 type Report {
   id: ID!
   public_id: ID!
-  report_name: String!
   account: Account!
-  transactions: [Transaction]!
+  transactions: Transaction!
   created_at: Datetime!
   updated_at: Datetime!
 }

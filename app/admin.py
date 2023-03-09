@@ -43,10 +43,6 @@ class ReportAdminView(admin.ModelAdmin):
 
     model = Report
 
-    list_display = (
-        'report_name',
-    )
-
     list_filter = (
         'created_at',
         'updated_at',
