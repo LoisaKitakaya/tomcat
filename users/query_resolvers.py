@@ -2,6 +2,7 @@ from users.models import User, Profile
 
 # User model query resolvers
 
+
 def resolve_getAllUsers(*_):
 
     try:
@@ -13,6 +14,7 @@ def resolve_getAllUsers(*_):
         raise Exception(str(e))
 
     return all_users
+
 
 def resolve_getUserByPublicId(*_, public_id):
 
@@ -26,6 +28,7 @@ def resolve_getUserByPublicId(*_, public_id):
 
     return user
 
+
 def resolve_getUserByUsername(*_, username):
 
     try:
@@ -35,10 +38,12 @@ def resolve_getUserByUsername(*_, username):
     except Exception as e:
 
         raise Exception(str(e))
-    
+
     return user
 
+
 # Profile model query resolvers
+
 
 def resolve_getAllProfiles(*_):
 
@@ -49,8 +54,9 @@ def resolve_getAllProfiles(*_):
     except Exception as e:
 
         raise Exception(str(e))
-    
+
     return profiles
+
 
 def resolve_getProfileByPublicId(*_, public_id):
 
@@ -61,5 +67,5 @@ def resolve_getProfileByPublicId(*_, public_id):
     except Exception as e:
 
         raise Exception(str(e))
-    
+
     return profile

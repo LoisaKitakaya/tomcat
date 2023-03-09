@@ -4,6 +4,7 @@ from users.models import Profile
 
 # Create your models here.
 
+
 class Category(models.Model):
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
@@ -12,39 +13,42 @@ class Category(models.Model):
 
     class Meta:
 
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
-        db_table = 'Categories'
+        verbose_name = "category"
+        verbose_name_plural = "categories"
+        db_table = "Categories"
 
     def __str__(self) -> str:
-        
+
         return self.category_name
+
 
 class Account(models.Model):
 
-    CHECKING = 'checking'
-    SAVING = 'saving'
-    CREDIT = 'credit'
-    INVESTMENT = 'investment'
-    RETIREMENT = 'retirement'
-    LOAN = 'loan'
-    INSURANCE = 'insurance'
-    MORTGAGE = 'mortgage'
+    CHECKING = "checking"
+    SAVING = "saving"
+    CREDIT = "credit"
+    INVESTMENT = "investment"
+    RETIREMENT = "retirement"
+    LOAN = "loan"
+    INSURANCE = "insurance"
+    MORTGAGE = "mortgage"
 
     ACCOUNT_TYPES = (
-        (CHECKING, 'Checking'),
-        (SAVING, 'Saving'),
-        (CREDIT, 'Credit'),
-        (INVESTMENT, 'Investment'),
-        (RETIREMENT, 'Retirement'),
-        (LOAN, 'Loan'),
-        (INSURANCE, 'Insurance'),
-        (MORTGAGE, 'Mortgage'),
+        (CHECKING, "Checking"),
+        (SAVING, "Saving"),
+        (CREDIT, "Credit"),
+        (INVESTMENT, "Investment"),
+        (RETIREMENT, "Retirement"),
+        (LOAN, "Loan"),
+        (INSURANCE, "Insurance"),
+        (MORTGAGE, "Mortgage"),
     )
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     account_name = models.CharField(max_length=100)
-    account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPES, default=CHECKING)
+    account_type = models.CharField(
+        max_length=50, choices=ACCOUNT_TYPES, default=CHECKING
+    )
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     currency_code = models.CharField(max_length=3)
     account_balance = models.DecimalField(max_digits=15, decimal_places=2)
@@ -53,27 +57,28 @@ class Account(models.Model):
 
     class Meta:
 
-        ordering = ['-created_at']
-        verbose_name = 'account'
-        verbose_name_plural = 'accounts'
-        db_table = 'Accounts'
+        ordering = ["-created_at"]
+        verbose_name = "account"
+        verbose_name_plural = "accounts"
+        db_table = "Accounts"
 
     def __str__(self) -> str:
-        
+
         return self.account_name
+
 
 class Transaction(models.Model):
 
-    DEPOSIT = 'deposit'
-    WITHDRAWAL = 'withdrawal'
-    TRANSFER = 'transfer'
-    PAYMENT = 'payment'
+    DEPOSIT = "deposit"
+    WITHDRAWAL = "withdrawal"
+    TRANSFER = "transfer"
+    PAYMENT = "payment"
 
     TRANSACTION_TYPES = (
-        (DEPOSIT, 'Deposit'),
-        (WITHDRAWAL, 'Withdrawal'),
-        (TRANSFER, 'Transfer'),
-        (PAYMENT, 'Payment')
+        (DEPOSIT, "Deposit"),
+        (WITHDRAWAL, "Withdrawal"),
+        (TRANSFER, "Transfer"),
+        (PAYMENT, "Payment"),
     )
 
     public_id = models.CharField(max_length=40, default=str(uuid4().hex))
@@ -89,14 +94,15 @@ class Transaction(models.Model):
 
     class Meta:
 
-        ordering = ['-created_at']
-        verbose_name = 'transaction'
-        verbose_name_plural = 'transactions'
-        db_table = 'Transactions'
+        ordering = ["-created_at"]
+        verbose_name = "transaction"
+        verbose_name_plural = "transactions"
+        db_table = "Transactions"
 
     def __str__(self) -> str:
-        
+
         return self.transaction_type
+
 
 class Budget(models.Model):
 
@@ -113,14 +119,15 @@ class Budget(models.Model):
 
     class Meta:
 
-        ordering = ['-created_at']
-        verbose_name = 'budget'
-        verbose_name_plural = 'budgets'
-        db_table = 'Budgets'
+        ordering = ["-created_at"]
+        verbose_name = "budget"
+        verbose_name_plural = "budgets"
+        db_table = "Budgets"
 
     def __str__(self) -> str:
-        
+
         return self.budget_name
+
 
 class Report(models.Model):
 
@@ -133,11 +140,11 @@ class Report(models.Model):
 
     class Meta:
 
-        ordering = ['-created_at']
-        verbose_name = 'report'
-        verbose_name_plural = 'reports'
-        db_table = 'Reports'
+        ordering = ["-created_at"]
+        verbose_name = "report"
+        verbose_name_plural = "reports"
+        db_table = "Reports"
 
     def __str__(self) -> str:
-        
+
         return self.report_name

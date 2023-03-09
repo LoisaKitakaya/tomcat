@@ -59,21 +59,6 @@ def resolve_getAccountByPublicId(*_, public_id):
     return account
 
 
-def resolve_getAccountByProfilePublicId(*_, public_id):
-
-    try:
-
-        profile = Profile.objects.get(public_id=public_id)
-
-        accounts = Account.objects.filter(owner__public_id=profile.public_id).first()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return accounts
-
-
 # Budget model query resolvers
 
 
@@ -103,21 +88,6 @@ def resolve_getBudgetByPublicId(*_, public_id):
     return budget
 
 
-def resolve_getBudgetByProfilePublicId(*_, public_id):
-
-    try:
-
-        profile = Profile.objects.get(public_id=public_id)
-
-        budgets = Budget.objects.filter(owner__public_id=profile.public_id).first()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return budgets
-
-
 # Transaction model query resolvers
 
 
@@ -138,30 +108,13 @@ def resolve_getTransactionByPublicId(*_, public_id):
 
     try:
 
-        transaction = Transaction.objects.get(public_id=public_id)
+        transaction = Transaction.objects.filter(public_id=public_id).first()
 
     except Exception as e:
 
         raise Exception(str(e))
 
     return transaction
-
-
-def resolve_getTransactionByAccountPublicId(*_, public_id):
-
-    try:
-
-        account = Account.objects.get(public_id=public_id)
-
-        transactions = Transaction.objects.filter(
-            account__public_id=account.public_id
-        ).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return transactions
 
 
 # Report model query resolvers
@@ -191,18 +144,3 @@ def resolve_getReportByPublicId(*_, public_id):
         raise Exception(str(e))
 
     return report
-
-
-def resolve_getReportByAccountPublicId(*_, public_id):
-
-    try:
-
-        account = Account.objects.get(public_id=public_id)
-
-        reports = Report.objects.filter(account__public_id=account.public_id).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return reports
