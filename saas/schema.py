@@ -23,7 +23,9 @@ from app.query_resolvers import (
     resolve_getAllAccounts,
     resolve_getAccountByPublicId,
     resolve_getAllCategories,
-    resolve_getCategoryByPublicId
+    resolve_getCategoryByPublicId,
+    resolve_getAllBudgets,
+    resolve_getBudgetByPublicId
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -76,6 +78,8 @@ query.set_field('getAccountByPublicId', resolve_getAccountByPublicId)
 query.set_field('getAllCategories', resolve_getAllCategories)
 query.set_field('getCategoryByPublicId', resolve_getCategoryByPublicId)
 
+query.set_field('getAllBudgets', resolve_getAllBudgets)
+query.set_field('getBudgetByPublicId', resolve_getBudgetByPublicId)
 
 schema = make_executable_schema(
     type_defs,[

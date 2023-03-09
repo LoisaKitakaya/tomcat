@@ -63,10 +63,10 @@ type Budget {
   public_id: String!
   budget_name: String!
   budget_description: String!
-  budget_start_date: String!
-  budget_end_date: String!
+  budget_start_date: Datetime!
+  budget_end_date: Datetime!
   budget_amount: Float!
-  categories: [Category]!
+  categories: Category!
   created_at: Datetime!
   updated_at: String!
 }
@@ -109,6 +109,9 @@ type Query {
 
   getAllCategories: [Category!]!
   getCategoryByPublicId(public_id: ID!): Category!
+
+  getAllBudgets: [Budget!]!
+  getBudgetByPublicId(public_id: ID!): Budget!
 
   getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!

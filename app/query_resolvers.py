@@ -1,4 +1,4 @@
-from app.models import Account, Category
+from app.models import Account, Category, Budget
 
 # Category model query resolvers
 
@@ -51,3 +51,29 @@ def resolve_getAccountByPublicId(*_, public_id):
         raise Exception(str(e))
     
     return account
+
+# Budget model query resolvers
+
+def resolve_getAllBudgets(*_):
+
+    try:
+
+        budgets = Budget.objects.all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return budgets
+
+def resolve_getBudgetByPublicId(*_, public_id):
+
+    try:
+
+        budget = Budget.objects.filter(public_id=public_id).first()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+    
+    return budget
