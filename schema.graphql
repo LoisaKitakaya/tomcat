@@ -84,16 +84,27 @@ type Query {
   getAllProfiles: [Profile!]!
   getProfileByPublicId(public_id: ID!): Profile!
 
-  getAllAccounts: [Account!]!
-  getAccountByPublicId(public_id: ID!): Account!
-
   getAllCategories: [Category!]!
   getCategoryByPublicId(public_id: ID!): Category!
 
+  getAllAccounts: [Account!]!
+  getAccountByPublicId(public_id: ID!): Account!
+  getAccountByProfilePublicId(public_id: ID!): Account!
+
   getAllBudgets: [Budget!]!
   getBudgetByPublicId(public_id: ID!): Budget!
+  getBudgetByProfilePublicId(public_id: ID!): Budget!
+  getBudgetByCategoryPublicId(public_id: ID!): Budget!
 
-  getTransactionsByAccountId(accountId: ID!): [Transaction!]!
+  getAllTransactions: [Transaction!]!
+  getTransactionByPublicId(public_id: ID!): Transaction!
+  getTransactionByAccountPublicId(public_id: ID!): Transaction!
+  getTransactionByCategoryPublicId(public_id: ID!): Transaction!
+
+  getAllReports: [Report!]!
+  getReportByPublicId(public_id: ID!): Report!
+  getReportByAccountPublicId(public_id: ID!): Report!
+  getReportByCategoryPublicId(public_id: ID!): Report!
 }
 
 type Mutation {

@@ -20,12 +20,23 @@ from users.query_resolvers import (
 )
 
 from app.query_resolvers import (
-    resolve_getAllAccounts,
-    resolve_getAccountByPublicId,
     resolve_getAllCategories,
     resolve_getCategoryByPublicId,
+    resolve_getAllAccounts,
+    resolve_getAccountByPublicId,
+    resolve_getAccountByProfilePublicId,
     resolve_getAllBudgets,
-    resolve_getBudgetByPublicId
+    resolve_getBudgetByPublicId,
+    resolve_getBudgetByProfilePublicId,
+    resolve_getBudgetByCategoryPublicId,
+    resolve_getAllTransactions,
+    resolve_getTransactionByPublicId,
+    resolve_getTransactionByAccountPublicId,
+    resolve_getTransactionByCategoryPublicId,
+    resolve_getAllReports,
+    resolve_getReportByPublicId,
+    resolve_getReportByAccountPublicId,
+    resolve_getReportByCategoryPublicId
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -72,14 +83,27 @@ query.set_field('getProfileByPublicId', resolve_getProfileByPublicId)
 
 # # # app app query resolvers
 
-query.set_field('getAllAccounts', resolve_getAllAccounts)
-query.set_field('getAccountByPublicId', resolve_getAccountByPublicId)
-
 query.set_field('getAllCategories', resolve_getAllCategories)
 query.set_field('getCategoryByPublicId', resolve_getCategoryByPublicId)
 
+query.set_field('getAllAccounts', resolve_getAllAccounts)
+query.set_field('getAccountByPublicId', resolve_getAccountByPublicId)
+query.set_field('getAccountByProfilePublicId', resolve_getAccountByProfilePublicId)
+
 query.set_field('getAllBudgets', resolve_getAllBudgets)
 query.set_field('getBudgetByPublicId', resolve_getBudgetByPublicId)
+query.set_field('getBudgetByProfilePublicId', resolve_getBudgetByProfilePublicId)
+query.set_field('getBudgetByCategoryPublicId', resolve_getBudgetByCategoryPublicId)
+
+query.set_field('getAllTransactions', resolve_getAllTransactions)
+query.set_field('getTransactionByPublicId', resolve_getTransactionByPublicId)
+query.set_field('getTransactionByAccountPublicId', resolve_getTransactionByAccountPublicId)
+query.set_field('getTransactionByCategoryPublicId', resolve_getTransactionByCategoryPublicId)
+
+query.set_field('getAllReports', resolve_getAllReports)
+query.set_field('getReportByPublicId', resolve_getReportByPublicId)
+query.set_field('getReportByAccountPublicId', resolve_getReportByAccountPublicId)
+query.set_field('getReportByCategoryPublicId', resolve_getReportByCategoryPublicId)
 
 schema = make_executable_schema(
     type_defs,[
