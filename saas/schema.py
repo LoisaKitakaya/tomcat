@@ -41,9 +41,9 @@ image_scalar = ScalarType("Image")
 @datetime_scalar.serializer
 def serialize_datetime(value):
 
-    date = time.mktime(value.timetuple())
+    timestamp = str(time.mktime(value.timetuple()))
 
-    return str(date)
+    return timestamp
 
 @image_scalar.serializer
 def serialize_image(value):
@@ -83,9 +83,9 @@ query.set_field('getBudgetByPublicId', resolve_getBudgetByPublicId)
 
 schema = make_executable_schema(
     type_defs,[
-    query, 
-    mutation,
-    datetime_scalar,
-    image_scalar
+        query, 
+        mutation,
+        datetime_scalar,
+        image_scalar
     ]
 )
