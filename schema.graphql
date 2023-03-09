@@ -113,10 +113,7 @@ type Query {
   getAllBudgets: [Budget!]!
   getBudgetByPublicId(public_id: ID!): Budget!
 
-  getAccountsByWorkspaceId(workspaceId: ID!): [Account!]!
   getTransactionsByAccountId(accountId: ID!): [Transaction!]!
-  getCategoryById(id: ID!): Category
-  getBudgetById(id: ID!): Budget
 }
 
 type Mutation {
