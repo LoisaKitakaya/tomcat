@@ -11,6 +11,14 @@ from ariadne import (
     gql,
 )
 
+from ariadne_jwt import (
+    jwt_schema,
+    GenericScalar,
+    resolve_token_auth,
+    resolve_refresh,
+    resolve_verify,
+)
+
 from users.query_resolvers import *
 from app.query_resolvers import *
 
@@ -76,6 +84,19 @@ query.set_field("getTransactionByPublicId", resolve_getTransactionByPublicId)
 query.set_field("getAllReports", resolve_getAllReports)
 query.set_field("getReportByPublicId", resolve_getReportByPublicId)
 
+# # mutation resolvers
+
+# # # authentication mutations
+
+mutation.set_field('verifyToken', resolve_verify)
+mutation.set_field('refreshToken', resolve_refresh)
+mutation.set_field('tokenAuth', resolve_token_auth)
+
 schema = make_executable_schema(
-    type_defs, [query, mutation, datetime_scalar, image_scalar]
+    [type_defs, jwt_schema],
+    query,
+    mutation,
+    image_scalar,
+    GenericScalar,
+    datetime_scalar,
 )

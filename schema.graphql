@@ -119,6 +119,10 @@ type Mutation {
   ): User
   deleteUser(id: ID!): Boolean
 
+  verifyToken(token: String!): VerifyToken
+  refreshToken(token: String!): RefreshToken
+  tokenAuth(username: String!, password: String!): TokenAuth
+
   createProfile(userId: ID!): Profile
   updateProfile(id: ID!, userId: ID!): Profile
   deleteProfile(id: ID!): Boolean

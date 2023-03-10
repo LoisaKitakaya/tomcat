@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from corsheaders.defaults import default_methods
+from corsheaders.defaults import default_headers
 
 load_dotenv()
 
@@ -33,6 +35,7 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "cloudinary",
     "ariadne_django",
+    "corsheaders",
     # my apps
     "users",
     "app",
@@ -41,9 +44,11 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "ariadne_jwt.middleware.JSONWebTokenMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -142,3 +147,22 @@ CLOUDINARY_STORAGE = {
 MEDIA_URL = "/saas/"
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# Django CORS headers
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CSRF_TRUSTED_ORIGINS = []
+
+CORS_ALLOW_METHODS = list(default_methods)
+
+CORS_ALLOW_HEADERS = list(default_headers)
+
+# Ariadne JWT
+
+AUTHENTICATION_BACKENDS = [
+    'ariadne_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend'
+]
