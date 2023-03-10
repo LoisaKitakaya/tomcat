@@ -16,6 +16,7 @@ type Profile {
   user: User!
   tier: String!
   account_limit: Int!
+  pdf_gen: Boolean!
   ai_predictions: Boolean!
   image: Image!
   created_at: Datetime!

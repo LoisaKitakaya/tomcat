@@ -26,6 +26,7 @@ class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE)
     account_limit = models.IntegerField(default=2)
+    pdf_gen = models.BooleanField(default=False)
     ai_predictions = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
