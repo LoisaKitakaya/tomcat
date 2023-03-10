@@ -1,9 +1,10 @@
-from users.models import Profile
+from ariadne_jwt.decorators import login_required
 from app.models import Account, Category, Budget, Transaction, Report
 
 # Category model query resolvers
 
 
+@login_required
 def resolve_getAllCategories(*_):
 
     try:
@@ -17,6 +18,7 @@ def resolve_getAllCategories(*_):
     return categories
 
 
+@login_required
 def resolve_getCategoryByPublicId(*_, public_id):
 
     try:
@@ -33,6 +35,7 @@ def resolve_getCategoryByPublicId(*_, public_id):
 # Account model query resolvers
 
 
+@login_required
 def resolve_getAllAccounts(*_):
 
     try:
@@ -46,6 +49,7 @@ def resolve_getAllAccounts(*_):
     return accounts
 
 
+@login_required
 def resolve_getAccountByPublicId(*_, public_id):
 
     try:
@@ -62,6 +66,7 @@ def resolve_getAccountByPublicId(*_, public_id):
 # Budget model query resolvers
 
 
+@login_required
 def resolve_getAllBudgets(*_):
 
     try:
@@ -75,6 +80,7 @@ def resolve_getAllBudgets(*_):
     return budgets
 
 
+@login_required
 def resolve_getBudgetByPublicId(*_, public_id):
 
     try:
@@ -91,6 +97,7 @@ def resolve_getBudgetByPublicId(*_, public_id):
 # Transaction model query resolvers
 
 
+@login_required
 def resolve_getAllTransactions(*_):
 
     try:
@@ -104,6 +111,7 @@ def resolve_getAllTransactions(*_):
     return transactions
 
 
+@login_required
 def resolve_getTransactionByPublicId(*_, public_id):
 
     try:
@@ -120,6 +128,7 @@ def resolve_getTransactionByPublicId(*_, public_id):
 # Report model query resolvers
 
 
+@login_required
 def resolve_getAllReports(*_):
 
     try:
@@ -133,6 +142,7 @@ def resolve_getAllReports(*_):
     return reports
 
 
+@login_required
 def resolve_getReportByPublicId(*_, public_id):
 
     try:

@@ -86,7 +86,7 @@ query.set_field("getReportByPublicId", resolve_getReportByPublicId)
 
 # # mutation resolvers
 
-# # # authentication mutations
+# # # authentication mutation resolvers
 
 mutation.set_field('verifyToken', resolve_verify)
 mutation.set_field('refreshToken', resolve_refresh)

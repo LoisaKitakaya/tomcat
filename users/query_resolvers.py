@@ -1,8 +1,10 @@
 from users.models import User, Profile
+from ariadne_jwt.decorators import login_required
 
 # User model query resolvers
 
 
+@login_required
 def resolve_getAllUsers(*_):
 
     try:
@@ -16,6 +18,7 @@ def resolve_getAllUsers(*_):
     return all_users
 
 
+@login_required
 def resolve_getUserByPublicId(*_, public_id):
 
     try:
@@ -29,6 +32,7 @@ def resolve_getUserByPublicId(*_, public_id):
     return user
 
 
+@login_required
 def resolve_getUserByUsername(*_, username):
 
     try:
@@ -45,6 +49,7 @@ def resolve_getUserByUsername(*_, username):
 # Profile model query resolvers
 
 
+@login_required
 def resolve_getAllProfiles(*_):
 
     try:
@@ -58,6 +63,7 @@ def resolve_getAllProfiles(*_):
     return profiles
 
 
+@login_required
 def resolve_getProfileByPublicId(*_, public_id):
 
     try:
