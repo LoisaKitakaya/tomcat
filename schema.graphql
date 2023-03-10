@@ -107,8 +107,10 @@ type Mutation {
   createUser(
     username: String!
     email: String!
-    firstName: String
-    lastName: String
+    first_name: String
+    last_name: String
+    password: String!
+    password2: String!
   ): User
   updateUser(
     id: ID!

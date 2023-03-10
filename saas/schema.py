@@ -20,6 +20,7 @@ from ariadne_jwt import (
 )
 
 from users.query_resolvers import *
+from users.mutation_resolvers import *
 from app.query_resolvers import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -86,11 +87,15 @@ query.set_field("getReportByPublicId", resolve_getReportByPublicId)
 
 # # mutation resolvers
 
+# # # user model mutation resolvers
+
+mutation.set_field("createUser", resolve_createUser)
+
 # # # authentication mutation resolvers
 
-mutation.set_field('verifyToken', resolve_verify)
-mutation.set_field('refreshToken', resolve_refresh)
-mutation.set_field('tokenAuth', resolve_token_auth)
+mutation.set_field("verifyToken", resolve_verify)
+mutation.set_field("refreshToken", resolve_refresh)
+mutation.set_field("tokenAuth", resolve_token_auth)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],
