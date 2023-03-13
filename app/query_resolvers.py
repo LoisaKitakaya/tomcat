@@ -50,11 +50,13 @@ def resolve_getAllAccounts(*_):
 
 
 @login_required
-def resolve_getAccountByPublicId(*_, public_id):
+def resolve_getAccount(_, info):
+
+    request = info.context["request"]
 
     try:
 
-        account = Account.objects.get(public_id=public_id)
+        account = Account.objects.get(public_id=request.user.public_id)
 
     except Exception as e:
 
@@ -81,11 +83,13 @@ def resolve_getAllBudgets(*_):
 
 
 @login_required
-def resolve_getBudgetByPublicId(*_, public_id):
+def resolve_getBudget(*_, info):
+
+    request = info.context["request"]
 
     try:
 
-        budget = Budget.objects.filter(public_id=public_id).first()
+        budget = Budget.objects.filter(public_id=request.user.public_id).first()
 
     except Exception as e:
 
@@ -112,11 +116,15 @@ def resolve_getAllTransactions(*_):
 
 
 @login_required
-def resolve_getTransactionByPublicId(*_, public_id):
+def resolve_getTransaction(_, info):
+
+    request = info.context["request"]
 
     try:
 
-        transaction = Transaction.objects.filter(public_id=public_id).first()
+        transaction = Transaction.objects.filter(
+            public_id=request.user.public_id
+        ).first()
 
     except Exception as e:
 
@@ -143,11 +151,13 @@ def resolve_getAllReports(*_):
 
 
 @login_required
-def resolve_getReportByPublicId(*_, public_id):
+def resolve_getReport(_, info):
+
+    request = info.context['request']
 
     try:
 
-        report = Report.objects.get(public_id=public_id)
+        report = Report.objects.get(public_id=request.user.public_id)
 
     except Exception as e:
 

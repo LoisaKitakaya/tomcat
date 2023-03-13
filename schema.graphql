@@ -19,7 +19,7 @@ type Profile {
   account_limit: Int!
   pdf_gen: Boolean!
   ai_predictions: Boolean!
-  image: Image!
+  image: Image
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -82,26 +82,26 @@ type Report {
 
 type Query {
   getAllUsers: [User!]!
-  getUserByPublicId(public_id: ID!): User!
+  getUser: User!
   getUserByUsername(username: String!): User!
 
   getAllProfiles: [Profile!]!
-  getProfileByPublicId(public_id: ID!): Profile!
+  getProfile: Profile!
 
   getAllCategories: [Category!]!
   getCategoryByPublicId(public_id: ID!): Category!
 
   getAllAccounts: [Account!]!
-  getAccountByPublicId(public_id: ID!): Account!
+  getAccount: Account!
 
   getAllBudgets: [Budget!]!
-  getBudgetByPublicId(public_id: ID!): Budget!
+  getBudget: Budget!
 
   getAllTransactions: [Transaction!]!
-  getTransactionByPublicId(public_id: ID!): Transaction!
+  getTransaction: Transaction!
 
   getAllReports: [Report!]!
-  getReportByPublicId(public_id: ID!): Report!
+  getReport: Report!
 }
 
 type Mutation {

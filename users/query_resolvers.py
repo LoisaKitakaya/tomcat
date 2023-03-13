@@ -19,11 +19,13 @@ def resolve_getAllUsers(*_):
 
 
 @login_required
-def resolve_getUserByPublicId(*_, public_id):
+def resolve_getUser(_, info):
+
+    request = info.context['request']
 
     try:
 
-        user = User.objects.get(public_id=public_id)
+        user = User.objects.get(public_id=request.user.public_id)
 
     except Exception as e:
 
@@ -64,11 +66,13 @@ def resolve_getAllProfiles(*_):
 
 
 @login_required
-def resolve_getProfileByPublicId(*_, public_id):
+def resolve_getProfile(_, info):
+
+    request = info.context['request']
 
     try:
 
-        profile = Profile.objects.get(public_id=public_id)
+        profile = Profile.objects.get(public_id=request.user.public_id)
 
     except Exception as e:
 

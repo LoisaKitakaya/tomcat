@@ -63,11 +63,11 @@ mutation = MutationType()
 # # # user app query resolvers
 
 query.set_field("getAllUsers", resolve_getAllUsers)
-query.set_field("getUserByPublicId", resolve_getUserByPublicId)
+query.set_field("getUser", resolve_getUser)
 query.set_field("getUserByUsername", resolve_getUserByUsername)
 
 query.set_field("getAllProfiles", resolve_getAllProfiles)
-query.set_field("getProfileByPublicId", resolve_getProfileByPublicId)
+query.set_field("getProfile", resolve_getProfile)
 
 # # # app app query resolvers
 
@@ -75,16 +75,16 @@ query.set_field("getAllCategories", resolve_getAllCategories)
 query.set_field("getCategoryByPublicId", resolve_getCategoryByPublicId)
 
 query.set_field("getAllAccounts", resolve_getAllAccounts)
-query.set_field("getAccountByPublicId", resolve_getAccountByPublicId)
+query.set_field("getAccount", resolve_getAccount)
 
 query.set_field("getAllBudgets", resolve_getAllBudgets)
-query.set_field("getBudgetByPublicId", resolve_getBudgetByPublicId)
+query.set_field("getBudget", resolve_getBudget)
 
 query.set_field("getAllTransactions", resolve_getAllTransactions)
-query.set_field("getTransactionByPublicId", resolve_getTransactionByPublicId)
+query.set_field("getTransaction", resolve_getTransaction)
 
 query.set_field("getAllReports", resolve_getAllReports)
-query.set_field("getReportByPublicId", resolve_getReportByPublicId)
+query.set_field("getReport", resolve_getReport)
 
 # # mutation resolvers
 
