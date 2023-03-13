@@ -19,7 +19,7 @@ type Profile {
   account_limit: Int!
   pdf_gen: Boolean!
   ai_predictions: Boolean!
-  image: Image
+  image: Image!
   created_at: Datetime!
   updated_at: Datetime!
 }
