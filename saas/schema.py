@@ -8,6 +8,7 @@ from ariadne import (
     MutationType,
     make_executable_schema,
     load_schema_from_path,
+    upload_scalar,
     gql,
 )
 
@@ -90,6 +91,7 @@ query.set_field("getReportByPublicId", resolve_getReportByPublicId)
 # # # user model mutation resolvers
 
 mutation.set_field("createUser", resolve_createUser)
+mutation.set_field("updateUser", resolve_updateUser)
 
 # # # authentication mutation resolvers
 
@@ -97,11 +99,17 @@ mutation.set_field("verifyToken", resolve_verify)
 mutation.set_field("refreshToken", resolve_refresh)
 mutation.set_field("tokenAuth", resolve_token_auth)
 
+# # # profile model mutation resolvers
+
+mutation.set_field("createProfile", resolve_createProfile)
+mutation.set_alias("updateProfile", resolve_updateProfile) # type: ignore
+
 schema = make_executable_schema(
     [type_defs, jwt_schema],
     query,
     mutation,
     image_scalar,
     GenericScalar,
+    upload_scalar,
     datetime_scalar,
 )

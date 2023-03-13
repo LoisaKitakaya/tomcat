@@ -1,5 +1,6 @@
-scalar Datetime
 scalar Image
+scalar Upload
+scalar Datetime
 
 type User {
   id: ID!
@@ -111,23 +112,20 @@ type Mutation {
     last_name: String
     password: String!
     password2: String!
-  ): User
+  ): User!
   updateUser(
-    id: ID!
     username: String!
     email: String!
-    firstName: String
-    lastName: String
-  ): User
-  deleteUser(id: ID!): Boolean
+    first_name: String!
+    last_name: String!
+  ): User!
 
-  verifyToken(token: String!): VerifyToken
-  refreshToken(token: String!): RefreshToken
-  tokenAuth(username: String!, password: String!): TokenAuth
+  verifyToken(token: String!): VerifyToken!
+  refreshToken(token: String!): RefreshToken!
+  tokenAuth(username: String!, password: String!): TokenAuth!
 
-  createProfile(userId: ID!): Profile
-  updateProfile(id: ID!, userId: ID!): Profile
-  deleteProfile(id: ID!): Boolean
+  createProfile(image: Upload!): Profile!
+  updateProfile(image: Upload!): Profile!
 
   updateAccount(
     id: ID!
