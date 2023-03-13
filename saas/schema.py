@@ -102,7 +102,7 @@ mutation.set_field("tokenAuth", resolve_token_auth)
 # # # profile model mutation resolvers
 
 mutation.set_field("createProfile", resolve_createProfile)
-mutation.set_alias("updateProfile", resolve_updateProfile) # type: ignore
+mutation.set_alias("updateProfile", resolve_updateProfile)  # type: ignore
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],
