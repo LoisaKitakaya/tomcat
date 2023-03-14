@@ -25,7 +25,7 @@ def resolve_getUser(_, info):
 
     try:
 
-        user = User.objects.get(public_id=request.user.public_id)
+        user = User.objects.get(id=request.user.id)
 
     except Exception as e:
 
@@ -72,7 +72,7 @@ def resolve_getProfile(_, info):
 
     try:
 
-        profile = Profile.objects.get(user__public_id=request.user.public_id)
+        profile = Profile.objects.get(user__id=request.user.id)
 
     except Exception as e:
 

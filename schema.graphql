@@ -1,8 +1,9 @@
+scalar Date
 scalar Datetime
 
 type User {
   id: ID!
-  public_id: ID!
+  
   first_name: String!
   last_name: String!
   username: String!
@@ -11,7 +12,7 @@ type User {
 
 type Profile {
   id: ID!
-  public_id: ID!
+  
   user: User!
   tier: String!
   account_limit: Int!
@@ -23,14 +24,14 @@ type Profile {
 
 type Category {
   id: ID!
-  public_id: ID!
+  
   category_name: String!
   category_description: String!
 }
 
 type Account {
   id: ID!
-  public_id: ID!
+  
   account_name: String!
   account_type: String!
   owner: Profile!
@@ -42,7 +43,7 @@ type Account {
 
 type Transaction {
   id: ID!
-  public_id: ID!
+  
   transaction_type: String!
   transaction_amount: Float!
   currency_code: String!
@@ -56,11 +57,11 @@ type Transaction {
 
 type Budget {
   id: ID!
-  public_id: ID!
+  
   budget_name: String!
   budget_description: String!
-  budget_start_date: Datetime!
-  budget_end_date: Datetime!
+  budget_start_date: Date!
+  budget_end_date: Date!
   budget_amount: Float!
   owner: Profile!
   category: Category!
@@ -70,7 +71,7 @@ type Budget {
 
 type Report {
   id: ID!
-  public_id: ID!
+  
   account: Account!
   transactions: Transaction!
   created_at: Datetime!
@@ -86,19 +87,16 @@ type Query {
   getProfile: Profile!
 
   getAllCategories: [Category!]!
-  getCategoryByPublicId(public_id: ID!): Category!
+  getCategoryByPublicId(id: ID!): Category!
 
   getAllAccounts: [Account!]!
-  getAccount: Account!
+  getAccount(id: ID!): Account!
 
   getAllBudgets: [Budget!]!
-  getBudget: Budget!
+  getBudget(id: ID!): Budget!
 
-  getAllTransactions: [Transaction!]!
-  getTransaction: Transaction!
-
-  getAllReports: [Report!]!
-  getReport: Report!
+  getAllTransactions(id: ID!): [Transaction!]!
+  getTransaction(id: ID!): Transaction!
 }
 
 type Mutation {

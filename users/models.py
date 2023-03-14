@@ -1,4 +1,3 @@
-from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -7,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
+    pass
 
 
 class Profile(models.Model):
@@ -21,8 +20,7 @@ class Profile(models.Model):
         (STANDARD, "standard"),
         (PRO, "pro"),
     )
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE)
     account_limit = models.IntegerField(default=2)

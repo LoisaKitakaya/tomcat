@@ -6,12 +6,13 @@ from django.contrib.auth.admin import UserAdmin
 
 admin.site.register(User, UserAdmin)
 
+
 @admin.register(Profile)
 class ProfileAdminView(admin.ModelAdmin):
 
     model = Profile
 
     list_filter = (
-        'created_at',
-        'updated_at',
+        "created_at",
+        "updated_at",
     )

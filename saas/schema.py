@@ -31,14 +31,23 @@ type_defs = gql(load_schema_from_path(schema_path))
 # scaler types
 
 datetime_scalar = ScalarType("Datetime")
+date_scalar = ScalarType("Date")
 
 
 @datetime_scalar.serializer
 def serialize_datetime(value):
 
-    timestamp = str(time.mktime(value.timetuple())) # type: ignore
+    timestamp = str(time.mktime(value.timetuple()))
 
     return timestamp
+
+
+@date_scalar.serializer
+def serialize_date(value):
+
+    date = value.isoformat()
+
+    return date
 
 
 # query and mutation types
@@ -73,9 +82,6 @@ query.set_field("getBudget", resolve_getBudget)
 query.set_field("getAllTransactions", resolve_getAllTransactions)
 query.set_field("getTransaction", resolve_getTransaction)
 
-query.set_field("getAllReports", resolve_getAllReports)
-query.set_field("getReport", resolve_getReport)
-
 # # mutation resolvers
 
 # # # user model mutation resolvers
@@ -93,6 +99,7 @@ schema = make_executable_schema(
     [type_defs, jwt_schema],
     query,
     mutation,
+    date_scalar,
     GenericScalar,
     datetime_scalar,
 )

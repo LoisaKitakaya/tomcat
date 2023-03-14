@@ -1,5 +1,6 @@
+from users.models import Profile
 from ariadne_jwt.decorators import login_required
-from app.models import Account, Category, Budget, Transaction, Report
+from app.models import Account, Category, Budget, Transaction
 
 # Category model query resolvers
 
@@ -19,11 +20,11 @@ def resolve_getAllCategories(*_):
 
 
 @login_required
-def resolve_getCategoryByPublicId(*_, public_id):
+def resolve_getCategoryByPublicId(*_, id):
 
     try:
 
-        category = Category.objects.filter(public_id=public_id).first()
+        category = Category.objects.filter(id=id).first()
 
     except Exception as e:
 
@@ -36,11 +37,15 @@ def resolve_getCategoryByPublicId(*_, public_id):
 
 
 @login_required
-def resolve_getAllAccounts(*_):
+def resolve_getAllAccounts(_, info):
+
+    request = info.context["request"]
 
     try:
 
-        accounts = Account.objects.all()
+        profile = Profile.objects.get(user__id=request.user.id)
+
+        accounts = Account.objects.filter(owner__id=profile.pk).all()
 
     except Exception as e:
 
@@ -50,13 +55,11 @@ def resolve_getAllAccounts(*_):
 
 
 @login_required
-def resolve_getAccount(_, info):
-
-    request = info.context["request"]
+def resolve_getAccount(*_, id):
 
     try:
 
-        account = Account.objects.get(public_id=request.user.public_id)
+        account = Account.objects.get(id=id)
 
     except Exception as e:
 
@@ -69,11 +72,15 @@ def resolve_getAccount(_, info):
 
 
 @login_required
-def resolve_getAllBudgets(*_):
+def resolve_getAllBudgets(_, info):
+
+    request = info.context["request"]
 
     try:
 
-        budgets = Budget.objects.all()
+        profile = Profile.objects.get(user__id=request.user.id)
+
+        budgets = Budget.objects.filter(owner__id=profile.pk).all()
 
     except Exception as e:
 
@@ -83,13 +90,11 @@ def resolve_getAllBudgets(*_):
 
 
 @login_required
-def resolve_getBudget(*_, info):
-
-    request = info.context["request"]
+def resolve_getBudget(*_, id):
 
     try:
 
-        budget = Budget.objects.filter(public_id=request.user.public_id).first()
+        budget = Budget.objects.get(id=id)
 
     except Exception as e:
 
@@ -102,11 +107,11 @@ def resolve_getBudget(*_, info):
 
 
 @login_required
-def resolve_getAllTransactions(*_):
+def resolve_getAllTransactions(*_, id):
 
     try:
 
-        transactions = Transaction.objects.all()
+        transactions = Transaction.objects.filter(account__id=id).all()
 
     except Exception as e:
 
@@ -116,51 +121,14 @@ def resolve_getAllTransactions(*_):
 
 
 @login_required
-def resolve_getTransaction(_, info):
-
-    request = info.context["request"]
+def resolve_getTransaction(*_, id):
 
     try:
 
-        transaction = Transaction.objects.filter(
-            public_id=request.user.public_id
-        ).first()
+        transaction = Transaction.objects.get(id=id)
 
     except Exception as e:
 
         raise Exception(str(e))
 
     return transaction
-
-
-# Report model query resolvers
-
-
-@login_required
-def resolve_getAllReports(*_):
-
-    try:
-
-        reports = Report.objects.all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return reports
-
-
-@login_required
-def resolve_getReport(_, info):
-
-    request = info.context["request"]
-
-    try:
-
-        report = Report.objects.get(public_id=request.user.public_id)
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return report

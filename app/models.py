@@ -1,4 +1,3 @@
-from uuid import uuid4
 from django.db import models
 from users.models import Profile
 
@@ -7,7 +6,6 @@ from users.models import Profile
 
 class Category(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     category_name = models.CharField(max_length=100)
     category_description = models.CharField(max_length=255)
 
@@ -44,7 +42,6 @@ class Account(models.Model):
         (MORTGAGE, "Mortgage"),
     )
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     account_name = models.CharField(max_length=100)
     account_type = models.CharField(
         max_length=50, choices=ACCOUNT_TYPES, default=CHECKING
@@ -81,7 +78,6 @@ class Transaction(models.Model):
         (PAYMENT, "Payment"),
     )
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
     transaction_amount = models.DecimalField(max_digits=15, decimal_places=2)
     currency_code = models.CharField(max_length=3)
@@ -106,11 +102,10 @@ class Transaction(models.Model):
 
 class Budget(models.Model):
 
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
     budget_name = models.CharField(max_length=100)
     budget_description = models.CharField(max_length=255)
-    budget_start_date = models.DateTimeField()
-    budget_end_date = models.DateTimeField()
+    budget_start_date = models.DateField()
+    budget_end_date = models.DateField()
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -127,23 +122,3 @@ class Budget(models.Model):
     def __str__(self) -> str:
 
         return self.budget_name
-
-
-class Report(models.Model):
-
-    public_id = models.CharField(max_length=40, default=str(uuid4().hex))
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    transactions = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-
-        ordering = ["-created_at"]
-        verbose_name = "report"
-        verbose_name_plural = "reports"
-        db_table = "Reports"
-
-    def __str__(self) -> str:
-
-        return self.account.account_name
