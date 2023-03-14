@@ -153,7 +153,7 @@ def resolve_getAllReports(*_):
 @login_required
 def resolve_getReport(_, info):
 
-    request = info.context['request']
+    request = info.context["request"]
 
     try:
 

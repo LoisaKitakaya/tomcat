@@ -147,6 +147,6 @@ CORS_ALLOW_HEADERS = list(default_headers)
 # Ariadne JWT
 
 AUTHENTICATION_BACKENDS = [
-    'ariadne_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    "ariadne_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]

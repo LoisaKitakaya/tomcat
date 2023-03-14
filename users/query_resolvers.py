@@ -21,7 +21,7 @@ def resolve_getAllUsers(*_):
 @login_required
 def resolve_getUser(_, info):
 
-    request = info.context['request']
+    request = info.context["request"]
 
     try:
 
@@ -68,7 +68,7 @@ def resolve_getAllProfiles(*_):
 @login_required
 def resolve_getProfile(_, info):
 
-    request = info.context['request']
+    request = info.context["request"]
 
     try:
 

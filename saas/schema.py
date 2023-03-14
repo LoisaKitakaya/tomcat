@@ -36,7 +36,7 @@ datetime_scalar = ScalarType("Datetime")
 @datetime_scalar.serializer
 def serialize_datetime(value):
 
-    timestamp = str(time.mktime(value.timetuple()))
+    timestamp = str(time.mktime(value.timetuple())) # type: ignore
 
     return timestamp
 
