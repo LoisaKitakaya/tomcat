@@ -1,5 +1,3 @@
-scalar Image
-scalar Upload
 scalar Datetime
 
 type User {
@@ -19,7 +17,6 @@ type Profile {
   account_limit: Int!
   pdf_gen: Boolean!
   ai_predictions: Boolean!
-  image: Image!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -123,9 +120,6 @@ type Mutation {
   verifyToken(token: String!): VerifyToken!
   refreshToken(token: String!): RefreshToken!
   tokenAuth(username: String!, password: String!): TokenAuth!
-
-  createProfile(image: Upload!): Profile!
-  updateProfile(image: Upload!): Profile!
 
   updateAccount(
     id: ID!

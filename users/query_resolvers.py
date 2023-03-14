@@ -72,7 +72,7 @@ def resolve_getProfile(_, info):
 
     try:
 
-        profile = Profile.objects.get(public_id=request.user.public_id)
+        profile = Profile.objects.get(user__public_id=request.user.public_id)
 
     except Exception as e:
 

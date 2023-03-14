@@ -5,13 +5,10 @@ ariadne-jwt==0.1.7
 asgiref==3.6.0
 certifi==2022.12.7
 charset-normalizer==3.1.0
-cloudinary==1.32.0
 Django==4.1.7
-django-cloudinary-storage==0.3.0
 django-cors-headers==3.14.0
 graphql-core==3.2.3
 idna==3.4
-Pillow==9.4.0
 promise==2.3
 psycopg2-binary==2.9.5
 PyJWT==2.6.0

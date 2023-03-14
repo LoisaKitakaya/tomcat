@@ -32,6 +32,12 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
 
             new_user.save()
 
+            new_profile = Profile.objects.create(user=new_user)
+
+            new_profile.public_id = str(uuid4().hex)
+
+            new_profile.save()
+
         else:
 
             raise Exception("Password is too short. Must have minimum of 8 characters")
@@ -43,7 +49,7 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
     return new_user
 
 
-def resolve_updateUser(_, info, username, email, first_name, last_name):
+def resolve_updateUser(_, info, username, email, first_name, last_name, image):
 
     request = info.context["request"]
 
@@ -71,33 +77,3 @@ def resolve_updateUser(_, info, username, email, first_name, last_name):
         raise Exception("Email already exists. Make sure your email is unique!")
 
     return user
-
-
-# UserProfile model mutation resolvers
-
-
-def resolve_createProfile(_, info, image):
-
-    request = info.context["request"]
-
-    try:
-
-        profile = Profile.objects.create(user=request.user, image=image)
-
-    except Exception as e:
-
-        raise Exception(str(e))
-
-    return profile
-
-def resolve_updateProfile(_, info, image):
-
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__public_id=request.user.public_id)
-
-    profile.image = image
-
-    profile.save()
-
-    return profile

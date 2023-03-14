@@ -8,7 +8,6 @@ from ariadne import (
     MutationType,
     make_executable_schema,
     load_schema_from_path,
-    upload_scalar,
     gql,
 )
 
@@ -32,7 +31,6 @@ type_defs = gql(load_schema_from_path(schema_path))
 # scaler types
 
 datetime_scalar = ScalarType("Datetime")
-image_scalar = ScalarType("Image")
 
 
 @datetime_scalar.serializer
@@ -41,14 +39,6 @@ def serialize_datetime(value):
     timestamp = str(time.mktime(value.timetuple()))
 
     return timestamp
-
-
-@image_scalar.serializer
-def serialize_image(value):
-
-    image = value.url
-
-    return image
 
 
 # query and mutation types
@@ -99,17 +89,10 @@ mutation.set_field("verifyToken", resolve_verify)
 mutation.set_field("refreshToken", resolve_refresh)
 mutation.set_field("tokenAuth", resolve_token_auth)
 
-# # # profile model mutation resolvers
-
-mutation.set_field("createProfile", resolve_createProfile)
-mutation.set_alias("updateProfile", resolve_updateProfile)  # type: ignore
-
 schema = make_executable_schema(
     [type_defs, jwt_schema],
     query,
     mutation,
-    image_scalar,
     GenericScalar,
-    upload_scalar,
     datetime_scalar,
 )

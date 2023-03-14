@@ -32,8 +32,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # 3rd party libraries
-    "cloudinary_storage",
-    "cloudinary",
     "ariadne_django",
     "corsheaders",
     # my apps
@@ -133,20 +131,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # custom user model
 
 AUTH_USER_MODEL = "users.User"
-
-# cloudinary settings
-
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.getenv("CLOUD_NAME"),
-    "API_KEY": os.getenv("API_KEY"),
-    "API_SECRET": os.getenv("API_SECRET"),
-}
-
-# media files (images)
-
-MEDIA_URL = "/saas/"
-
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Django CORS headers
 
