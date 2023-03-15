@@ -176,6 +176,22 @@ def resolve_createTransaction(
         account=account,
     )
 
+    if (
+        transaction_type == "withdrawal"
+        or transaction_type == "transfer"
+        or transaction_type == "payment"
+    ):
+
+        account.account_balance = account.account_balance - transaction_amount
+
+        account.save()
+
+    else:
+
+        account.account_balance = account.account_balance + transaction_amount
+
+        account.save()
+
     return new_transaction
 
 
@@ -183,6 +199,7 @@ def resolve_createTransaction(
 def resolve_updateTransaction(
     *_,
     id,
+    account_id,
     transaction_type,
     transaction_amount,
     transaction_date,
@@ -190,6 +207,8 @@ def resolve_updateTransaction(
     description,
     category
 ):
+
+    account = Account.objects.get(id=account_id)
 
     transaction = Transaction.objects.get(id=id)
 
@@ -205,6 +224,24 @@ def resolve_updateTransaction(
     transaction.category = transaction_category  # type: ignore
 
     transaction.save()
+
+    if (
+        transaction_type == "withdrawal"
+        or transaction_type == "transfer"
+        or transaction_type == "payment"
+    ):
+
+        account.account_balance = account.account_balance - transaction_amount
+
+        account.save()
+
+    else:
+
+        account.account_balance = account.account_balance + transaction_amount
+
+        account.save()
+
+    return transaction
 
 
 @login_required

@@ -146,6 +146,7 @@ type Mutation {
   ): Transaction!
   updateTransaction(
     id: ID!
+    account_id: ID!
     transaction_type: String!
     transaction_amount: Float!
     transaction_date: String!
