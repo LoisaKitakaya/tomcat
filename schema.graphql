@@ -3,7 +3,6 @@ scalar Datetime
 
 type User {
   id: ID!
-  
   first_name: String!
   last_name: String!
   username: String!
@@ -12,7 +11,6 @@ type User {
 
 type Profile {
   id: ID!
-  
   user: User!
   tier: String!
   account_limit: Int!
@@ -24,14 +22,12 @@ type Profile {
 
 type Category {
   id: ID!
-  
   category_name: String!
   category_description: String!
 }
 
 type Account {
   id: ID!
-  
   account_name: String!
   account_type: String!
   owner: Profile!
@@ -41,23 +37,8 @@ type Account {
   updated_at: Datetime!
 }
 
-type Transaction {
-  id: ID!
-  
-  transaction_type: String!
-  transaction_amount: Float!
-  currency_code: String!
-  description: String!
-  transaction_date: Datetime!
-  account: Account!
-  category: Category!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type Budget {
   id: ID!
-  
   budget_name: String!
   budget_description: String!
   budget_start_date: Date!
@@ -69,11 +50,15 @@ type Budget {
   updated_at: Datetime!
 }
 
-type Report {
+type Transaction {
   id: ID!
-  
+  transaction_type: String!
+  transaction_amount: Float!
+  currency_code: String!
+  description: String!
+  transaction_date: Datetime!
   account: Account!
-  transactions: Transaction!
+  category: Category!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -85,9 +70,6 @@ type Query {
 
   getAllProfiles: [Profile!]!
   getProfile: Profile!
-
-  getAllCategories: [Category!]!
-  getCategoryByPublicId(id: ID!): Category!
 
   getAllAccounts: [Account!]!
   getAccount(id: ID!): Account!
@@ -119,47 +101,57 @@ type Mutation {
   refreshToken(token: String!): RefreshToken!
   tokenAuth(username: String!, password: String!): TokenAuth!
 
+  createAccount(
+    account_name: String!
+    account_type: String!
+    account_balance: Float!
+    currency_code: String!
+  ): Account!
   updateAccount(
     id: ID!
-    accountName: String!
-    accountType: String!
-    currencyCode: String!
-    accountBalance: Float!
-  ): Account
-  deleteAccount(id: ID!): Boolean
-
-  createTransaction(
-    transactionType: String!
-    transactionAmount: Float!
-    currencyCode: String!
-    description: String!
-    transactionDate: String!
-    accountId: ID!
-  ): Transaction
-  updateTransaction(
-    id: ID!
-    transactionType: String!
-    transactionAmount: Float!
-    currencyCode: String!
-    description: String!
-    transactionDate: String!
-  ): Transaction
-  deleteTransaction(id: ID!): Boolean
+    account_name: String!
+    account_type: String!
+    account_balance: Float!
+    currency_code: String!
+  ): Account!
+  deleteAccount(id: ID!): Boolean!
 
   createBudget(
-    budgetName: String!
-    budgetDescription: String!
-    budgetStartDate: String!
-    budgetEndDate: String!
-    budgetAmount: Float!
-  ): Budget
+    budget_name: String!
+    budget_description: String!
+    budget_start_date: String!
+    budget_end_date: String!
+    budget_amount: Float!
+    category: String!
+  ): Budget!
   updateBudget(
     id: ID!
-    budgetName: String!
-    budgetDescription: String!
-    budgetStartDate: String!
-    budgetEndDate: String!
-    budgetAmount: Float!
-  ): Budget
-  deleteBudget(id: ID!): Boolean
+    budget_name: String!
+    budget_description: String!
+    budget_start_date: String!
+    budget_end_date: String!
+    budget_amount: Float!
+    category: String!
+  ): Budget!
+  deleteBudget(id: ID!): Boolean!
+
+  createTransaction(
+    account_id: ID!
+    transaction_type: String!
+    transaction_amount: Float!
+    transaction_date: String!
+    currency_code: String!
+    description: String!
+    category: String!
+  ): Transaction!
+  updateTransaction(
+    id: ID!
+    transaction_type: String!
+    transaction_amount: Float!
+    transaction_date: String!
+    currency_code: String!
+    description: String!
+    category: String!
+  ): Transaction!
+  deleteTransaction(id: ID!): Boolean!
 }

@@ -1,4 +1,3 @@
-from uuid import uuid4
 from users.models import User, Profile
 from ariadne_jwt.decorators import login_required
 
@@ -26,17 +25,11 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
 
             new_user = User.objects.get(email=email)
 
-            new_user.public_id = str(uuid4().hex)
-
             new_user.set_password(password)
 
             new_user.save()
 
-            new_profile = Profile.objects.create(user=new_user)
-
-            new_profile.public_id = str(uuid4().hex)
-
-            new_profile.save()
+            Profile.objects.create(user=new_user)
 
         else:
 
@@ -49,7 +42,8 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
     return new_user
 
 
-def resolve_updateUser(_, info, username, email, first_name, last_name, image):
+@login_required
+def resolve_updateUser(_, info, username, email, first_name, last_name):
 
     request = info.context["request"]
 
@@ -57,7 +51,7 @@ def resolve_updateUser(_, info, username, email, first_name, last_name, image):
 
         if not User.objects.filter(username=username).exists():
 
-            user = User.objects.get(public_id=request.user.public_id)
+            user = User.objects.get(id=request.user.id)
 
             user.username = username
             user.email = email

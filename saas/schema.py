@@ -22,6 +22,7 @@ from ariadne_jwt import (
 from users.query_resolvers import *
 from users.mutation_resolvers import *
 from app.query_resolvers import *
+from app.mutation_resolvers import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")
@@ -70,9 +71,6 @@ query.set_field("getProfile", resolve_getProfile)
 
 # # # app app query resolvers
 
-query.set_field("getAllCategories", resolve_getAllCategories)
-query.set_field("getCategoryByPublicId", resolve_getCategoryByPublicId)
-
 query.set_field("getAllAccounts", resolve_getAllAccounts)
 query.set_field("getAccount", resolve_getAccount)
 
@@ -94,6 +92,20 @@ mutation.set_field("updateUser", resolve_updateUser)
 mutation.set_field("verifyToken", resolve_verify)
 mutation.set_field("refreshToken", resolve_refresh)
 mutation.set_field("tokenAuth", resolve_token_auth)
+
+# # # app models mutation resolvers
+
+mutation.set_field("createAccount", resolve_createAccount)
+mutation.set_field("updateAccount", resolve_updateAccount)
+mutation.set_field("deleteAccount", resolve_deleteAccount)
+
+mutation.set_field("createBudget", resolve_createBudget)
+mutation.set_field("updateBudget", resolve_updateBudget)
+mutation.set_field("deleteBudget", resolve_deleteBudget)
+
+mutation.set_field("createTransaction", resolve_createTransaction)
+mutation.set_field("updateTransaction", resolve_updateTransaction)
+mutation.set_field("deleteTransaction", resolve_deleteTransaction)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],
