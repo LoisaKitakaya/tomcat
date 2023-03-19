@@ -78,6 +78,7 @@ type Query {
   getBudget(id: ID!): Budget!
 
   getAllTransactions(id: ID!): [Transaction!]!
+  getTransactionsByAccount(id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
 }
 

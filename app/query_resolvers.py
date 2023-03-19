@@ -1,3 +1,4 @@
+import time
 from users.models import Profile
 from ariadne_jwt.decorators import login_required
 from app.models import Account, Category, Budget, Transaction
@@ -108,6 +109,20 @@ def resolve_getBudget(*_, id):
 
 @login_required
 def resolve_getAllTransactions(*_, id):
+
+    try:
+
+        transactions = Transaction.objects.filter(account__id=id).all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+
+    return transactions
+
+
+@login_required
+def resolve_getTransactionsByAccount(*_, id):
 
     try:
 

@@ -78,6 +78,7 @@ query.set_field("getAllBudgets", resolve_getAllBudgets)
 query.set_field("getBudget", resolve_getBudget)
 
 query.set_field("getAllTransactions", resolve_getAllTransactions)
+query.set_field("getTransactionsByAccount", resolve_getTransactionsByAccount)
 query.set_field("getTransaction", resolve_getTransaction)
 
 # # mutation resolvers
