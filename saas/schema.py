@@ -33,6 +33,7 @@ type_defs = gql(load_schema_from_path(schema_path))
 
 datetime_scalar = ScalarType("Datetime")
 date_scalar = ScalarType("Date")
+time_scalar = ScalarType("Time")
 
 
 @datetime_scalar.serializer
@@ -49,6 +50,14 @@ def serialize_date(value):
     date = value.isoformat()
 
     return date
+
+
+@time_scalar.serializer
+def serialize_time(value):
+
+    date_time = value.strftime('%Y-%m-%d')
+
+    return date_time
 
 
 # query and mutation types
@@ -113,6 +122,7 @@ schema = make_executable_schema(
     query,
     mutation,
     date_scalar,
+    time_scalar,
     GenericScalar,
     datetime_scalar,
 )

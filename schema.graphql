@@ -1,5 +1,6 @@
 scalar Date
 scalar Datetime
+scalar Time
 
 type User {
   id: ID!
@@ -56,11 +57,11 @@ type Transaction {
   transaction_amount: Float!
   currency_code: String!
   description: String!
-  transaction_date: Datetime!
+  transaction_date: Time!
   account: Account!
   category: Category!
-  created_at: Datetime!
-  updated_at: Datetime!
+  created_at: Time!
+  updated_at: Time!
 }
 
 type Query {
