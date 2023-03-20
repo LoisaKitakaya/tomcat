@@ -17,7 +17,6 @@ type Profile {
   tier: String!
   account_limit: Int!
   pdf_gen: Boolean!
-  ai_predictions: Boolean!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -32,6 +31,7 @@ type Account {
   id: ID!
   account_name: String!
   account_type: String!
+  account_number: String!
   owner: Profile!
   currency_code: String!
   account_balance: Float!
@@ -107,6 +107,7 @@ type Mutation {
   createAccount(
     account_name: String!
     account_type: String!
+    account_number: String!
     account_balance: Float!
     currency_code: String!
   ): Account!
@@ -114,6 +115,7 @@ type Mutation {
     id: ID!
     account_name: String!
     account_type: String!
+    account_number: String!
     account_balance: Float!
     currency_code: String!
   ): Account!

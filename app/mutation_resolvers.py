@@ -8,7 +8,7 @@ from app.models import Account, Budget, Transaction, Category
 
 @login_required
 def resolve_createAccount(
-    _, info, account_name, account_type, account_balance, currency_code
+    _, info, account_name, account_type, account_number, account_balance, currency_code
 ):
 
     request = info.context["request"]
@@ -18,6 +18,7 @@ def resolve_createAccount(
     new_account = Account.objects.create(
         account_name=account_name,
         account_type=account_type,
+        account_number=account_number,
         account_balance=account_balance,
         currency_code=currency_code,
         owner=owner,
@@ -163,32 +164,38 @@ def resolve_createTransaction(
     account = Account.objects.get(id=account_id)
 
     transaction_category = Category.objects.filter(
-        Q(category_name__icontains=category)
+        Q(category_name__exact=category)
     ).first()
+
+    transaction_date_object = datetime.strptime(
+        transaction_date, "%Y-%m-%dT%H:%M"
+    ).date()
+
+    date_object = datetime(
+        transaction_date_object.year,
+        transaction_date_object.month,
+        transaction_date_object.day,
+    )
 
     new_transaction = Transaction.objects.create(
         transaction_type=transaction_type,
         transaction_amount=transaction_amount,
-        transaction_date=transaction_date,
+        transaction_date=date_object,
         currency_code=currency_code,
         description=description,
         category=transaction_category,
         account=account,
     )
 
-    if (
-        transaction_type == "withdrawal"
-        or transaction_type == "transfer"
-        or transaction_type == "payment"
-    ):
+    if transaction_type == "payable":
 
-        account.account_balance = account.account_balance - transaction_amount
+        account.account_balance -= transaction_amount
 
         account.save()
 
-    else:
+    elif transaction_type == "receivable":
 
-        account.account_balance = account.account_balance + transaction_amount
+        account.account_balance += transaction_amount
 
         account.save()
 
