@@ -1,6 +1,7 @@
 scalar Date
 scalar Datetime
 scalar Time
+scalar Number
 
 type User {
   id: ID!
@@ -54,7 +55,7 @@ type Budget {
 type Transaction {
   id: ID!
   transaction_type: String!
-  transaction_amount: Float!
+  transaction_amount: Number!
   currency_code: String!
   description: String!
   transaction_date: Time!
