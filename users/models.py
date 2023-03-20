@@ -25,7 +25,6 @@ class Profile(models.Model):
     tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE)
     account_limit = models.IntegerField(default=2)
     pdf_gen = models.BooleanField(default=False)
-    ai_predictions = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

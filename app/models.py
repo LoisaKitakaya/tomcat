@@ -22,33 +22,12 @@ class Category(models.Model):
 
 class Account(models.Model):
 
-    CHECKING = "checking"
-    SAVING = "saving"
-    CREDIT = "credit"
-    INVESTMENT = "investment"
-    RETIREMENT = "retirement"
-    LOAN = "loan"
-    INSURANCE = "insurance"
-    MORTGAGE = "mortgage"
-
-    ACCOUNT_TYPES = (
-        (CHECKING, "Checking"),
-        (SAVING, "Saving"),
-        (CREDIT, "Credit"),
-        (INVESTMENT, "Investment"),
-        (RETIREMENT, "Retirement"),
-        (LOAN, "Loan"),
-        (INSURANCE, "Insurance"),
-        (MORTGAGE, "Mortgage"),
-    )
-
     account_name = models.CharField(max_length=100)
-    account_type = models.CharField(
-        max_length=50, choices=ACCOUNT_TYPES, default=CHECKING
-    )
+    account_type = models.CharField(max_length=50)
+    account_number = models.CharField(max_length=254)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     currency_code = models.CharField(max_length=3)
-    account_balance = models.DecimalField(max_digits=15, decimal_places=2)
+    account_balance = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -66,20 +45,8 @@ class Account(models.Model):
 
 class Transaction(models.Model):
 
-    DEPOSIT = "deposit"
-    WITHDRAWAL = "withdrawal"
-    TRANSFER = "transfer"
-    PAYMENT = "payment"
-
-    TRANSACTION_TYPES = (
-        (DEPOSIT, "Deposit"),
-        (WITHDRAWAL, "Withdrawal"),
-        (TRANSFER, "Transfer"),
-        (PAYMENT, "Payment"),
-    )
-
-    transaction_type = models.CharField(max_length=50, choices=TRANSACTION_TYPES)
-    transaction_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    transaction_type = models.CharField(max_length=50)
+    transaction_amount = models.FloatField()
     currency_code = models.CharField(max_length=3)
     description = models.CharField(max_length=255)
     transaction_date = models.DateTimeField()
