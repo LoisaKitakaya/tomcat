@@ -220,12 +220,16 @@ def resolve_updateTransaction(
     transaction = Transaction.objects.get(id=id)
 
     transaction_category = Category.objects.filter(
-        Q(category_name__icontains=category)
+        Q(category_name__exact=category)
     ).first()
+
+    transaction_date_object = datetime.strptime(
+        transaction_date, "%Y-%m-%dT%H:%M"
+    ).date()
 
     transaction.transaction_type = transaction_type
     transaction.transaction_amount = transaction_amount
-    transaction.transaction_date = transaction_date
+    transaction.transaction_date = transaction_date_object # type: ignore
     transaction.currency_code = currency_code
     transaction.description = description
     transaction.category = transaction_category  # type: ignore
