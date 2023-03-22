@@ -29,13 +29,14 @@ def resolve_createAccount(
 
 @login_required
 def resolve_updateAccount(
-    *_, id, account_name, account_type, account_balance, currency_code
+    *_, id, account_name, account_type, account_number, account_balance, currency_code
 ):
 
     account = Account.objects.get(id=id)
 
     account.account_name = account_name
     account.account_type = account_type
+    account.account_number = account_number
     account.account_balance = account_balance
     account.currency_code = currency_code
 
@@ -223,49 +224,78 @@ def resolve_updateTransaction(
         Q(category_name__exact=category)
     ).first()
 
-    transaction_date_object = datetime.strptime(
-        transaction_date, "%Y-%m-%dT%H:%M"
-    ).date()
+    date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M").date()
+
+    if transaction.transaction_type == "payable" and transaction_type == "payable":
+
+        previous_balance = account.account_balance + transaction.transaction_amount
+
+        account.account_balance = previous_balance - transaction_amount
+
+        account.save()
+
+    elif (
+        transaction.transaction_type == "receivable"
+        and transaction_type == "receivable"
+    ):
+
+        previous_balance = account.account_balance - transaction.transaction_amount
+
+        account.account_balance = previous_balance + transaction_amount
+
+        account.save()
+
+    elif transaction.transaction_type == "receivable" and transaction_type == "payable":
+
+        previous_balance = account.account_balance - transaction.transaction_amount
+
+        account.account_balance = previous_balance - transaction_amount
+
+        account.save()
+
+    elif transaction.transaction_type == "payable" and transaction_type == "receivable":
+
+        previous_balance = account.account_balance + transaction.transaction_amount
+
+        account.account_balance = previous_balance + transaction_amount
+
+        account.save()
 
     transaction.transaction_type = transaction_type
     transaction.transaction_amount = transaction_amount
-    transaction.transaction_date = transaction_date_object # type: ignore
+    transaction.transaction_date = date_object  # type: ignore
     transaction.currency_code = currency_code
     transaction.description = description
     transaction.category = transaction_category  # type: ignore
 
     transaction.save()
 
-    if (
-        transaction_type == "withdrawal"
-        or transaction_type == "transfer"
-        or transaction_type == "payment"
-    ):
-
-        account.account_balance = account.account_balance - transaction_amount
-
-        account.save()
-
-    else:
-
-        account.account_balance = account.account_balance + transaction_amount
-
-        account.save()
-
     return transaction
 
 
 @login_required
-def resolve_deleteTransaction(*_, id):
+def resolve_deleteTransaction(*_, id, account_id):
 
-    try:
+    account = Account.objects.get(id=account_id)
 
-        Transaction.objects.get(id=id).delete()
+    transaction = Transaction.objects.get(id=id)
 
-    except Exception as e:
+    if transaction.transaction_type == "payable":
 
-        raise Exception(str(e))
+        previous_balance = account.account_balance + transaction.transaction_amount
 
-    else:
+        account.account_balance = previous_balance
 
-        return True
+        account.save()
+
+    elif transaction.transaction_type == "receivable":
+
+        previous_balance = account.account_balance - transaction.transaction_amount
+
+        account.account_balance = previous_balance
+
+        account.save()
+
+    transaction.delete()
+
+    return True

@@ -159,5 +159,5 @@ type Mutation {
     description: String!
     category: String!
   ): Transaction!
-  deleteTransaction(id: ID!): Boolean!
+  deleteTransaction(id: ID!, account_id: ID!): Boolean!
 }
