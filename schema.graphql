@@ -1,6 +1,5 @@
 scalar Date
 scalar Datetime
-scalar Time
 scalar Number
 
 type User {
@@ -43,8 +42,7 @@ type Budget {
   id: ID!
   budget_name: String!
   budget_description: String!
-  budget_start_date: Date!
-  budget_end_date: Date!
+  budget_is_active: Boolean!
   budget_amount: Float!
   owner: Profile!
   category: Category!
@@ -58,11 +56,11 @@ type Transaction {
   transaction_amount: Number!
   currency_code: String!
   description: String!
-  transaction_date: Time!
+  transaction_date: Date!
   account: Account!
   category: Category!
-  created_at: Time!
-  updated_at: Time!
+  created_at: Date!
+  updated_at: Date!
 }
 
 type Query {
@@ -124,8 +122,6 @@ type Mutation {
   createBudget(
     budget_name: String!
     budget_description: String!
-    budget_start_date: String!
-    budget_end_date: String!
     budget_amount: Float!
     category: String!
   ): Budget!
@@ -133,8 +129,6 @@ type Mutation {
     id: ID!
     budget_name: String!
     budget_description: String!
-    budget_start_date: String!
-    budget_end_date: String!
     budget_amount: Float!
     category: String!
   ): Budget!
