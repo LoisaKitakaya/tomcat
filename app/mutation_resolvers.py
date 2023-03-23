@@ -108,6 +108,18 @@ def resolve_updateBudget(
 
 
 @login_required
+def resolve_budgetStatus(*_, id, status):
+
+    budget = Budget.objects.get(id=id)
+
+    budget.budget_is_active = status
+
+    budget.save()
+
+    return budget
+
+
+@login_required
 def resolve_deleteBudget(*_, id):
 
     try:

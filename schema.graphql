@@ -132,6 +132,7 @@ type Mutation {
     budget_amount: Float!
     category: String!
   ): Budget!
+  budgetStatus(id: ID!, status: Boolean!): Budget!
   deleteBudget(id: ID!): Boolean!
 
   createTransaction(

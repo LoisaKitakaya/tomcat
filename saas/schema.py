@@ -51,10 +51,11 @@ def serialize_date(value):
 
     return date
 
+
 @number_scalar.serializer
 def serialize_number(value):
 
-    number = '{:,}'.format(value)
+    number = "{:,}".format(value)
 
     return number
 
@@ -110,6 +111,7 @@ mutation.set_field("deleteAccount", resolve_deleteAccount)
 
 mutation.set_field("createBudget", resolve_createBudget)
 mutation.set_field("updateBudget", resolve_updateBudget)
+mutation.set_field("budgetStatus", resolve_budgetStatus)
 mutation.set_field("deleteBudget", resolve_deleteBudget)
 
 mutation.set_field("createTransaction", resolve_createTransaction)
