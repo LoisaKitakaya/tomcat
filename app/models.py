@@ -49,7 +49,7 @@ class Transaction(models.Model):
     transaction_amount = models.FloatField()
     currency_code = models.CharField(max_length=3)
     description = models.CharField(max_length=255)
-    transaction_date = models.DateTimeField()
+    transaction_date = models.DateField()
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -71,8 +71,7 @@ class Budget(models.Model):
 
     budget_name = models.CharField(max_length=100)
     budget_description = models.CharField(max_length=255)
-    budget_start_date = models.DateField()
-    budget_end_date = models.DateField()
+    budget_is_active = models.BooleanField(default=True)
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
