@@ -67,8 +67,6 @@ def resolve_createBudget(
     info,
     budget_name,
     budget_description,
-    budget_start_date,
-    budget_end_date,
     budget_amount,
     category,
 ):
@@ -77,26 +75,12 @@ def resolve_createBudget(
 
     profile = Profile.objects.get(id=request.user.id)
 
-    budget_category = Category.objects.filter(
-        Q(category_name__icontains=category)
-    ).first()
-
-    start_date_object = datetime.strptime(budget_start_date, "%Y-%m-%d").date()
-    end_date_object = datetime.strptime(budget_end_date, "%Y-%m-%d").date()
-
-    start_date = set_date.date(
-        start_date_object.year, start_date_object.month, start_date_object.day
-    )
-    end_date = set_date.date(
-        end_date_object.year, end_date_object.month, end_date_object.day
-    )
+    budget_category = Category.objects.filter(Q(category_name__exact=category)).first()
 
     new_budget = Budget.objects.create(
         budget_name=budget_name,
         budget_description=budget_description,
         budget_amount=budget_amount,
-        budget_start_date=start_date,
-        budget_end_date=end_date,
         category=budget_category,
         owner=profile,
     )
@@ -106,26 +90,15 @@ def resolve_createBudget(
 
 @login_required
 def resolve_updateBudget(
-    *_,
-    id,
-    budget_name,
-    budget_description,
-    budget_start_date,
-    budget_end_date,
-    budget_amount,
-    category
+    *_, id, budget_name, budget_description, budget_amount, category
 ):
 
     budget = Budget.objects.get(id=id)
 
-    budget_category = Category.objects.filter(
-        Q(category_name__icontains=category)
-    ).first()
+    budget_category = Category.objects.filter(Q(category_name__exact=category)).first()
 
     budget.budget_name = budget_name
     budget.budget_description = budget_description
-    budget.budget_start_date = budget_start_date
-    budget.budget_end_date = budget_end_date
     budget.budget_amount = budget_amount
     budget.category = budget_category  # type: ignore
 
@@ -168,9 +141,7 @@ def resolve_createTransaction(
         Q(category_name__exact=category)
     ).first()
 
-    transaction_date_object = datetime.strptime(
-        transaction_date, "%Y-%m-%dT%H:%M"
-    ).date()
+    transaction_date_object = datetime.strptime(transaction_date, "%Y-%m-%d").date()
 
     date_object = datetime(
         transaction_date_object.year,
@@ -224,7 +195,7 @@ def resolve_updateTransaction(
         Q(category_name__exact=category)
     ).first()
 
-    date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M").date()
+    date_object = datetime.strptime(transaction_date, "%Y-%m-%d").date()
 
     if transaction.transaction_type == "payable" and transaction_type == "payable":
 
