@@ -73,7 +73,7 @@ def resolve_createBudget(
 
     request = info.context["request"]
 
-    profile = Profile.objects.get(id=request.user.id)
+    profile = Profile.objects.get(user__id=request.user.id)
 
     budget_category = Category.objects.filter(Q(category_name__exact=category)).first()
 
@@ -116,7 +116,7 @@ def resolve_budgetStatus(*_, id, status):
 
     budget.save()
 
-    return budget
+    return True
 
 
 @login_required
