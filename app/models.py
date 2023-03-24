@@ -57,7 +57,7 @@ class Transaction(models.Model):
 
     class Meta:
 
-        ordering = ["-created_at"]
+        ordering = ["created_at"]
         verbose_name = "transaction"
         verbose_name_plural = "transactions"
         db_table = "Transactions"
