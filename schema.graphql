@@ -101,10 +101,6 @@ type Mutation {
     last_name: String!
   ): User!
 
-  verifyToken(token: String!): VerifyToken!
-  refreshToken(token: String!): RefreshToken!
-  tokenAuth(username: String!, password: String!): TokenAuth!
-
   createAccount(
     account_name: String!
     account_type: String!

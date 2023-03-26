@@ -11,14 +11,6 @@ from ariadne import (
     gql,
 )
 
-from ariadne_jwt import (
-    jwt_schema,
-    GenericScalar,
-    resolve_token_auth,
-    resolve_refresh,
-    resolve_verify,
-)
-
 from users.query_resolvers import *
 from users.mutation_resolvers import *
 from app.query_resolvers import *
@@ -108,9 +100,6 @@ mutation.set_field("updateUser", resolve_updateUser)
 
 # # # authentication mutation resolvers
 
-mutation.set_field("verifyToken", resolve_verify)
-mutation.set_field("refreshToken", resolve_refresh)
-mutation.set_field("tokenAuth", resolve_token_auth)
 
 # # # app models mutation resolvers
 
@@ -128,12 +117,13 @@ mutation.set_field("updateTransaction", resolve_updateTransaction)
 mutation.set_field("deleteTransaction", resolve_deleteTransaction)
 
 schema = make_executable_schema(
-    [type_defs, jwt_schema],
-    query,
-    mutation,
-    date_scalar,
-    time_scalar,
-    GenericScalar,
-    number_scalar,
-    datetime_scalar,
+    type_defs,
+    [
+        query,
+        mutation,
+        date_scalar,
+        time_scalar,
+        number_scalar,
+        datetime_scalar,
+    ],
 )
