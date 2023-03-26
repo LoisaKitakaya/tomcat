@@ -74,6 +74,7 @@ class Budget(models.Model):
     budget_is_active = models.BooleanField(default=True)
     budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

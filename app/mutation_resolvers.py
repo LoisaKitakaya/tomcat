@@ -65,6 +65,7 @@ def resolve_deleteAccount(*_, id):
 def resolve_createBudget(
     _,
     info,
+    account_id,
     budget_name,
     budget_description,
     budget_amount,
@@ -75,6 +76,8 @@ def resolve_createBudget(
 
     profile = Profile.objects.get(user__id=request.user.id)
 
+    account = Account.objects.get(id=account_id)
+
     budget_category = Category.objects.filter(Q(category_name__exact=category)).first()
 
     new_budget = Budget.objects.create(
@@ -83,6 +86,7 @@ def resolve_createBudget(
         budget_amount=budget_amount,
         category=budget_category,
         owner=profile,
+        account=account,
     )
 
     return new_budget

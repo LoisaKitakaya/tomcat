@@ -16,6 +16,7 @@ type Profile {
   user: User!
   tier: String!
   account_limit: Int!
+  budget_limit: Int!
   pdf_gen: Boolean!
   created_at: Datetime!
   updated_at: Datetime!
@@ -46,6 +47,7 @@ type Budget {
   budget_is_active: Boolean!
   budget_amount: Float!
   owner: Profile!
+  account: Account!
   category: Category!
   created_at: Datetime!
   updated_at: Datetime!
@@ -121,6 +123,7 @@ type Mutation {
   deleteAccount(id: ID!): Boolean!
 
   createBudget(
+    account_id: ID!
     budget_name: String!
     budget_description: String!
     budget_amount: Float!
