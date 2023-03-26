@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from twilio.rest import Client
 from corsheaders.defaults import default_methods
 from corsheaders.defaults import default_headers
 
@@ -153,3 +154,9 @@ AUTHENTICATION_BACKENDS = [
     "ariadne_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
+# Twilio settings
+
+TWILIO_NUMBER = os.getenv("TWILIO_NUMBER")
+TWILIO_ACCOUNT = os.getenv("TWILIO_ACCOUNT")
+TWILIO_TOKEN = os.getenv("TWILIO_TOKEN")
