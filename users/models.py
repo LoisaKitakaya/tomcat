@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
+    REQUIRED_FIELDS = ['first_name', 'phone_number']
 
     objects = CustomUserManager()
 
@@ -67,10 +67,10 @@ class Profile(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE)
-    account_limit = models.IntegerField(default=1)
-    budget_limit = models.IntegerField(default=4)
-    pdf_gen = models.BooleanField(default=False)
+    tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE, blank=False)
+    account_limit = models.IntegerField(default=1, blank=False)
+    budget_limit = models.IntegerField(default=4, blank=False)
+    pdf_gen = models.BooleanField(default=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

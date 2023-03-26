@@ -35,6 +35,7 @@ datetime_scalar = ScalarType("Datetime")
 date_scalar = ScalarType("Date")
 number_scalar = ScalarType("Number")
 time_scalar = ScalarType("Time")
+otp_scalar = ScalarType("Otp")
 
 
 @datetime_scalar.serializer
@@ -67,6 +68,12 @@ def serialize_time(value):
     date = value.strftime("%Y-%m-%d")
 
     return date
+
+
+@otp_scalar.serializer
+def serialize_otp(value):
+
+    return value
 
 
 # query and mutation types
@@ -135,6 +142,7 @@ schema = make_executable_schema(
     [type_defs, jwt_schema],
     query,
     mutation,
+    otp_scalar,
     date_scalar,
     time_scalar,
     GenericScalar,

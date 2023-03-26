@@ -71,7 +71,10 @@ def resolve_verifyOTP(_, info, otp):
 
     else:
 
-        return True
+        return {
+            "success": True,
+            "message": f"Your account has been verified",
+        }
 
 
 @login_required

@@ -2,6 +2,7 @@ from twilio.rest import Client
 from django.conf import settings
 from django_otp.oath import TOTP
 from users.models import User, Profile
+from django.core.mail import send_mail
 from ariadne_jwt.decorators import login_required
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
@@ -67,18 +68,44 @@ def resolve_generateOTP(_, info):
 
     otp = totp.token()
 
-    account = settings.TWILIO_ACCOUNT
-    token = settings.TWILIO_TOKEN
-    number = settings.TWILIO_NUMBER
+    if user.phone_number:
 
-    client = Client(account, token)
+        account = settings.TWILIO_ACCOUNT
+        token = settings.TWILIO_TOKEN
+        number = settings.TWILIO_NUMBER
 
-    message = client.messages.create(
-        body=f"Your One-Time-Password is:\n{otp}", from_=number, to=user.phone_number
-    )
-    print(message.sid)
+        client = Client(account, token)
 
-    return True
+        client.messages.create(
+            body=f"Your One-Time-Password is:\n{otp}",
+            from_=number,
+            to=user.phone_number,
+        )
+
+        return {
+            "success": True,
+            "message": f"A One-Time-Password has been sent to the number:\n{user.phone_number}",
+        }
+
+    else:
+
+        subject = "Account verification"
+        body = f"Your One-Time-Password is:\n{otp}"
+        me = settings.DEFAULT_FROM_EMAIL
+        recipient = user.email
+
+        send_mail(
+            subject,
+            body,
+            me,
+            [recipient],
+            fail_silently=False,
+        )
+
+        return {
+            "success": True,
+            "message": f"A One-Time-Password has been sent to the email:\n{user.email}",
+        }
 
 
 # Profile model query resolvers

@@ -6,8 +6,8 @@ from users.models import Profile
 
 class Category(models.Model):
 
-    category_name = models.CharField(max_length=100)
-    category_description = models.CharField(max_length=255)
+    category_name = models.CharField(max_length=100, blank=False, unique=True)
+    category_description = models.CharField(max_length=255, blank=False)
 
     class Meta:
 
@@ -22,12 +22,12 @@ class Category(models.Model):
 
 class Account(models.Model):
 
-    account_name = models.CharField(max_length=100)
-    account_type = models.CharField(max_length=50)
+    account_name = models.CharField(max_length=100, blank=False)
+    account_type = models.CharField(max_length=50, blank=False)
     account_number = models.CharField(max_length=254)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    currency_code = models.CharField(max_length=3)
-    account_balance = models.FloatField()
+    currency_code = models.CharField(max_length=3, blank=False)
+    account_balance = models.FloatField(default=0.0, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -45,11 +45,11 @@ class Account(models.Model):
 
 class Transaction(models.Model):
 
-    transaction_type = models.CharField(max_length=50)
-    transaction_amount = models.FloatField()
-    currency_code = models.CharField(max_length=3)
-    description = models.CharField(max_length=255)
-    transaction_date = models.DateField()
+    transaction_type = models.CharField(max_length=50, blank=False)
+    transaction_amount = models.FloatField(default=0.0, blank=False)
+    currency_code = models.CharField(max_length=3, blank=False)
+    description = models.CharField(max_length=255, blank=False)
+    transaction_date = models.DateField(blank=False)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -69,10 +69,10 @@ class Transaction(models.Model):
 
 class Budget(models.Model):
 
-    budget_name = models.CharField(max_length=100)
-    budget_description = models.CharField(max_length=255)
-    budget_is_active = models.BooleanField(default=True)
-    budget_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    budget_name = models.CharField(max_length=100, blank=False)
+    budget_description = models.CharField(max_length=255, blank=False)
+    budget_is_active = models.BooleanField(default=True, blank=False)
+    budget_amount = models.FloatField(default=0.0, blank=False)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

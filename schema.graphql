@@ -2,6 +2,7 @@ scalar Date
 scalar Datetime
 scalar Number
 scalar Time
+scalar Otp
 
 type User {
   id: ID!
@@ -67,7 +68,7 @@ type Transaction {
 }
 
 type Query {
-  generateOTP: Boolean!
+  generateOTP: Otp!
 
   getAllUsers: [User!]!
   getUser: User!
@@ -88,7 +89,7 @@ type Query {
 }
 
 type Mutation {
-  verifyOTP(otp: String!): Boolean!
+  verifyOTP(otp: String!): Otp!
 
   createUser(
     username: String!
