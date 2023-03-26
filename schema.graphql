@@ -1,5 +1,6 @@
 scalar Date
 scalar Datetime
+scalar Qrcode
 scalar Number
 scalar Time
 scalar Otp
@@ -69,6 +70,8 @@ type Transaction {
 
 type Query {
   generateOTP: Otp!
+
+  generateQRCode: Qrcode!
 
   getAllUsers: [User!]!
   getUser: User!

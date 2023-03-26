@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from twilio.rest import Client
 from corsheaders.defaults import default_methods
 from corsheaders.defaults import default_headers
 
@@ -139,10 +138,14 @@ AUTH_USER_MODEL = "users.User"
 # Django CORS headers
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    os.getenv("MOLLY_DEV"),
+    # os.getenv("MOLLY_PROD"),
 ]
 
-CSRF_TRUSTED_ORIGINS = []
+CSRF_TRUSTED_ORIGINS = [
+    os.getenv("TOMCAT_DEV"),
+    # os.getenv("TOMCAT_PROD"),
+]
 
 CORS_ALLOW_METHODS = list(default_methods)
 
@@ -170,3 +173,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
+# OTP settings
+
+OTP_THROTTLE_FACTOR = 30  # user must wait at least 30 seconds between OTP attempts
+OTP_THROTTLE_TIMEOUT = 300  # if a user exceeds the OTP_THROTTLE_FACTOR, they must wait 5 minutes before trying again
+OTP_SYNC = True  # the server will be the source of truth for OTP generation
+OTP_ISSUER = "Finance Fluent"  # name of the OTP issuer that is included in the QR code
+OTP_DIGITS = 6  # OTP value will be a 6-digit number
+OTP_TOTP_INTERVAL = 30  # default interval for TOTP code generation
+OTP_TOTP_GRACE_PERIOD = (
+    120  #  TOTP code will be valid for up to 2 minutes after it is generated
+)

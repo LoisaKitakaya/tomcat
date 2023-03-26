@@ -36,6 +36,7 @@ date_scalar = ScalarType("Date")
 number_scalar = ScalarType("Number")
 time_scalar = ScalarType("Time")
 otp_scalar = ScalarType("Otp")
+qrcode_scalar = ScalarType("Qrcode")
 
 
 @datetime_scalar.serializer
@@ -76,6 +77,12 @@ def serialize_otp(value):
     return value
 
 
+@qrcode_scalar.serializer
+def serialize_qrcode(value):
+
+    return value
+
+
 # query and mutation types
 
 query = QueryType()
@@ -88,6 +95,7 @@ mutation = MutationType()
 # # # user app query resolvers
 
 query.set_field("generateOTP", resolve_generateOTP)
+query.set_field("generateQRCode", resolve_generateQRCode)
 
 query.set_field("getAllUsers", resolve_getAllUsers)
 query.set_field("getUser", resolve_getUser)
@@ -145,6 +153,7 @@ schema = make_executable_schema(
     otp_scalar,
     date_scalar,
     time_scalar,
+    qrcode_scalar,
     GenericScalar,
     number_scalar,
     datetime_scalar,

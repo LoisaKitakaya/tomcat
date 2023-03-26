@@ -1,6 +1,10 @@
+import base64
+import io
+from PIL import Image
 from twilio.rest import Client
 from django.conf import settings
 from django_otp.oath import TOTP
+from qrcode import make as make_qr
 from users.models import User, Profile
 from django.core.mail import send_mail
 from ariadne_jwt.decorators import login_required
@@ -106,6 +110,26 @@ def resolve_generateOTP(_, info):
             "success": True,
             "message": f"A One-Time-Password has been sent to the email:\n{user.email}",
         }
+
+
+@login_required
+def resolve_generateQRCode(_, info):
+
+    request = info.context["request"]
+
+    user = User.objects.get(id=request.user.id)
+
+    device = TOTPDevice.objects.get(user__id=user.id)
+
+    totp_uri = device.config_url
+    qr = make_qr(totp_uri)
+
+    img = qr.get_image()
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    image_base64 = base64.b64encode(buf.getvalue()).decode("ascii")
+
+    return image_base64
 
 
 # Profile model query resolvers
