@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     # 3rd party libraries
     "ariadne_django",
     "corsheaders",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
     # my apps
     "users",
     "app",
@@ -46,6 +48,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "ariadne_jwt.middleware.JSONWebTokenMiddleware",
+    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -142,3 +146,10 @@ CSRF_TRUSTED_ORIGINS = []
 CORS_ALLOW_METHODS = list(default_methods)
 
 CORS_ALLOW_HEADERS = list(default_headers)
+
+# Ariadne JWT
+
+AUTHENTICATION_BACKENDS = [
+    "ariadne_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]

@@ -7,12 +7,13 @@ from django.contrib.auth.admin import UserAdmin
 
 class CustomUserAdmin(UserAdmin):
 
+    model = User
+
+    list_display = ["email", "first_name", "last_name", "phone_number"]
+
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
-        (
-            "Personal info",
-            {"fields": ("first_name", "last_name", "email", "phone_number")},
-        ),
+        (None, {"fields": ("email", "password")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "phone_number")}),
         (
             "Permissions",
             {
@@ -28,14 +29,25 @@ class CustomUserAdmin(UserAdmin):
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
-    list_display = (
-        "username",
-        "first_name",
-        "last_name",
-        "email",
-        "phone_number",
-        "is_staff",
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "first_name",
+                    "last_name",
+                    "phone_number",
+                ),
+            },
+        ),
     )
+
+    search_fields = ("email",)
+    ordering = ("email",)
 
 
 admin.site.register(User, CustomUserAdmin)

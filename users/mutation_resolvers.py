@@ -1,5 +1,6 @@
 from users.models import User, Profile
 from ariadne_jwt.decorators import login_required
+from django.core.management.utils import get_random_secret_key
 
 # User model mutation resolvers
 
@@ -29,7 +30,11 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
 
             new_user.save()
 
-            Profile.objects.create(user=new_user)
+            new_profile = Profile.objects.create(user=new_user)
+
+            new_profile.secret_key = str(get_random_secret_key())
+
+            new_profile.save()
 
         else:
 
@@ -40,6 +45,11 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
         raise Exception("Email already exists. Make sure your email is unique!")
 
     return new_user
+
+
+def resolve_verifyUser(*_):
+
+    pass
 
 
 @login_required
