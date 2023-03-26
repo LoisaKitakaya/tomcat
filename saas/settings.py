@@ -176,12 +176,10 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # OTP settings
 
-OTP_THROTTLE_FACTOR = 30  # user must wait at least 30 seconds between OTP attempts
-OTP_THROTTLE_TIMEOUT = 300  # if a user exceeds the OTP_THROTTLE_FACTOR, they must wait 5 minutes before trying again
-OTP_SYNC = True  # the server will be the source of truth for OTP generation
-OTP_ISSUER = "Finance Fluent"  # name of the OTP issuer that is included in the QR code
-OTP_DIGITS = 6  # OTP value will be a 6-digit number
-OTP_TOTP_INTERVAL = 30  # default interval for TOTP code generation
-OTP_TOTP_GRACE_PERIOD = (
-    120  #  TOTP code will be valid for up to 2 minutes after it is generated
-)
+OTP_THROTTLE_FACTOR = 30
+OTP_THROTTLE_TIMEOUT = 300
+OTP_SYNC = True
+OTP_ISSUER = "Finance Fluent"
+OTP_DIGITS = 6
+OTP_TOTP_INTERVAL = 30
+OTP_TOTP_GRACE_PERIOD = 120
