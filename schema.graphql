@@ -67,6 +67,8 @@ type Transaction {
 }
 
 type Query {
+  generateOTP: Boolean!
+
   getAllUsers: [User!]!
   getUser: User!
   getUserByUsername(username: String!): User!
@@ -86,6 +88,8 @@ type Query {
 }
 
 type Mutation {
+  verifyOTP(otp: String!): Boolean!
+
   createUser(
     username: String!
     email: String!

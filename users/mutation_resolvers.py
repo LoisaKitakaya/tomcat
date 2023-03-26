@@ -1,6 +1,7 @@
+from django_otp.oath import TOTP
 from users.models import User, Profile
 from ariadne_jwt.decorators import login_required
-from django.core.management.utils import get_random_secret_key
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 # User model mutation resolvers
 
@@ -30,11 +31,11 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
 
             new_user.save()
 
-            new_profile = Profile.objects.create(user=new_user)
+            name = f"OTP device for user: ID {new_user.id}"
 
-            new_profile.secret_key = str(get_random_secret_key())
+            Profile.objects.create(user=new_user)
 
-            new_profile.save()
+            TOTPDevice.objects.create(user=new_user, name=name)
 
         else:
 
@@ -47,9 +48,30 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
     return new_user
 
 
-def resolve_verifyUser(*_):
+@login_required
+def resolve_verifyOTP(_, info, otp):
 
-    pass
+    request = info.context["request"]
+
+    user = User.objects.get(id=request.user.id)
+
+    device = TOTPDevice.objects.get(user__id=user.id)
+
+    secret = device.key.encode()
+
+    totp = TOTP(key=secret)
+
+    try:
+
+        totp.verify(otp)
+
+    except Exception as e:
+
+        raise Exception(str(e))
+
+    else:
+
+        return True
 
 
 @login_required

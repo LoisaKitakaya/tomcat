@@ -68,7 +68,6 @@ class Profile(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE)
-    secret_key = models.CharField(max_length=100)
     account_limit = models.IntegerField(default=1)
     budget_limit = models.IntegerField(default=4)
     pdf_gen = models.BooleanField(default=False)

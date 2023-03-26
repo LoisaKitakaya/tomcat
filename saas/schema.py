@@ -80,6 +80,8 @@ mutation = MutationType()
 
 # # # user app query resolvers
 
+query.set_field("generateOTP", resolve_generateOTP)
+
 query.set_field("getAllUsers", resolve_getAllUsers)
 query.set_field("getUser", resolve_getUser)
 query.set_field("getUserByUsername", resolve_getUserByUsername)
@@ -107,6 +109,8 @@ mutation.set_field("createUser", resolve_createUser)
 mutation.set_field("updateUser", resolve_updateUser)
 
 # # # authentication mutation resolvers
+
+mutation.set_field("verifyOTP", resolve_verifyOTP)
 
 mutation.set_field("verifyToken", resolve_verify)
 mutation.set_field("refreshToken", resolve_refresh)
