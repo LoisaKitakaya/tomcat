@@ -6,7 +6,9 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 # User model mutation resolvers
 
 
-def resolve_createUser(*_, username, email, first_name, last_name, password, password2):
+def resolve_createUser(
+    *_, phone_number, email, first_name, last_name, password, password2
+):
 
     if not User.objects.filter(email=email).exists():
 
@@ -15,8 +17,8 @@ def resolve_createUser(*_, username, email, first_name, last_name, password, pas
             if password == password2:
 
                 User.objects.create(
-                    username=username,
                     email=email,
+                    phone_number=phone_number,
                     first_name=first_name,
                     last_name=last_name,
                 )
@@ -78,18 +80,18 @@ def resolve_verifyOTP(_, info, otp):
 
 
 @login_required
-def resolve_updateUser(_, info, username, email, first_name, last_name):
+def resolve_updateUser(_, info, phone_number, email, first_name, last_name):
 
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():
 
-        if not User.objects.filter(username=username).exists():
+        if not User.objects.filter(phone_number=phone_number).exists():
 
             user = User.objects.get(id=request.user.id)
 
-            user.username = username
             user.email = email
+            user.phone_number = phone_number
             user.first_name = first_name
             user.last_name = last_name
 
@@ -98,7 +100,7 @@ def resolve_updateUser(_, info, username, email, first_name, last_name):
         else:
 
             raise Exception(
-                "Username already exists. Make sure your username is unique!"
+                "Phone number already exists. Make sure your Phone number is unique!"
             )
 
     else:

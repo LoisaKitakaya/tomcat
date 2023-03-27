@@ -8,9 +8,9 @@ scalar Otp
 type User {
   id: ID!
   first_name: String!
-  last_name: String!
-  username: String!
+  last_name: String
   email: String!
+  phone_number: String!
 }
 
 type Profile {
@@ -34,7 +34,7 @@ type Account {
   id: ID!
   account_name: String!
   account_type: String!
-  account_number: String!
+  account_number: String
   owner: Profile!
   currency_code: String!
   account_balance: Float!
@@ -95,18 +95,18 @@ type Mutation {
   verifyOTP(otp: String!): Otp!
 
   createUser(
-    username: String!
     email: String!
-    first_name: String
+    phone_number: String!
+    first_name: String!
     last_name: String
     password: String!
     password2: String!
   ): User!
   updateUser(
-    username: String!
     email: String!
+    phone_number: String!
     first_name: String!
-    last_name: String!
+    last_name: String
   ): User!
 
   verifyToken(token: String!): VerifyToken!
