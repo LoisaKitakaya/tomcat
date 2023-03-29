@@ -1,4 +1,4 @@
-from .models import User, Profile
+from .models import User, Profile, OTPDevice
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -57,6 +57,16 @@ admin.site.register(User, CustomUserAdmin)
 class ProfileAdminView(admin.ModelAdmin):
 
     model = Profile
+
+    list_filter = (
+        "created_at",
+        "updated_at",
+    )
+
+@admin.register(OTPDevice)
+class OTPDeviceAdminView(admin.ModelAdmin):
+
+    model = OTPDevice
 
     list_filter = (
         "created_at",

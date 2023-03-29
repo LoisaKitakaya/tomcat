@@ -1,3 +1,4 @@
+import pyotp
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import (
@@ -10,13 +11,12 @@ from django.contrib.auth.models import (
 
 
 class CustomUserManager(BaseUserManager):
-
     def create_user(self, email, password=None, **extra_fields):
 
         if not email:
 
             raise ValueError("The Email field must be set")
-        
+
         email = self.normalize_email(email)
 
         user = self.model(email=email, **extra_fields)
@@ -44,8 +44,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'phone_number']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name", "phone_number"]
 
     objects = CustomUserManager()
 
@@ -67,7 +67,9 @@ class Profile(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tier = models.CharField(max_length=20, choices=PROFILE_TIERS, default=FREE, blank=False)
+    tier = models.CharField(
+        max_length=20, choices=PROFILE_TIERS, default=FREE, blank=False
+    )
     account_limit = models.IntegerField(default=1, blank=False)
     budget_limit = models.IntegerField(default=4, blank=False)
     pdf_gen = models.BooleanField(default=False, blank=False)
@@ -84,3 +86,23 @@ class Profile(models.Model):
     def __str__(self) -> str:
 
         return self.user.email
+
+
+class OTPDevice(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=False)
+    key = models.CharField(max_length=100, blank=False, default=pyotp.random_base32())
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+
+        ordering = ["-created_at"]
+        verbose_name = "user device"
+        verbose_name_plural = "user devices"
+        db_table = "UserDevices"
+
+    def __str__(self) -> str:
+
+        return self.name

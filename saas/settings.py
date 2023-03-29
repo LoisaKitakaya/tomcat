@@ -34,8 +34,6 @@ INSTALLED_APPS = [
     # 3rd party libraries
     "ariadne_django",
     "corsheaders",
-    "django_otp",
-    "django_otp.plugins.otp_totp",
     # my apps
     "users",
     "app",
@@ -49,7 +47,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "ariadne_jwt.middleware.JSONWebTokenMiddleware",
-    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -175,11 +172,3 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # OTP settings
-
-OTP_THROTTLE_FACTOR = 30
-OTP_THROTTLE_TIMEOUT = 300
-OTP_SYNC = True
-OTP_ISSUER = "Finance Fluent"
-OTP_DIGITS = 6
-OTP_TOTP_INTERVAL = 30
-OTP_TOTP_GRACE_PERIOD = 120

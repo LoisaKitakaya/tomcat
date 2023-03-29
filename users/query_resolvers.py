@@ -1,14 +1,14 @@
-import base64
 import io
+import time
+import pyotp
+import base64
 from PIL import Image
 from twilio.rest import Client
 from django.conf import settings
-from django_otp.oath import TOTP
 from qrcode import make as make_qr
-from users.models import User, Profile
 from django.core.mail import send_mail
 from ariadne_jwt.decorators import login_required
-from django_otp.plugins.otp_totp.models import TOTPDevice
+from users.models import User, Profile, OTPDevice
 
 # User model query resolvers
 
@@ -64,13 +64,11 @@ def resolve_generateOTP(_, info):
 
     user = User.objects.get(id=request.user.id)
 
-    device = TOTPDevice.objects.get(user__id=user.id)
+    device = OTPDevice.objects.get(user__id=user.id)
 
-    secret = device.key.encode()
+    totp = pyotp.TOTP(str(device.key))
 
-    totp = TOTP(key=secret)
-
-    otp = totp.token()
+    otp = totp.now()
 
     if user.phone_number:
 
@@ -119,9 +117,11 @@ def resolve_generateQRCode(_, info):
 
     user = User.objects.get(id=request.user.id)
 
-    device = TOTPDevice.objects.get(user__id=user.id)
+    device = OTPDevice.objects.get(user__id=user.id)
 
-    totp_uri = device.config_url
+    totp_uri = pyotp.totp.TOTP(str(device.key)).provisioning_uri(
+        name=user.email, issuer_name="2FA Secure App"
+    )
     qr = make_qr(totp_uri)
 
     img = qr.get_image()
