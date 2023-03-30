@@ -1,7 +1,7 @@
 import time
 from users.models import Profile
 from ariadne_jwt.decorators import login_required
-from app.models import Account, Category, Budget, Transaction
+from app.models import Account, Category, Budget, Transaction, Target
 
 # Category model query resolvers
 
@@ -102,6 +102,38 @@ def resolve_getBudget(*_, id):
         raise Exception(str(e))
 
     return budget
+
+
+@login_required
+def resolve_getAllTargets(_, info):
+
+    request = info.context["request"]
+
+    try:
+
+        profile = Profile.objects.get(user__id=request.user.id)
+
+        targets = Target.objects.filter(owner__id=profile.pk).all()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+
+    return targets
+
+
+@login_required
+def resolve_getTarget(*_, id):
+
+    try:
+
+        target = Target.objects.get(id=id)
+
+    except Exception as e:
+
+        raise Exception(str(e))
+
+    return target
 
 
 # Transaction model query resolvers

@@ -1,7 +1,13 @@
 from django.contrib import admin
-from .models import Account, Budget, Category, Transaction
+from .models import Account, Budget, Category, Transaction, Target
 
 # Register your models here.
+
+
+@admin.register(Category)
+class CategoryAdminView(admin.ModelAdmin):
+
+    model = Category
 
 
 @admin.register(Account)
@@ -21,6 +27,20 @@ class AccountAdminView(admin.ModelAdmin):
     )
 
 
+@admin.register(Transaction)
+class TransactionAdminView(admin.ModelAdmin):
+
+    model = Transaction
+
+    list_display = ("transaction_type",)
+
+    list_filter = (
+        "transaction_type",
+        "created_at",
+        "updated_at",
+    )
+
+
 @admin.register(Budget)
 class BudgetAdminView(admin.ModelAdmin):
 
@@ -34,21 +54,14 @@ class BudgetAdminView(admin.ModelAdmin):
     )
 
 
-@admin.register(Category)
-class CategoryAdminView(admin.ModelAdmin):
+@admin.register(Target)
+class TargetAdminView(admin.ModelAdmin):
 
-    model = Category
+    model = Target
 
-
-@admin.register(Transaction)
-class TransactionAdminView(admin.ModelAdmin):
-
-    model = Transaction
-
-    list_display = ("transaction_type",)
+    list_display = ("target_name",)
 
     list_filter = (
-        "transaction_type",
         "created_at",
         "updated_at",
     )

@@ -55,6 +55,19 @@ type Budget {
   updated_at: Datetime!
 }
 
+type Target {
+  id: ID!
+  target_name: String!
+  target_description: String!
+  target_is_active: Boolean!
+  target_amount: Float!
+  owner: Profile!
+  account: Account!
+  category: Category!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
 type Transaction {
   id: ID!
   transaction_type: String!
@@ -85,6 +98,9 @@ type Query {
 
   getAllBudgets: [Budget!]!
   getBudget(id: ID!): Budget!
+
+  getAllTargets: [Target!]!
+  getTarget(id: ID!): Target!
 
   getAllTransactions(id: ID!): [Transaction!]!
   getTransactionsByAccount(id: ID!): [Transaction!]!
@@ -146,6 +162,23 @@ type Mutation {
   ): Budget!
   budgetStatus(id: ID!, status: Boolean!): Boolean!
   deleteBudget(id: ID!): Boolean!
+
+  createTarget(
+    account_id: ID!
+    target_name: String!
+    target_description: String!
+    target_amount: Float!
+    category: String!
+  ): Target!
+  updateTarget(
+    id: ID!
+    target_name: String!
+    target_description: String!
+    target_amount: Float!
+    category: String!
+  ): Target!
+  targetStatus(id: ID!, status: Boolean!): Boolean!
+  deleteTarget(id: ID!): Boolean!
 
   createTransaction(
     account_id: ID!

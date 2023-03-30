@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db.models import Q
 from users.models import Profile
 from ariadne_jwt.decorators import login_required
-from app.models import Account, Budget, Transaction, Category
+from app.models import Account, Budget, Transaction, Category, Target
 
 
 @login_required
@@ -128,6 +128,84 @@ def resolve_deleteBudget(*_, id):
     try:
 
         Budget.objects.get(id=id).delete()
+
+    except Exception as e:
+
+        raise Exception(str(e))
+
+    else:
+
+        return True
+    
+
+@login_required
+def resolve_createTarget(
+    _,
+    info,
+    account_id,
+    target_name,
+    target_description,
+    target_amount,
+    category,
+):
+
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    account = Account.objects.get(id=account_id)
+
+    target_category = Category.objects.filter(Q(category_name__exact=category)).first()
+
+    new_target = Target.objects.create(
+        target_name=target_name,
+        target_description=target_description,
+        target_amount=target_amount,
+        category=target_category,
+        owner=profile,
+        account=account,
+    )
+
+    return new_target
+
+
+@login_required
+def resolve_updateTarget(
+    *_, id, target_name, target_description, target_amount, category
+):
+
+    target = Target.objects.get(id=id)
+
+    target_category = Category.objects.filter(Q(category_name__exact=category)).first()
+
+    target.target_name = target_name
+    target.target_description = target_description
+    target.target_amount = target_amount
+    target.category = target_category  # type: ignore
+
+    target.save()
+
+    return target
+
+
+@login_required
+def resolve_targetStatus(*_, id, status):
+
+    target = Target.objects.get(id=id)
+
+    target.target_is_active = status
+
+    target.save()
+
+    return True
+
+
+@login_required
+def resolve_deleteTarget(*_, id):
+
+    try:
+
+        Target.objects.get(id=id).delete()
 
     except Exception as e:
 

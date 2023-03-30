@@ -112,6 +112,9 @@ query.set_field("getAccount", resolve_getAccount)
 query.set_field("getAllBudgets", resolve_getAllBudgets)
 query.set_field("getBudget", resolve_getBudget)
 
+query.set_field("getAllTargets", resolve_getAllTargets)
+query.set_field("getTarget", resolve_getTarget)
+
 query.set_field("getAllTransactions", resolve_getAllTransactions)
 query.set_field("getTransactionsByAccount", resolve_getTransactionsByAccount)
 query.set_field("getTransaction", resolve_getTransaction)
@@ -141,6 +144,11 @@ mutation.set_field("createBudget", resolve_createBudget)
 mutation.set_field("updateBudget", resolve_updateBudget)
 mutation.set_field("budgetStatus", resolve_budgetStatus)
 mutation.set_field("deleteBudget", resolve_deleteBudget)
+
+mutation.set_field("createTarget", resolve_createTarget)
+mutation.set_field("updateTarget", resolve_updateTarget)
+mutation.set_field("targetStatus", resolve_targetStatus)
+mutation.set_field("deleteTarget", resolve_deleteTarget)
 
 mutation.set_field("createTransaction", resolve_createTransaction)
 mutation.set_field("updateTransaction", resolve_updateTransaction)

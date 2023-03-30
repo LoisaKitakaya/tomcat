@@ -1,5 +1,4 @@
 import pyotp
-from django.db.models import Q
 from ariadne_jwt.decorators import login_required
 from users.models import User, Profile, OTPDevice, Package
 

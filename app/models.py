@@ -89,3 +89,27 @@ class Budget(models.Model):
     def __str__(self) -> str:
 
         return self.budget_name
+    
+
+class Target(models.Model):
+
+    target_name = models.CharField(max_length=100, blank=False)
+    target_description = models.TextField(blank=False)
+    target_is_active = models.BooleanField(default=True, blank=False)
+    target_amount = models.FloatField(default=0.0, blank=False)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+
+        ordering = ["-created_at"]
+        verbose_name = "target"
+        verbose_name_plural = "targets"
+        db_table = "Targets"
+
+    def __str__(self) -> str:
+
+        return self.target_name
