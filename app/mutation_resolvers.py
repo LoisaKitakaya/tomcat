@@ -1,4 +1,3 @@
-import datetime as set_date
 from datetime import datetime
 from django.db.models import Q
 from users.models import Profile
@@ -157,13 +156,7 @@ def resolve_createTransaction(
         Q(category_name__exact=category)
     ).first()
 
-    transaction_date_object = datetime.strptime(transaction_date, "%Y-%m-%d").date()
-
-    date_object = datetime(
-        transaction_date_object.year,
-        transaction_date_object.month,
-        transaction_date_object.day,
-    )
+    date_object = datetime.strptime(transaction_date, "%Y-%m-%d").date()
 
     new_transaction = Transaction.objects.create(
         transaction_type=transaction_type,
@@ -250,7 +243,7 @@ def resolve_updateTransaction(
 
     transaction.transaction_type = transaction_type
     transaction.transaction_amount = transaction_amount
-    transaction.transaction_date = date_object  # type: ignore
+    transaction.transaction_date = date_object
     transaction.currency_code = currency_code
     transaction.description = description
     transaction.category = transaction_category  # type: ignore

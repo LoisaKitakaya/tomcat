@@ -1,6 +1,7 @@
 import pyotp
+from django.db.models import Q
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice
+from users.models import User, Profile, OTPDevice, Package
 
 # User model mutation resolvers
 
@@ -34,7 +35,9 @@ def resolve_createUser(
 
             name = f"OTP device for user: ID {new_user.id}"
 
-            Profile.objects.create(user=new_user)
+            starter_package = Package.objects.get(name="Free")
+
+            Profile.objects.create(user=new_user, package=starter_package)
 
             new_device = OTPDevice.objects.create(user=new_user, name=name)
 
