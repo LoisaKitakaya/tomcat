@@ -52,27 +52,38 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
 
         return self.email
+    
+
+class Package(models.Model):
+
+    name = models.CharField(max_length=50, blank=False)
+    accounts = models.BooleanField(default=False, blank=False)
+    no_of_accounts = models.IntegerField(default=0, blank=False)
+    budgets = models.BooleanField(default=False, blank=False)
+    no_of_budgets = models.IntegerField(default=0, blank=False)
+    targets = models.BooleanField(default=False, blank=False)
+    no_of_targets = models.IntegerField(default=0, blank=False)
+    pdf_reports = models.BooleanField(default=False, blank=False)
+    ai_assistant = models.BooleanField(default=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+
+        ordering = ["-created_at"]
+        verbose_name = "subscriber package"
+        verbose_name_plural = "subscriber packages"
+        db_table = "SubscriberPackages"
+
+    def __str__(self) -> str:
+
+        return self.name
 
 
 class Profile(models.Model):
 
-    FREE = "free"
-    STANDARD = "standard"
-    PRO = "pro"
-
-    PROFILE_TIERS = (
-        (FREE, "free"),
-        (STANDARD, "standard"),
-        (PRO, "pro"),
-    )
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tier = models.CharField(
-        max_length=20, choices=PROFILE_TIERS, default=FREE, blank=False
-    )
-    account_limit = models.IntegerField(default=1, blank=False)
-    budget_limit = models.IntegerField(default=4, blank=False)
-    pdf_gen = models.BooleanField(default=False, blank=False)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
