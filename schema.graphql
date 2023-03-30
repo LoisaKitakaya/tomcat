@@ -11,15 +11,32 @@ type User {
   last_name: String
   email: String!
   phone_number: String!
+  is_staff: Boolean!
+  is_active: Boolean!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type Package {
+  name: String!
+  accounts: Boolean!
+  no_of_accounts: Int!
+  budgets: Boolean!
+  no_of_budgets: Int!
+  targets: Boolean!
+  no_of_targets: Int!
+  pdf_reports: Boolean!
+  ai_assistant: Boolean!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type Profile {
   id: ID!
   user: User!
-  tier: String!
-  account_limit: Int!
-  budget_limit: Int!
-  pdf_gen: Boolean!
+  package: Package!
+  workspace_uid: String!
+  is_employee: Boolean!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -156,6 +173,10 @@ type Query {
   getAllTransactions(id: ID!): [Transaction!]!
   getTransactionsByAccount(id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
+
+  getWorkspace: Workspace!
+  getTeamLogs(workspace_id: ID!): [TeamLogs!]!
+  getTeamMembers: [Profile!]!
 }
 
 type Mutation {
@@ -252,4 +273,15 @@ type Mutation {
     category: String!
   ): Transaction!
   deleteTransaction(id: ID!, account_id: ID!): Boolean!
+
+  updateWorkspace(name: String!): Workspace!
+
+  createTeamMember(
+    email: String!
+    phone_number: String!
+    first_name: String!
+    last_name: String
+    password: String!
+  ): User!
+  deleteTeamMember(member_id: ID!): Boolean!
 }

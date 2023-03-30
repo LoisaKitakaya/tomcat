@@ -1,8 +1,6 @@
 import io
-import time
 import pyotp
 import base64
-from PIL import Image
 from twilio.rest import Client
 from django.conf import settings
 from qrcode import make as make_qr
@@ -120,7 +118,7 @@ def resolve_generateQRCode(_, info):
     device = OTPDevice.objects.get(user__id=user.id)
 
     totp_uri = pyotp.totp.TOTP(str(device.key)).provisioning_uri(
-        name=user.email, issuer_name="2FA Secure App"
+        name=user.email, issuer_name="Finance Fluent 2FA"
     )
     qr = make_qr(totp_uri)
 

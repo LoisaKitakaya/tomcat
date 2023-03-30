@@ -23,6 +23,8 @@ from users.query_resolvers import *
 from users.mutation_resolvers import *
 from app.query_resolvers import *
 from app.mutation_resolvers import *
+from teams.query_resolvers import *
+from teams.mutation_resolvers import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")
@@ -119,6 +121,10 @@ query.set_field("getAllTransactions", resolve_getAllTransactions)
 query.set_field("getTransactionsByAccount", resolve_getTransactionsByAccount)
 query.set_field("getTransaction", resolve_getTransaction)
 
+query.set_field("getWorkspace", resolve_getWorkspace)
+query.set_field("getTeamLogs", resolve_getTeamLogs)
+query.set_field("getTeamMembers", resolve_getTeamMembers)
+
 # # mutation resolvers
 
 # # # user model mutation resolvers
@@ -153,6 +159,11 @@ mutation.set_field("deleteTarget", resolve_deleteTarget)
 mutation.set_field("createTransaction", resolve_createTransaction)
 mutation.set_field("updateTransaction", resolve_updateTransaction)
 mutation.set_field("deleteTransaction", resolve_deleteTransaction)
+
+mutation.set_field("updateWorkspace", resolve_updateWorkspace)
+
+mutation.set_field("createTeamMember", resolve_createTeamMember)
+mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],
