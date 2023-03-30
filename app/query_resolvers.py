@@ -1,5 +1,5 @@
-import time
 from users.models import Profile
+from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 from app.models import Account, Category, Budget, Transaction, Target
 
@@ -42,15 +42,17 @@ def resolve_getAllAccounts(_, info):
 
     request = info.context["request"]
 
-    try:
+    profile = Profile.objects.get(user__id=request.user.id)
 
-        profile = Profile.objects.get(user__id=request.user.id)
+    if profile.is_employee:
+
+        workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+        accounts = Account.objects.filter(workspace__id=workspace.pk).all()
+
+    else:
 
         accounts = Account.objects.filter(owner__id=profile.pk).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
 
     return accounts
 

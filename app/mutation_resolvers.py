@@ -136,7 +136,7 @@ def resolve_deleteBudget(*_, id):
     else:
 
         return True
-    
+
 
 @login_required
 def resolve_createTarget(

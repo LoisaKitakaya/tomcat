@@ -81,6 +81,57 @@ type Transaction {
   updated_at: Time!
 }
 
+type Workspace {
+  name: String!
+  workspace_uid: String!
+  owner: User!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type TeamLogs {
+  workspace: Workspace!
+  user: User!
+  action: String!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CardPaymentMethod {
+  user: User!
+  cardholder_name: String!
+  card_number: String!
+  expiration_month: Int!
+  expiration_year: Int!
+  cvc: String!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type MpesaPaymentMethod {
+  user: User!
+  phone_owner: String!
+  phone_number: String!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CardBilling {
+  customer: CardPaymentMethod
+  transaction_uid: String!
+  amount: Float!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type MpesaBilling {
+  customer: MpesaPaymentMethod
+  transaction_uid: String!
+  amount: Float!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
 type Query {
   generateOTP: Otp!
 
@@ -115,6 +166,7 @@ type Mutation {
     phone_number: String!
     first_name: String!
     last_name: String
+    workspace_name: String!
     password: String!
     password2: String!
   ): User!
