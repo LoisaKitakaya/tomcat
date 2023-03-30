@@ -1,4 +1,6 @@
 import pyotp
+from uuid import uuid4
+from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 from users.models import User, Profile, OTPDevice, Package
 
@@ -6,7 +8,7 @@ from users.models import User, Profile, OTPDevice, Package
 
 
 def resolve_createUser(
-    *_, phone_number, email, first_name, last_name, password, password2
+    *_, phone_number, email, first_name, last_name, workspace_name, password, password2
 ):
 
     if not User.objects.filter(email=email).exists():
@@ -32,11 +34,21 @@ def resolve_createUser(
 
             new_user.save()
 
-            name = f"OTP device for user: ID {new_user.id}"
+            workspace = Workspace.objects.create(name=workspace_name, owner=new_user)
+
+            workspace.workspace_uid = str(uuid4().hex)
+
+            workspace.save()
 
             starter_package = Package.objects.get(name="Free")
 
-            Profile.objects.create(user=new_user, package=starter_package)
+            Profile.objects.create(
+                user=new_user,
+                package=starter_package,
+                workspace_uid=workspace.workspace_uid,
+            )
+
+            name = f"OTP device for user: ID {new_user.id}"
 
             new_device = OTPDevice.objects.create(user=new_user, name=name)
 

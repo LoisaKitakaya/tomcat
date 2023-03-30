@@ -84,6 +84,8 @@ class Profile(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
+    workspace_uid = models.CharField(max_length=50, blank=False)
+    is_employee = models.BooleanField(default=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import Profile
+from teams.models import Workspace
 
 # Create your models here.
 
@@ -26,6 +27,7 @@ class Account(models.Model):
     account_type = models.CharField(max_length=50, blank=False)
     account_number = models.CharField(max_length=254)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     currency_code = models.CharField(max_length=3, blank=False)
     account_balance = models.FloatField(default=0.0, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -89,7 +91,7 @@ class Budget(models.Model):
     def __str__(self) -> str:
 
         return self.budget_name
-    
+
 
 class Target(models.Model):
 
