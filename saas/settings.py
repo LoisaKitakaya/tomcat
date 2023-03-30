@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     # my apps
     "users",
     "app",
+    "teams",
+    "billing",
 ]
 
 MIDDLEWARE = [
