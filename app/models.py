@@ -7,7 +7,7 @@ from users.models import Profile
 class Category(models.Model):
 
     category_name = models.CharField(max_length=100, blank=False, unique=True)
-    category_description = models.CharField(max_length=255, blank=False)
+    category_description = models.TextField(blank=False)
 
     class Meta:
 
@@ -48,7 +48,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=50, blank=False)
     transaction_amount = models.FloatField(default=0.0, blank=False)
     currency_code = models.CharField(max_length=3, blank=False)
-    description = models.CharField(max_length=255, blank=False)
+    description = models.TextField(blank=False)
     transaction_date = models.DateField(blank=False)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -70,7 +70,7 @@ class Transaction(models.Model):
 class Budget(models.Model):
 
     budget_name = models.CharField(max_length=100, blank=False)
-    budget_description = models.CharField(max_length=255, blank=False)
+    budget_description = models.TextField(blank=False)
     budget_is_active = models.BooleanField(default=True, blank=False)
     budget_amount = models.FloatField(default=0.0, blank=False)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
