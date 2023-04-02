@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.db.models import Q
 from users.models import Profile
+from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 from app.models import Account, Budget, Transaction, Category, Target
 
@@ -14,6 +15,8 @@ def resolve_createAccount(
 
     owner = Profile.objects.get(user__id=request.user.id)
 
+    workspace = Workspace.objects.get(owner__id=request.user.id)
+
     new_account = Account.objects.create(
         account_name=account_name,
         account_type=account_type,
@@ -21,6 +24,7 @@ def resolve_createAccount(
         account_balance=account_balance,
         currency_code=currency_code,
         owner=owner,
+        workspace=workspace,
     )
 
     return new_account
@@ -75,6 +79,8 @@ def resolve_createBudget(
 
     profile = Profile.objects.get(user__id=request.user.id)
 
+    workspace = Workspace.objects.get(owner__id=request.user.id)
+
     account = Account.objects.get(id=account_id)
 
     budget_category = Category.objects.filter(Q(category_name__exact=category)).first()
@@ -86,6 +92,7 @@ def resolve_createBudget(
         category=budget_category,
         owner=profile,
         account=account,
+        workspace=workspace,
     )
 
     return new_budget
@@ -153,6 +160,8 @@ def resolve_createTarget(
 
     profile = Profile.objects.get(user__id=request.user.id)
 
+    workspace = Workspace.objects.get(owner__id=request.user.id)
+
     account = Account.objects.get(id=account_id)
 
     target_category = Category.objects.filter(Q(category_name__exact=category)).first()
@@ -164,6 +173,7 @@ def resolve_createTarget(
         category=target_category,
         owner=profile,
         account=account,
+        workspace=workspace,
     )
 
     return new_target

@@ -79,15 +79,17 @@ def resolve_getAllBudgets(_, info):
 
     request = info.context["request"]
 
-    try:
+    profile = Profile.objects.get(user__id=request.user.id)
 
-        profile = Profile.objects.get(user__id=request.user.id)
+    if profile.is_employee:
+
+        workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+        budgets = Budget.objects.filter(workspace__id=workspace.pk).all()
+
+    else:
 
         budgets = Budget.objects.filter(owner__id=profile.pk).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
 
     return budgets
 
@@ -111,15 +113,17 @@ def resolve_getAllTargets(_, info):
 
     request = info.context["request"]
 
-    try:
+    profile = Profile.objects.get(user__id=request.user.id)
 
-        profile = Profile.objects.get(user__id=request.user.id)
+    if profile.is_employee:
+
+        workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+        targets = Target.objects.filter(workspace__id=workspace.pk).all()
+
+    else:
 
         targets = Target.objects.filter(owner__id=profile.pk).all()
-
-    except Exception as e:
-
-        raise Exception(str(e))
 
     return targets
 

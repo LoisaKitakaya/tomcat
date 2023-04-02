@@ -47,12 +47,21 @@ type Category {
   category_description: String!
 }
 
+type Workspace {
+  name: String!
+  workspace_uid: String!
+  owner: User!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
 type Account {
   id: ID!
   account_name: String!
   account_type: String!
   account_number: String
   owner: Profile!
+  workspace: Workspace!
   currency_code: String!
   account_balance: Float!
   created_at: Datetime!
@@ -66,6 +75,7 @@ type Budget {
   budget_is_active: Boolean!
   budget_amount: Float!
   owner: Profile!
+  workspace: Workspace!
   account: Account!
   category: Category!
   created_at: Datetime!
@@ -79,6 +89,7 @@ type Target {
   target_is_active: Boolean!
   target_amount: Float!
   owner: Profile!
+  workspace: Workspace!
   account: Account!
   category: Category!
   created_at: Datetime!
@@ -96,14 +107,6 @@ type Transaction {
   category: Category!
   created_at: Time!
   updated_at: Time!
-}
-
-type Workspace {
-  name: String!
-  workspace_uid: String!
-  owner: User!
-  created_at: Datetime!
-  updated_at: Datetime!
 }
 
 type TeamLogs {
