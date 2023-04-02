@@ -25,6 +25,8 @@ type Package {
   no_of_budgets: Int!
   targets: Boolean!
   no_of_targets: Int!
+  teams: Boolean!
+  no_of_teams: Int!
   pdf_reports: Boolean!
   ai_assistant: Boolean!
   created_at: Datetime!
