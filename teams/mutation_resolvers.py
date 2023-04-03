@@ -83,6 +83,10 @@ def resolve_deleteTeamMember(_, info, member_id):
 
     member_profile = Profile.objects.get(user__id=member.id)
 
+    if member.id == request.user.id:
+
+        raise Exception("You cannot delete your own profile")
+
     try:
 
         if member_profile.workspace_uid == workspace.workspace_uid:
