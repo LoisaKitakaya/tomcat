@@ -25,6 +25,7 @@ from app.query_resolvers import *
 from app.mutation_resolvers import *
 from teams.query_resolvers import *
 from teams.mutation_resolvers import *
+from billing.query_resolvers import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")
@@ -124,6 +125,18 @@ query.set_field("getTransaction", resolve_getTransaction)
 query.set_field("getWorkspace", resolve_getWorkspace)
 query.set_field("getTeamLogs", resolve_getTeamLogs)
 query.set_field("getTeamMembers", resolve_getTeamMembers)
+
+query.set_field("getAllCardUsers", resolve_getAllCardUsers)
+query.set_field("getCardUser", resolve_getCardUser)
+
+query.set_field("getAllMpesaUsers", resolve_getAllMpesaUsers)
+query.set_field("getMpesaUser", resolve_getMpesaUser)
+
+query.set_field("getAllCardPayments", resolve_getAllCardPayments)
+query.set_field("getUserCardPayments", resolve_getUserCardPayments)
+
+query.set_field("getAllMpesaPayments", resolve_getAllMpesaPayments)
+query.set_field("getUserMpesaPayments", resolve_getUserMpesaPayments)
 
 # # mutation resolvers
 

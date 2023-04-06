@@ -51,6 +51,7 @@ class CardBilling(models.Model):
 
     customer = models.ForeignKey(CardPaymentMethod, on_delete=models.CASCADE)
     transaction_uid = models.CharField(max_length=200, blank=False)
+    plan = models.CharField(max_length=10, blank=False)
     amount = models.FloatField(default=0.0, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -71,6 +72,7 @@ class MpesaBilling(models.Model):
 
     customer = models.ForeignKey(MpesaPaymentMethod, on_delete=models.CASCADE)
     transaction_uid = models.CharField(max_length=200, blank=False)
+    plan = models.CharField(max_length=10, blank=False)
     amount = models.FloatField(default=0.0, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
