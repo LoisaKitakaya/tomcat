@@ -39,6 +39,7 @@ type Profile {
   user: User!
   package: Package!
   workspace_uid: String!
+  payment_method: String!
   is_paid_user: Boolean!
   is_employee: Boolean!
   created_at: Datetime!
@@ -309,4 +310,37 @@ type Mutation {
     password: String!
   ): User!
   deleteTeamMember(member_id: ID!): Boolean!
+
+  registerCard(
+    cardholder_name: String!
+    card_number: String!
+    expiration_month: Int!
+    expiration_year: Int!
+    cvc: String!
+  ): CardPaymentMethod!
+
+  registerAndBillCard(
+    cardholder_name: String!
+    card_number: String!
+    expiration_month: Int!
+    expiration_year: Int!
+    cvc: String!
+    plan: String!
+    amount: Float!
+  ): CardBilling!
+
+  registerMpesa(
+    phone_owner: String!
+    phone_number: String!
+  ): MpesaPaymentMethod!
+
+  registerAndBillMpesa(
+    phone_owner: String!
+    phone_number: String!
+    plan: String!
+    amount: Float!
+  ): MpesaBilling!
+
+  requestBilling(payment_method: String!): Boolean!
+  cancelPlan(payment_method: String!): Boolean!
 }

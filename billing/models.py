@@ -6,7 +6,7 @@ from users.models import User
 
 class CardPaymentMethod(models.Model):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     cardholder_name = models.CharField(max_length=255, blank=False)
     card_number = models.CharField(max_length=16, blank=False)
     expiration_month = models.PositiveSmallIntegerField(blank=False)
@@ -29,7 +29,7 @@ class CardPaymentMethod(models.Model):
 
 class MpesaPaymentMethod(models.Model):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_owner = models.CharField(max_length=255, blank=False)
     phone_number = models.CharField(max_length=20, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)

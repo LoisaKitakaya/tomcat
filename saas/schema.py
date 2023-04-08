@@ -26,6 +26,7 @@ from app.mutation_resolvers import *
 from teams.query_resolvers import *
 from teams.mutation_resolvers import *
 from billing.query_resolvers import *
+from billing.mutation_resolvers import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")
@@ -177,6 +178,15 @@ mutation.set_field("updateWorkspace", resolve_updateWorkspace)
 
 mutation.set_field("createTeamMember", resolve_createTeamMember)
 mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
+
+mutation.set_field("registerCard", resolve_registerCard)
+mutation.set_field("registerAndBillCard", resolve_registerAndBillCard)
+
+mutation.set_field("registerMpesa", resolve_registerMpesa)
+mutation.set_field("registerAndBillMpesa", resolve_registerAndBillMpesa)
+
+mutation.set_field("requestBilling", resolve_requestBilling)
+mutation.set_field("cancelPlan", resolve_cancelPlan)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],

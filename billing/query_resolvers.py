@@ -9,7 +9,6 @@ from billing.models import (
 
 @login_required
 def resolve_getAllCardUsers(*_):
-
     card_users = CardPaymentMethod.objects.all()
 
     return card_users
@@ -17,7 +16,6 @@ def resolve_getAllCardUsers(*_):
 
 @login_required
 def resolve_getCardUser(_, info):
-
     request = info.context["request"]
 
     card_user = CardPaymentMethod.objects.get(user__id=request.user.id)
@@ -27,7 +25,6 @@ def resolve_getCardUser(_, info):
 
 @login_required
 def resolve_getAllMpesaUsers(*_):
-
     mpesa_users = MpesaPaymentMethod.objects.all()  # type: ignore
 
     return mpesa_users
@@ -35,7 +32,6 @@ def resolve_getAllMpesaUsers(*_):
 
 @login_required
 def resolve_getMpesaUser(_, info):
-
     request = info.context["request"]
 
     mpesa_user = MpesaPaymentMethod.objects.get(user__id=request.user.id)
@@ -45,7 +41,6 @@ def resolve_getMpesaUser(_, info):
 
 @login_required
 def resolve_getAllCardPayments(*_):
-
     card_payments = CardBilling.objects.all()
 
     return card_payments
@@ -53,7 +48,6 @@ def resolve_getAllCardPayments(*_):
 
 @login_required
 def resolve_getUserCardPayments(_, info):
-
     request = info.context["request"]
 
     customer = CardPaymentMethod.objects.get(user__id=request.user.id)
@@ -65,7 +59,6 @@ def resolve_getUserCardPayments(_, info):
 
 @login_required
 def resolve_getAllMpesaPayments(*_):
-
     mpesa_payments = MpesaBilling.objects.all()
 
     return mpesa_payments
@@ -73,7 +66,6 @@ def resolve_getAllMpesaPayments(*_):
 
 @login_required
 def resolve_getUserMpesaPayments(_, info):
-
     request = info.context["request"]
 
     customer = MpesaPaymentMethod.objects.get(user__id=request.user.id)
