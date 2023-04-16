@@ -124,41 +124,15 @@ type TeamLogs {
   updated_at: Datetime!
 }
 
-type CardPaymentMethod {
-  id: ID!
-  user: User!
-  cardholder_name: String!
-  card_number: String!
-  expiration_month: Int!
-  expiration_year: Int!
-  cvc: String!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type MpesaPaymentMethod {
-  id: ID!
-  user: User!
-  phone_owner: String!
-  phone_number: String!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type CardBilling {
-  id: ID!
-  customer: CardPaymentMethod
-  transaction_uid: String!
+type PlanBilling {
+  customer: User!
+  order_tracking_id: String!
+  merchant_ref: String!
+  account_ref: String!
+  plan: String!
+  currency: String!
   amount: Float!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type MpesaBilling {
-  id: ID!
-  customer: MpesaPaymentMethod
-  transaction_uid: String!
-  amount: Float!
+  payment_confirmed: Boolean!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -192,17 +166,8 @@ type Query {
   getTeamLogs(workspace_id: ID!): [TeamLogs!]!
   getTeamMembers: [Profile!]!
 
-  getAllCardUsers: [CardPaymentMethod!]!
-  getCardUser: CardPaymentMethod!
-
-  getAllMpesaUsers: [MpesaPaymentMethod!]!
-  getMpesaUser: MpesaPaymentMethod!
-
-  getAllCardPayments: [CardBilling!]!
-  getUserCardPayments: [CardBilling!]!
-
-  getAllMpesaPayments: [MpesaBilling!]!
-  getUserMpesaPayments: [MpesaBilling!]!
+  requestBilling: Boolean!
+  cancelPlan: Boolean!
 }
 
 type Mutation {
@@ -310,37 +275,4 @@ type Mutation {
     password: String!
   ): User!
   deleteTeamMember(member_id: ID!): Boolean!
-
-  registerCard(
-    cardholder_name: String!
-    card_number: String!
-    expiration_month: Int!
-    expiration_year: Int!
-    cvc: String!
-  ): CardPaymentMethod!
-
-  registerAndBillCard(
-    cardholder_name: String!
-    card_number: String!
-    expiration_month: Int!
-    expiration_year: Int!
-    cvc: String!
-    plan: String!
-    amount: Float!
-  ): CardBilling!
-
-  registerMpesa(
-    phone_owner: String!
-    phone_number: String!
-  ): MpesaPaymentMethod!
-
-  registerAndBillMpesa(
-    phone_owner: String!
-    phone_number: String!
-    plan: String!
-    amount: Float!
-  ): MpesaBilling!
-
-  requestBilling(payment_method: String!): Boolean!
-  cancelPlan(payment_method: String!): Boolean!
 }

@@ -45,7 +45,6 @@ qrcode_scalar = ScalarType("Qrcode")
 
 @datetime_scalar.serializer
 def serialize_datetime(value):
-
     timestamp = str(time.mktime(value.timetuple()))
 
     return timestamp
@@ -53,7 +52,6 @@ def serialize_datetime(value):
 
 @date_scalar.serializer
 def serialize_date(value):
-
     date = value.isoformat()
 
     return date
@@ -61,7 +59,6 @@ def serialize_date(value):
 
 @number_scalar.serializer
 def serialize_number(value):
-
     number = "{:,}".format(value)
 
     return number
@@ -69,7 +66,6 @@ def serialize_number(value):
 
 @time_scalar.serializer
 def serialize_time(value):
-
     date = value.strftime("%Y-%m-%d")
 
     return date
@@ -77,13 +73,11 @@ def serialize_time(value):
 
 @otp_scalar.serializer
 def serialize_otp(value):
-
     return value
 
 
 @qrcode_scalar.serializer
 def serialize_qrcode(value):
-
     return value
 
 
@@ -127,18 +121,6 @@ query.set_field("getWorkspace", resolve_getWorkspace)
 query.set_field("getTeamLogs", resolve_getTeamLogs)
 query.set_field("getTeamMembers", resolve_getTeamMembers)
 
-query.set_field("getAllCardUsers", resolve_getAllCardUsers)
-query.set_field("getCardUser", resolve_getCardUser)
-
-query.set_field("getAllMpesaUsers", resolve_getAllMpesaUsers)
-query.set_field("getMpesaUser", resolve_getMpesaUser)
-
-query.set_field("getAllCardPayments", resolve_getAllCardPayments)
-query.set_field("getUserCardPayments", resolve_getUserCardPayments)
-
-query.set_field("getAllMpesaPayments", resolve_getAllMpesaPayments)
-query.set_field("getUserMpesaPayments", resolve_getUserMpesaPayments)
-
 # # mutation resolvers
 
 # # # user model mutation resolvers
@@ -178,15 +160,6 @@ mutation.set_field("updateWorkspace", resolve_updateWorkspace)
 
 mutation.set_field("createTeamMember", resolve_createTeamMember)
 mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
-
-mutation.set_field("registerCard", resolve_registerCard)
-mutation.set_field("registerAndBillCard", resolve_registerAndBillCard)
-
-mutation.set_field("registerMpesa", resolve_registerMpesa)
-mutation.set_field("registerAndBillMpesa", resolve_registerAndBillMpesa)
-
-mutation.set_field("requestBilling", resolve_requestBilling)
-mutation.set_field("cancelPlan", resolve_cancelPlan)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],

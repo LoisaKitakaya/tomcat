@@ -3,8 +3,8 @@ from billing import views
 
 urlpatterns = [
     path(
-        "/transactions/",
+        "transactions/",
         views.notifications,  # type: ignore
-        name="transaction-notifications",
+        name="transaction -notifications",
     ),
 ]

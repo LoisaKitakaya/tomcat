@@ -6,14 +6,17 @@ from .models import User, Profile, OTPDevice, Package
 
 
 class CustomUserAdmin(UserAdmin):
-
     model = User
 
-    list_display = ["email", "first_name", "last_name", "phone_number"]
+    list_display = ("username", "email", "first_name", "last_name", "is_staff")
+
+    search_fields = ("username", "email", "first_name", "last_name")
+
+    list_filter = ("is_staff", "is_superuser", "groups")
 
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name", "phone_number")}),
+        (None, {"fields": ("username", "password")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "email")}),
         (
             "Permissions",
             {
@@ -29,33 +32,12 @@ class CustomUserAdmin(UserAdmin):
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": (
-                    "email",
-                    "password1",
-                    "password2",
-                    "first_name",
-                    "last_name",
-                    "phone_number",
-                ),
-            },
-        ),
-    )
-
-    search_fields = ("email",)
-    ordering = ("email",)
-
 
 admin.site.register(User, CustomUserAdmin)
 
 
 @admin.register(Profile)
 class ProfileAdminView(admin.ModelAdmin):
-
     model = Profile
 
     list_filter = (
@@ -66,7 +48,6 @@ class ProfileAdminView(admin.ModelAdmin):
 
 @admin.register(OTPDevice)
 class OTPDeviceAdminView(admin.ModelAdmin):
-
     model = OTPDevice
 
     list_filter = (
@@ -77,7 +58,6 @@ class OTPDeviceAdminView(admin.ModelAdmin):
 
 @admin.register(Package)
 class PackageAdminView(admin.ModelAdmin):
-
     model = Package
 
     list_filter = (

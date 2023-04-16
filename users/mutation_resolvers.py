@@ -8,7 +8,7 @@ from users.models import User, Profile, OTPDevice, Package
 
 
 def resolve_createUser(
-    *_, phone_number, email, first_name, last_name, workspace_name, password, password2
+    *_, username, email, first_name, last_name, workspace_name, password, password2
 ):
 
     if not User.objects.filter(email=email).exists():
@@ -19,7 +19,7 @@ def resolve_createUser(
 
                 User.objects.create(
                     email=email,
-                    phone_number=phone_number,
+                    username=username,
                     first_name=first_name,
                     last_name=last_name,
                 )
@@ -48,7 +48,7 @@ def resolve_createUser(
                 workspace_uid=workspace.workspace_uid,
             )
 
-            name = f"OTP device for user: ID {new_user.id}"
+            name = f"OTP device for user: ID {new_user.pk}"
 
             new_device = OTPDevice.objects.create(user=new_user, name=name)
 
@@ -76,7 +76,7 @@ def resolve_verifyOTP(_, info, otp):
 
     user = User.objects.get(id=request.user.id)
 
-    device = OTPDevice.objects.get(user__id=user.id)
+    device = OTPDevice.objects.get(user__id=user.pk)
 
     totp = pyotp.TOTP(str(device.key))
 
@@ -104,18 +104,18 @@ def resolve_verifyOTP(_, info, otp):
 
 
 @login_required
-def resolve_updateUser(_, info, phone_number, email, first_name, last_name):
+def resolve_updateUser(_, info, username, email, first_name, last_name):
 
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():
 
-        if not User.objects.filter(phone_number=phone_number).exists():
+        if not User.objects.filter(username=username).exists():
 
             user = User.objects.get(id=request.user.id)
 
             user.email = email
-            user.phone_number = phone_number
+            user.username = username
             user.first_name = first_name
             user.last_name = last_name
 
