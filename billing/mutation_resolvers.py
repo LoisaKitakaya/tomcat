@@ -23,23 +23,31 @@ def resolve_subscribeToPlan(_, info, plan):
 
     consumer_key = settings.CONSUMER_KEY
     consumer_secret = settings.CONSUMER_SECRET
+    environment = settings.ENVIRONMENT
     app_url = settings.BACKEND_TRUSTED_URL
 
-    ipn_callback_url = f"{app_url}:8000/billing/pesapal_ipn_callback/"
-    notification_callback_url = f"{app_url}:8000/billing/notifications/"
+    test_ipn_callback_url = f"{app_url}:8000/billing/pesapal_ipn_callback/"
+    test_notification_callback_url = f"{app_url}:8000/billing/notifications/"
+
+    live_ipn_callback_url = f"{app_url}/billing/pesapal_ipn_callback/"
+    live_notification_callback_url = f"{app_url}/billing/notifications/"
 
     subscription = PesaPal(
         consumer_key=consumer_key,
         consumer_secret=consumer_secret,
-        notification_url=ipn_callback_url,
-        environment="test",
+        notification_url=live_ipn_callback_url
+        if environment == "live"
+        else test_ipn_callback_url,
+        environment=environment,
     )
 
     subscription_payment = subscription.submit_recurring_order_request(
         currency=currency,
-        amount=amount,
+        amount=amount if environment == "live" else 0.003,
         description=description,
-        callback_url=notification_callback_url,
+        callback_url=live_notification_callback_url
+        if environment == "live"
+        else test_notification_callback_url,
         email_address=request.user.email,
         first_name=request.user.first_name,
         last_name=request.user.last_name,
