@@ -10,7 +10,7 @@ type User {
   first_name: String!
   last_name: String!
   email: String!
-  phone_number: String!
+  username: String!
   is_staff: Boolean!
   is_active: Boolean!
   created_at: Datetime!
@@ -175,7 +175,7 @@ type Mutation {
 
   createUser(
     email: String!
-    phone_number: String!
+    username: String!
     first_name: String!
     last_name: String
     workspace_name: String!
@@ -184,7 +184,7 @@ type Mutation {
   ): User!
   updateUser(
     email: String!
-    phone_number: String!
+    username: String!
     first_name: String!
     last_name: String
   ): User!
@@ -269,7 +269,7 @@ type Mutation {
 
   createTeamMember(
     email: String!
-    phone_number: String!
+    username: String!
     first_name: String!
     last_name: String
     password: String!
