@@ -3,8 +3,13 @@ from billing import views
 
 urlpatterns = [
     path(
-        "transactions/",
+        "notifications/",
         views.notifications,  # type: ignore
-        name="transaction -notifications",
+        name="transaction-notifications",
+    ),
+    path(
+        "pesapal_ipn_callback",
+        views.pesapal_ipn_callback,  # type: ignore
+        name="pesapal-ipn-callbacks",
     ),
 ]

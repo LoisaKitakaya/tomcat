@@ -55,7 +55,11 @@ def register_ipn_url(notification_url, registration_url, token):
 
 class PesaPal:
     def __init__(
-        self, consumer_key, consumer_secret, notification_url, environment
+        self,
+        consumer_key="",
+        consumer_secret="",
+        notification_url="",
+        environment="",
     ) -> None:
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
@@ -143,9 +147,9 @@ class PesaPal:
         description,
         callback_url,
         email_address,
-        phone_number,
         first_name,
         last_name,
+        phone_number=None,
         country_code=None,
         middle_name=None,
         line_1=None,
@@ -178,7 +182,7 @@ class PesaPal:
                 "notification_id": self.ipn_id,
                 "billing_address": {
                     "email_address": email_address,
-                    "phone_number": phone_number,
+                    "phone_number": phone_number or "",
                     "country_code": country_code or "",
                     "first_name": first_name,
                     "middle_name": middle_name or "",
@@ -214,9 +218,9 @@ class PesaPal:
         description,
         callback_url,
         email_address,
-        phone_number,
         first_name,
         last_name,
+        phone_number=None,
         country_code=None,
         middle_name=None,
         line_1=None,
@@ -250,7 +254,7 @@ class PesaPal:
                 "notification_id": self.ipn_id,
                 "billing_address": {
                     "email_address": email_address,
-                    "phone_number": phone_number,
+                    "phone_number": phone_number or "",
                     "country_code": country_code or "",
                     "first_name": first_name,
                     "middle_name": middle_name or "",
