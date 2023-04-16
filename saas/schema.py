@@ -161,6 +161,8 @@ mutation.set_field("updateWorkspace", resolve_updateWorkspace)
 mutation.set_field("createTeamMember", resolve_createTeamMember)
 mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
 
+mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
+
 schema = make_executable_schema(
     [type_defs, jwt_schema],
     query,

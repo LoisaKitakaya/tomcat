@@ -127,6 +127,7 @@ type PlanBilling {
   order_tracking_id: String!
   merchant_ref: String!
   account_ref: String!
+  redirect_url: String!
   plan: String!
   currency: String!
   amount: Float!
@@ -273,4 +274,6 @@ type Mutation {
     password: String!
   ): User!
   deleteTeamMember(member_id: ID!): Boolean!
+
+  subscribeToPlan(plan: String!): PlanBilling!
 }

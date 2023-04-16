@@ -139,3 +139,6 @@ dump.json
 # schema
 schema.js
 token.json
+
+# api3-demo-keys
+api3-demo-keys.txt

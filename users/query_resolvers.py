@@ -13,13 +13,10 @@ from users.models import User, Profile, OTPDevice
 
 @login_required
 def resolve_getAllUsers(*_):
-
     try:
-
         all_users = User.objects.all()
 
     except Exception as e:
-
         raise Exception(str(e))
 
     return all_users
@@ -27,15 +24,12 @@ def resolve_getAllUsers(*_):
 
 @login_required
 def resolve_getUser(_, info):
-
     request = info.context["request"]
 
     try:
-
         user = User.objects.get(id=request.user.id)
 
     except Exception as e:
-
         raise Exception(str(e))
 
     return user
@@ -43,13 +37,10 @@ def resolve_getUser(_, info):
 
 @login_required
 def resolve_getUserByUsername(*_, username):
-
     try:
-
         user = User.objects.get(username=username)
 
     except Exception as e:
-
         raise Exception(str(e))
 
     return user
@@ -57,65 +48,42 @@ def resolve_getUserByUsername(*_, username):
 
 @login_required
 def resolve_generateOTP(_, info):
-
     request = info.context["request"]
 
     user = User.objects.get(id=request.user.id)
 
-    device = OTPDevice.objects.get(user__id=user.id)
+    device = OTPDevice.objects.get(user__id=user.pk)
 
     totp = pyotp.TOTP(str(device.key))
 
     otp = totp.now()
 
-    if user.phone_number:
+    subject = "Account verification"
+    body = f"Your One-Time-Password is:\n{otp}"
+    me = settings.DEFAULT_FROM_EMAIL
+    recipient = user.email
 
-        account = settings.TWILIO_ACCOUNT
-        token = settings.TWILIO_TOKEN
-        number = settings.TWILIO_NUMBER
+    send_mail(
+        subject,
+        body,
+        me,
+        [recipient],
+        fail_silently=False,
+    )
 
-        client = Client(account, token)
-
-        client.messages.create(
-            body=f"Your One-Time-Password is:\n{otp}",
-            from_=number,
-            to=user.phone_number,
-        )
-
-        return {
-            "success": True,
-            "message": f"A One-Time-Password has been sent to the number:\n{user.phone_number}",
-        }
-
-    else:
-
-        subject = "Account verification"
-        body = f"Your One-Time-Password is:\n{otp}"
-        me = settings.DEFAULT_FROM_EMAIL
-        recipient = user.email
-
-        send_mail(
-            subject,
-            body,
-            me,
-            [recipient],
-            fail_silently=False,
-        )
-
-        return {
-            "success": True,
-            "message": f"A One-Time-Password has been sent to the email:\n{user.email}",
-        }
+    return {
+        "success": True,
+        "message": f"A One-Time-Password has been sent to the email:\n{user.email}",
+    }
 
 
 @login_required
 def resolve_generateQRCode(_, info):
-
     request = info.context["request"]
 
     user = User.objects.get(id=request.user.id)
 
-    device = OTPDevice.objects.get(user__id=user.id)
+    device = OTPDevice.objects.get(user__id=user.pk)
 
     totp_uri = pyotp.totp.TOTP(str(device.key)).provisioning_uri(
         name=user.email, issuer_name="Finance Fluent 2FA"
@@ -135,13 +103,10 @@ def resolve_generateQRCode(_, info):
 
 @login_required
 def resolve_getAllProfiles(*_):
-
     try:
-
         profiles = Profile.objects.all()
 
     except Exception as e:
-
         raise Exception(str(e))
 
     return profiles
@@ -149,15 +114,12 @@ def resolve_getAllProfiles(*_):
 
 @login_required
 def resolve_getProfile(_, info):
-
     request = info.context["request"]
 
     try:
-
         profile = Profile.objects.get(user__id=request.user.id)
 
     except Exception as e:
-
         raise Exception(str(e))
 
     return profile

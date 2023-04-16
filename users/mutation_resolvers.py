@@ -10,13 +10,9 @@ from users.models import User, Profile, OTPDevice, Package
 def resolve_createUser(
     *_, username, email, first_name, last_name, workspace_name, password, password2
 ):
-
     if not User.objects.filter(email=email).exists():
-
         if len(password) > 8 and len(password2) > 8:
-
             if password == password2:
-
                 User.objects.create(
                     email=email,
                     username=username,
@@ -25,7 +21,6 @@ def resolve_createUser(
                 )
 
             else:
-
                 raise Exception("Passwords provided did not match!")
 
             new_user = User.objects.get(email=email)
@@ -57,11 +52,9 @@ def resolve_createUser(
             new_device.save()
 
         else:
-
             raise Exception("Password is too short. Must have minimum of 8 characters")
 
     else:
-
         raise Exception("Email already exists. Make sure your email is unique!")
 
     return new_user
@@ -69,7 +62,6 @@ def resolve_createUser(
 
 @login_required
 def resolve_verifyOTP(_, info, otp):
-
     pass
 
     request = info.context["request"]
@@ -81,22 +73,18 @@ def resolve_verifyOTP(_, info, otp):
     totp = pyotp.TOTP(str(device.key))
 
     try:
-
         test = totp.verify(otp)
 
     except Exception as e:
-
         raise Exception(str(e))
 
     if test:
-
         return {
             "success": True,
             "message": f"Your account has been verified",
         }
 
     else:
-
         return {
             "success": False,
             "message": f"Entered invalid OTP code",
@@ -105,13 +93,10 @@ def resolve_verifyOTP(_, info, otp):
 
 @login_required
 def resolve_updateUser(_, info, username, email, first_name, last_name):
-
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():
-
         if not User.objects.filter(username=username).exists():
-
             user = User.objects.get(id=request.user.id)
 
             user.email = email
@@ -122,13 +107,11 @@ def resolve_updateUser(_, info, username, email, first_name, last_name):
             user.save()
 
         else:
-
             raise Exception(
                 "Phone number already exists. Make sure your Phone number is unique!"
             )
 
     else:
-
         raise Exception("Email already exists. Make sure your email is unique!")
 
     return user

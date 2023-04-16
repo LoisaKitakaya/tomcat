@@ -136,13 +136,17 @@ AUTH_USER_MODEL = "users.User"
 
 # Django CORS headers
 
+FRONTEND_URL = os.getenv("MOLLY_DEV")
+
 CORS_ALLOWED_ORIGINS = [
-    os.getenv("MOLLY_DEV"),
+    FRONTEND_URL,
     # os.getenv("MOLLY_PROD"),
 ]
 
+BACKEND_TRUSTED_URL = os.getenv("TOMCAT_DEV")
+
 CSRF_TRUSTED_ORIGINS = [
-    os.getenv("TOMCAT_DEV"),
+    BACKEND_TRUSTED_URL,
     # os.getenv("TOMCAT_PROD"),
 ]
 
@@ -173,4 +177,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
-# OTP settings
+# PesaPal Account Settings
+
+CONSUMER_KEY = os.getenv("CONSUMER_KEY")
+CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")

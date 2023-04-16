@@ -10,7 +10,6 @@ from app.models import Account, Budget, Transaction, Category, Target
 def resolve_createAccount(
     _, info, account_name, account_type, account_number, account_balance, currency_code
 ):
-
     request = info.context["request"]
 
     owner = Profile.objects.get(user__id=request.user.id)
@@ -34,7 +33,6 @@ def resolve_createAccount(
 def resolve_updateAccount(
     *_, id, account_name, account_type, account_number, account_balance, currency_code
 ):
-
     account = Account.objects.get(id=id)
 
     account.account_name = account_name
@@ -50,17 +48,13 @@ def resolve_updateAccount(
 
 @login_required
 def resolve_deleteAccount(*_, id):
-
     try:
-
         Account.objects.get(id=id).delete()
 
     except Exception as e:
-
         raise Exception(str(e))
 
     else:
-
         return True
 
 
@@ -74,7 +68,6 @@ def resolve_createBudget(
     budget_amount,
     category,
 ):
-
     request = info.context["request"]
 
     profile = Profile.objects.get(user__id=request.user.id)
@@ -102,7 +95,6 @@ def resolve_createBudget(
 def resolve_updateBudget(
     *_, id, budget_name, budget_description, budget_amount, category
 ):
-
     budget = Budget.objects.get(id=id)
 
     budget_category = Category.objects.filter(Q(category_name__exact=category)).first()
@@ -119,7 +111,6 @@ def resolve_updateBudget(
 
 @login_required
 def resolve_budgetStatus(*_, id, status):
-
     budget = Budget.objects.get(id=id)
 
     budget.budget_is_active = status
@@ -131,17 +122,13 @@ def resolve_budgetStatus(*_, id, status):
 
 @login_required
 def resolve_deleteBudget(*_, id):
-
     try:
-
         Budget.objects.get(id=id).delete()
 
     except Exception as e:
-
         raise Exception(str(e))
 
     else:
-
         return True
 
 
@@ -155,7 +142,6 @@ def resolve_createTarget(
     target_amount,
     category,
 ):
-
     request = info.context["request"]
 
     profile = Profile.objects.get(user__id=request.user.id)
@@ -183,7 +169,6 @@ def resolve_createTarget(
 def resolve_updateTarget(
     *_, id, target_name, target_description, target_amount, category
 ):
-
     target = Target.objects.get(id=id)
 
     target_category = Category.objects.filter(Q(category_name__exact=category)).first()
@@ -200,7 +185,6 @@ def resolve_updateTarget(
 
 @login_required
 def resolve_targetStatus(*_, id, status):
-
     target = Target.objects.get(id=id)
 
     target.target_is_active = status
@@ -212,17 +196,13 @@ def resolve_targetStatus(*_, id, status):
 
 @login_required
 def resolve_deleteTarget(*_, id):
-
     try:
-
         Target.objects.get(id=id).delete()
 
     except Exception as e:
-
         raise Exception(str(e))
 
     else:
-
         return True
 
 
@@ -237,7 +217,6 @@ def resolve_createTransaction(
     description,
     category
 ):
-
     account = Account.objects.get(id=account_id)
 
     transaction_category = Category.objects.filter(
@@ -257,13 +236,11 @@ def resolve_createTransaction(
     )
 
     if transaction_type == "payable":
-
         account.account_balance -= transaction_amount
 
         account.save()
 
     elif transaction_type == "receivable":
-
         account.account_balance += transaction_amount
 
         account.save()
@@ -283,7 +260,6 @@ def resolve_updateTransaction(
     description,
     category
 ):
-
     account = Account.objects.get(id=account_id)
 
     transaction = Transaction.objects.get(id=id)
@@ -295,7 +271,6 @@ def resolve_updateTransaction(
     date_object = datetime.strptime(transaction_date, "%Y-%m-%d").date()
 
     if transaction.transaction_type == "payable" and transaction_type == "payable":
-
         previous_balance = account.account_balance + transaction.transaction_amount
 
         account.account_balance = previous_balance - transaction_amount
@@ -306,7 +281,6 @@ def resolve_updateTransaction(
         transaction.transaction_type == "receivable"
         and transaction_type == "receivable"
     ):
-
         previous_balance = account.account_balance - transaction.transaction_amount
 
         account.account_balance = previous_balance + transaction_amount
@@ -314,7 +288,6 @@ def resolve_updateTransaction(
         account.save()
 
     elif transaction.transaction_type == "receivable" and transaction_type == "payable":
-
         previous_balance = account.account_balance - transaction.transaction_amount
 
         account.account_balance = previous_balance - transaction_amount
@@ -322,7 +295,6 @@ def resolve_updateTransaction(
         account.save()
 
     elif transaction.transaction_type == "payable" and transaction_type == "receivable":
-
         previous_balance = account.account_balance + transaction.transaction_amount
 
         account.account_balance = previous_balance + transaction_amount
@@ -343,13 +315,11 @@ def resolve_updateTransaction(
 
 @login_required
 def resolve_deleteTransaction(*_, id, account_id):
-
     account = Account.objects.get(id=account_id)
 
     transaction = Transaction.objects.get(id=id)
 
     if transaction.transaction_type == "payable":
-
         previous_balance = account.account_balance + transaction.transaction_amount
 
         account.account_balance = previous_balance
@@ -357,7 +327,6 @@ def resolve_deleteTransaction(*_, id, account_id):
         account.save()
 
     elif transaction.transaction_type == "receivable":
-
         previous_balance = account.account_balance - transaction.transaction_amount
 
         account.account_balance = previous_balance

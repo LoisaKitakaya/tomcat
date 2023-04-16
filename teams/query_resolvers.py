@@ -5,7 +5,6 @@ from users.models import User, Profile
 
 @login_required
 def resolve_getWorkspace(_, info):
-
     request = info.context["request"]
 
     workspace = Workspace.objects.get(owner__id=request.user.id)
@@ -15,7 +14,6 @@ def resolve_getWorkspace(_, info):
 
 @login_required
 def resolve_getTeamLogs(*_, workspace_id):
-
     workspace = Workspace.objects.get(id=workspace_id)
 
     logs = TeamLogs.objects.filter(workspace__id=workspace.pk).all()
@@ -25,7 +23,6 @@ def resolve_getTeamLogs(*_, workspace_id):
 
 @login_required
 def resolve_getTeamMembers(_, info):
-
     request = info.context["request"]
 
     workspace = Workspace.objects.get(owner__id=request.user.id)
