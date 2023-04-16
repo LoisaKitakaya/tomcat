@@ -1,6 +1,4 @@
-from django.db.models import Q
 from django.conf import settings
-from users.models import User, Profile, Package
 from ariadne_jwt.decorators import login_required
 from billing.models import PlanBilling
 from billing.pesapal import PesaPal

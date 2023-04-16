@@ -1,6 +1,7 @@
-from users.models import Profile
-from billing.models import PlanBilling
+from django.db.models import Q
 from billing.pesapal import PesaPal
+from billing.models import PlanBilling
+from users.models import User, Profile, Package
 
 
 def notifications(request):

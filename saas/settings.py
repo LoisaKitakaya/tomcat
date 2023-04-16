@@ -147,14 +147,12 @@ FRONTEND_URL = os.getenv("MOLLY_DEV")
 
 CORS_ALLOWED_ORIGINS = [
     FRONTEND_URL,
-    # os.getenv("MOLLY_PROD"),
 ]
 
 BACKEND_TRUSTED_URL = os.getenv("TOMCAT_DEV")
 
 CSRF_TRUSTED_ORIGINS = [
     BACKEND_TRUSTED_URL,
-    # os.getenv("TOMCAT_PROD"),
 ]
 
 CORS_ALLOW_METHODS = list(default_methods)
