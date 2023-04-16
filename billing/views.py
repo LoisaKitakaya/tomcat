@@ -1,8 +1,9 @@
-from django.db.models import Q
 from billing.pesapal import PesaPal
 from django.shortcuts import render
 from billing.models import PlanBilling
-from users.models import User, Profile, Package
+from django.core.mail import send_mail
+from django.conf import settings
+from users.models import Profile, Package
 from django.conf import settings
 
 
@@ -56,13 +57,49 @@ def pesapal_ipn_callback(request):
             order_tracking_id=order_tracking_id
         )
 
-        # transaction status codes
-
-        INVALID = 0
-        COMPLETED = 1
-        FAILED = 2
-        REVERSED = 3
-
         print(transaction_status)
+
+        account_ref = transaction_status["subscription_transaction_info"]["account_reference"]  # type: ignore
+
+        if transaction_status["status_code"] == 1 and transaction_status["status"] == "200":  # type: ignore
+            user_billing = PlanBilling.objects.get(order_tracking_id=order_tracking_id)
+
+            user_billing.account_ref = account_ref if account_ref else "NOT RECURRING"
+            user_billing.payment_confirmed = True
+
+            user_billing.save()
+
+            plan = Package.objects.get(name=user_billing.plan)
+
+            user_profile = Profile.objects.get(user__id=user_billing.customer.pk)
+
+            user_profile.package = plan
+            user_profile.is_paid_user = True
+            user_profile.payment_method = transaction_status["payment_method"]  # type: ignore
+
+            user_profile.save()
+
+            payment_status = transaction_status["payment_status"]  # type: ignore
+            amount = transaction_status["amount"]  # type: ignore
+            currency = transaction_status["currency"]  # type: ignore
+            created_date = transaction_status["created_date"]  # type: ignore
+
+            subject = f"Transaction Status"
+            body = f"Order tracking ID: {order_tracking_id}\n\
+                Payment status: {payment_status}\n\
+                    Amount: {amount}\n\
+                        Currency: {currency}\n\
+                            Account: {user_billing.account_ref}\n\
+                                \nCreated date: {created_date}"
+            me = settings.DEFAULT_FROM_EMAIL
+            recipient = settings.DEFAULT_FROM_EMAIL
+
+            send_mail(
+                subject,
+                body,
+                me,
+                [recipient],
+                fail_silently=False,
+            )
 
         return
