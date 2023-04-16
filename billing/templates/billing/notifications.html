@@ -1,0 +1,39 @@
+<!-- load static -->
+{% load static %}
+<!-- load static -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- my css -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <!-- my css -->
+    <title>Finance Fluent {%block title%} {% endblock %}</title>
+  </head>
+  <body>
+    <!-- notifications page -->
+    <div class="info">
+      <div class="is-flex is-justify-content-center is-align-items-center">
+        <i class="is-size-1 mx-2 has-text-success bi bi-check-circle-fill"></i>
+        <p class="is-size-1 mx-2 has-text-centered">Success</p>
+      </div>
+      <p class="is-size-5 has-text-centered">
+        Your payment has been processed successfully
+      </p>
+      <div class="card mx-auto">
+        <div class="card-content">
+          <p>Order tracking ID: {{ order_tracking_id }}</p>
+          <p>Order merchant Reference: {{ order_merchant_reference }}</p>
+          <p>Order Notification Type: {{ order_notification_type }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- notifications page -->
+  </body>
+  <!-- custom js scripts -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <!-- custom js scripts -->
+</html>
