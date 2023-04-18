@@ -8,7 +8,7 @@ urlpatterns = [
         name="transaction-notifications",
     ),
     path(
-        "pesapal_ipn_callback",
+        "pesapal_ipn_callback/",
         views.pesapal_ipn_callback,  # type: ignore
         name="pesapal-ipn-callbacks",
     ),

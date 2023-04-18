@@ -7,16 +7,16 @@ from billing.pesapal import PesaPal
 @login_required
 def resolve_subscribeToPlan(_, info, plan):
     request = info.context["request"]
-    amount = 0.00
+    amount = 0.003
     currency = "USD"
     description = ""
 
     if plan == "Standard":
-        amount = 10.00
+        # amount = 10.00
         description = "Subscription payment for Standard plan"
 
     elif plan == "Pro":
-        amount = 15.00
+        # amount = 15.00
         description = "Subscription payment for Pro plan"
 
     consumer_key = settings.CONSUMER_KEY
@@ -41,7 +41,7 @@ def resolve_subscribeToPlan(_, info, plan):
 
     subscription_payment = subscription.submit_recurring_order_request(
         currency=currency,
-        amount=amount if environment == "live" else 0.003,
+        amount=amount,
         description=description,
         callback_url=live_notification_callback_url
         if environment == "live"

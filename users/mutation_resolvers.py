@@ -8,14 +8,14 @@ from users.models import User, Profile, OTPDevice, Package
 
 
 def resolve_createUser(
-    *_, username, email, first_name, last_name, workspace_name, password, password2
+    *_, email, first_name, last_name, workspace_name, password, password2
 ):
     if not User.objects.filter(email=email).exists():
         if len(password) > 8 and len(password2) > 8:
             if password == password2:
                 User.objects.create(
                     email=email,
-                    username=username,
+                    username=email,
                     first_name=first_name,
                     last_name=last_name,
                 )
