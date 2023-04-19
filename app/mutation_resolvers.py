@@ -11,6 +11,7 @@ from app.models import (
     TransactionCategory,
     TransactionSubCategory,
     Target,
+    TransactionType,
 )
 
 
@@ -402,6 +403,8 @@ def resolve_createTransaction(
 
     account = Account.objects.get(id=account_id)
 
+    type = TransactionType.objects.get(type_name=transaction_type)
+
     transaction_category = TransactionCategory.objects.get(category_name=category)
     transaction_sub_category = TransactionSubCategory.objects.get(
         category_name=sub_category
@@ -410,7 +413,7 @@ def resolve_createTransaction(
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
 
     new_transaction = Transaction.objects.create(
-        transaction_type=transaction_type,
+        transaction_type=type,
         transaction_amount=transaction_amount,
         transaction_date=date_object,
         currency_code=currency_code,
@@ -465,6 +468,8 @@ def resolve_updateTransaction(
 
     transaction = Transaction.objects.get(id=id)
 
+    type = TransactionType.objects.get(type_name=transaction_type)
+
     transaction_category = TransactionCategory.objects.get(category_name=category)
     transaction_sub_category = TransactionSubCategory.objects.get(
         category_name=sub_category
@@ -503,7 +508,7 @@ def resolve_updateTransaction(
 
         account.save()
 
-    transaction.transaction_type = transaction_type
+    transaction.transaction_type = type
     transaction.transaction_amount = transaction_amount
     transaction.transaction_date = date_object
     transaction.currency_code = currency_code

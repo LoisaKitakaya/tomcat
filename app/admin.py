@@ -10,9 +10,15 @@ from .models import (
     Target,
     Employee,
     Product,
+    TransactionType,
 )
 
 # Register your models here.
+
+
+@admin.register(TransactionType)
+class TransactionTypeAdminView(admin.ModelAdmin):
+    model = TransactionType
 
 
 @admin.register(TransactionCategory)

@@ -5,6 +5,19 @@ from teams.models import Workspace
 # Create your models here.
 
 
+class TransactionType(models.Model):
+    type_name = models.CharField(max_length=100, blank=False, unique=True)
+    type_description = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "transaction type"
+        verbose_name_plural = "transaction types"
+        db_table = "TransactionTypes"
+
+    def __str__(self) -> str:
+        return self.type_name
+
+
 class TransactionCategory(models.Model):
     category_name = models.CharField(max_length=100, blank=False, unique=True)
     category_description = models.TextField(blank=False)
@@ -80,7 +93,7 @@ class Account(models.Model):
 
 
 class Transaction(models.Model):
-    transaction_type = models.CharField(max_length=50, blank=False)
+    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     transaction_amount = models.FloatField(default=0.0, blank=False)
     currency_code = models.CharField(max_length=3, blank=False)
     description = models.TextField(blank=False)  # type: ignore
@@ -98,7 +111,7 @@ class Transaction(models.Model):
         db_table = "Transactions"
 
     def __str__(self) -> str:
-        return self.transaction_type
+        return self.transaction_type.type_name
 
 
 class Budget(models.Model):
