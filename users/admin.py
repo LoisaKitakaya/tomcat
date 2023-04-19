@@ -54,3 +54,13 @@ class OTPDeviceAdminView(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
+
+
+@admin.register(Package)
+class PackageAdminView(admin.ModelAdmin):
+    model = Package
+
+    list_filter = (
+        "created_at",
+        "updated_at",
+    )
