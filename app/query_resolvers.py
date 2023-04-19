@@ -37,13 +37,9 @@ def resolve_getAllAccounts(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    if profile.is_employee:
-        workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
-        accounts = Account.objects.filter(workspace__id=workspace.pk).all()
-
-    else:
-        accounts = Account.objects.filter(owner__id=profile.pk).all()
+    accounts = Account.objects.filter(workspace__id=workspace.pk).all()
 
     return accounts
 
@@ -68,13 +64,9 @@ def resolve_getAllBudgets(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    if profile.is_employee:
-        workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
-        budgets = Budget.objects.filter(workspace__id=workspace.pk).all()
-
-    else:
-        budgets = Budget.objects.filter(owner__id=profile.pk).all()
+    budgets = Budget.objects.filter(workspace__id=workspace.pk).all()
 
     return budgets
 
@@ -96,13 +88,9 @@ def resolve_getAllTargets(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    if profile.is_employee:
-        workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
-        targets = Target.objects.filter(workspace__id=workspace.pk).all()
-
-    else:
-        targets = Target.objects.filter(owner__id=profile.pk).all()
+    targets = Target.objects.filter(workspace__id=workspace.pk).all()
 
     return targets
 
@@ -123,17 +111,6 @@ def resolve_getTarget(*_, id):
 
 @login_required
 def resolve_getAllTransactions(*_, id):
-    try:
-        transactions = Transaction.objects.filter(account__id=id).all()
-
-    except Exception as e:
-        raise Exception(str(e))
-
-    return transactions
-
-
-@login_required
-def resolve_getTransactionsByAccount(*_, id):
     try:
         transactions = Transaction.objects.filter(account__id=id).all()
 

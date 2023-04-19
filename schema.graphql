@@ -157,7 +157,6 @@ type Query {
   getTarget(id: ID!): Target!
 
   getAllTransactions(id: ID!): [Transaction!]!
-  getTransactionsByAccount(id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
 
   getWorkspace: Workspace!

@@ -90,7 +90,6 @@ query.set_field("getAllTargets", resolve_getAllTargets)
 query.set_field("getTarget", resolve_getTarget)
 
 query.set_field("getAllTransactions", resolve_getAllTransactions)
-query.set_field("getTransactionsByAccount", resolve_getTransactionsByAccount)
 query.set_field("getTransaction", resolve_getTransaction)
 
 query.set_field("getWorkspace", resolve_getWorkspace)
