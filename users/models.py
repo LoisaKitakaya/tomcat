@@ -11,7 +11,7 @@ class User(AbstractUser):
 class Package(models.Model):
     name = models.CharField(max_length=50, blank=False)
     accounts = models.BooleanField(default=False, blank=False)
-    inventory = models.BooleanField(default=False, blank=False)
+    inventory = models.IntegerField(default=0, blank=False)
     no_of_accounts = models.IntegerField(default=0, blank=False)
     budgets = models.BooleanField(default=False, blank=False)
     no_of_budgets = models.IntegerField(default=0, blank=False)
