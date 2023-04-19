@@ -29,7 +29,7 @@ class TeamLogs(models.Model):
 
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    action = models.CharField(max_length=50, blank=False)
+    action = models.CharField(max_length=150, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
