@@ -1,31 +1,7 @@
 from users.models import Profile
 from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
-from app.models import Account, Category, Budget, Transaction, Target
-
-# Category model query resolvers
-
-
-@login_required
-def resolve_getAllCategories(*_):
-    try:
-        categories = Category.objects.all()
-
-    except Exception as e:
-        raise Exception(str(e))
-
-    return categories
-
-
-@login_required
-def resolve_getCategoryByPublicId(*_, id):
-    try:
-        category = Category.objects.filter(id=id).first()
-
-    except Exception as e:
-        raise Exception(str(e))
-
-    return category
+from app.models import Account, Budget, Transaction, Target
 
 
 # Account model query resolvers

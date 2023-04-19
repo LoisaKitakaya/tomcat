@@ -1,9 +1,8 @@
 import pyotp
 from uuid import uuid4
 from teams.models import Workspace
-from billing.models import Package
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice
+from users.models import User, Profile, OTPDevice, Package
 
 # User model mutation resolvers
 
@@ -93,9 +92,7 @@ def resolve_verifyOTP(_, info, otp):
 
 
 @login_required
-def resolve_updateUser(
-    _, info, email, first_name, last_name, phone_number=None
-):
+def resolve_updateUser(_, info, email, first_name, last_name, phone_number=None):
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():

@@ -1,8 +1,7 @@
 import pyotp
 from teams.models import Workspace
-from billing.models import Package
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice
+from users.models import User, Profile, OTPDevice, Package
 
 
 @login_required
@@ -19,9 +18,7 @@ def resolve_updateWorkspace(_, info, name):
 
 
 @login_required
-def resolve_createTeamMember(
-    _, info, email, first_name, last_name, password
-):
+def resolve_createTeamMember(_, info, email, first_name, last_name, password):
     if not User.objects.filter(email=email).exists():
         if len(password) > 8:
             request = info.context["request"]

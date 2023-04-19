@@ -1,7 +1,6 @@
 import io
 import pyotp
 import base64
-from twilio.rest import Client
 from django.conf import settings
 from qrcode import make as make_qr
 from django.core.mail import send_mail
