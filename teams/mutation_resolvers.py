@@ -20,7 +20,7 @@ def resolve_updateWorkspace(_, info, name):
 
 @login_required
 def resolve_createTeamMember(
-    _, info, phone_number, email, first_name, last_name, password
+    _, info, email, first_name, last_name, password
 ):
     if not User.objects.filter(email=email).exists():
         if len(password) > 8:
@@ -32,7 +32,7 @@ def resolve_createTeamMember(
 
             new_user = User.objects.create(
                 email=email,
-                phone_number=phone_number,
+                username=email,
                 first_name=first_name,
                 last_name=last_name,
             )

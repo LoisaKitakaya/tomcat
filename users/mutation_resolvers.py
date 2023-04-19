@@ -44,7 +44,7 @@ def resolve_createUser(
                 workspace_uid=workspace.workspace_uid,
             )
 
-            name = f"OTP device for user: ID {new_user.pk}"
+            name = f"2FA Device For: {new_user.username}"
 
             new_device = OTPDevice.objects.create(user=new_user, name=name)
 
@@ -93,23 +93,32 @@ def resolve_verifyOTP(_, info, otp):
 
 
 @login_required
-def resolve_updateUser(_, info, username, email, first_name, last_name):
+def resolve_updateUser(
+    _, info, email, first_name, last_name, phone_number=None
+):
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():
-        if not User.objects.filter(username=username).exists():
+        if not User.objects.filter(username=email).exists():
             user = User.objects.get(id=request.user.id)
 
             user.email = email
-            user.username = username
+            user.username = email
             user.first_name = first_name
             user.last_name = last_name
 
             user.save()
 
+            if phone_number:
+                profile = Profile.objects.get(user__id=user.pk)
+
+                profile.phone_number = phone_number
+
+                profile.save()
+
         else:
             raise Exception(
-                "Phone number already exists. Make sure your Phone number is unique!"
+                "username already exists. Make sure your Phone number is unique!"
             )
 
     else:

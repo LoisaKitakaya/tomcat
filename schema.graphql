@@ -37,6 +37,7 @@ type Profile {
   id: ID!
   user: User!
   package: Package!
+  phone_number: String!
   workspace_uid: String!
   payment_method: String!
   is_paid_user: Boolean!
