@@ -257,6 +257,7 @@ type Mutation {
     budget_description: String!
     budget_amount: Float!
     category: String!
+    sub_category: String!
   ): Budget!
   updateBudget(
     id: ID!
@@ -264,6 +265,7 @@ type Mutation {
     budget_description: String!
     budget_amount: Float!
     category: String!
+    sub_category: String!
   ): Budget!
   budgetStatus(id: ID!, status: Boolean!): Boolean!
   deleteBudget(id: ID!): Boolean!
@@ -274,6 +276,7 @@ type Mutation {
     target_description: String!
     target_amount: Float!
     category: String!
+    sub_category: String!
   ): Target!
   updateTarget(
     id: ID!
@@ -281,6 +284,7 @@ type Mutation {
     target_description: String!
     target_amount: Float!
     category: String!
+    sub_category: String!
   ): Target!
   targetStatus(id: ID!, status: Boolean!): Boolean!
   deleteTarget(id: ID!): Boolean!
@@ -293,6 +297,7 @@ type Mutation {
     currency_code: String!
     description: String!
     category: String!
+    sub_category: String!
   ): Transaction!
   updateTransaction(
     id: ID!
@@ -303,6 +308,7 @@ type Mutation {
     currency_code: String!
     description: String!
     category: String!
+    sub_category: String!
   ): Transaction!
   deleteTransaction(id: ID!, account_id: ID!): Boolean!
 
