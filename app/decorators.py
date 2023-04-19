@@ -10,7 +10,7 @@ def check_plan_standard(info):
 
             profile = Profile.objects.get(user__id=request.user.id)
 
-            allowed = ["Standard, Pro"]
+            allowed = ["Standard", "Pro"]
 
             plan = profile.package.name
 

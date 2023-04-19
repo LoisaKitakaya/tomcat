@@ -3,7 +3,15 @@ from django.db.models import Q
 from users.models import Profile
 from teams.models import Workspace, TeamLogs
 from ariadne_jwt.decorators import login_required
-from app.models import Account, Budget, Transaction, Category, Target
+from app.decorators import check_plan_standard, check_plan_pro
+from app.models import (
+    Account,
+    Budget,
+    Transaction,
+    TransactionCategory,
+    TransactionSubCategory,
+    Target,
+)
 
 
 @login_required
@@ -12,7 +20,6 @@ def resolve_createAccount(
     info,
     account_name,
     account_type,
-    account_number,
     account_balance,
     currency_code,
 ):
@@ -25,7 +32,6 @@ def resolve_createAccount(
     new_account = Account.objects.create(
         account_name=account_name,
         account_type=account_type,
-        account_number=account_number,
         account_balance=account_balance,
         currency_code=currency_code,
         owner=profile,
@@ -49,7 +55,6 @@ def resolve_updateAccount(
     id,
     account_name,
     account_type,
-    account_number,
     account_balance,
     currency_code,
 ):
@@ -63,7 +68,6 @@ def resolve_updateAccount(
 
     account.account_name = account_name
     account.account_type = account_type
-    account.account_number = account_number
     account.account_balance = account_balance
     account.currency_code = currency_code
 
@@ -116,6 +120,7 @@ def resolve_createBudget(
     budget_description,
     budget_amount,
     category,
+    sub_category,
 ):
     request = info.context["request"]
 
@@ -125,13 +130,15 @@ def resolve_createBudget(
 
     account = Account.objects.get(id=account_id)
 
-    budget_category = Category.objects.get(category_name=category)
+    budget_category = TransactionCategory.objects.get(category_name=category)
+    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     new_budget = Budget.objects.create(
         budget_name=budget_name,
         budget_description=budget_description,
         budget_amount=budget_amount,
         category=budget_category,
+        sub_category=budget_sub_category,
         owner=profile,
         account=account,
         workspace=workspace,
@@ -156,6 +163,7 @@ def resolve_updateBudget(
     budget_description,
     budget_amount,
     category,
+    sub_category,
 ):
     request = info.context["request"]
 
@@ -165,12 +173,14 @@ def resolve_updateBudget(
 
     budget = Budget.objects.get(id=id)
 
-    budget_category = Category.objects.get(category_name=category)
+    budget_category = TransactionCategory.objects.get(category_name=category)
+    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     budget.budget_name = budget_name
     budget.budget_description = budget_description
     budget.budget_amount = budget_amount
     budget.category = budget_category
+    budget.sub_category = budget_sub_category
 
     budget.save()
 
@@ -245,6 +255,7 @@ def resolve_createTarget(
     target_description,
     target_amount,
     category,
+    sub_category,
 ):
     request = info.context["request"]
 
@@ -254,13 +265,15 @@ def resolve_createTarget(
 
     account = Account.objects.get(id=account_id)
 
-    target_category = Category.objects.get(category_name=category)
+    target_category = TransactionCategory.objects.get(category_name=category)
+    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     new_target = Target.objects.create(
         target_name=target_name,
         target_description=target_description,
         target_amount=target_amount,
         category=target_category,
+        sub_category=target_sub_category,
         owner=profile,
         account=account,
         workspace=workspace,
@@ -285,6 +298,7 @@ def resolve_updateTarget(
     target_description,
     target_amount,
     category,
+    sub_category,
 ):
     request = info.context["request"]
 
@@ -294,12 +308,14 @@ def resolve_updateTarget(
 
     target = Target.objects.get(id=id)
 
-    target_category = Category.objects.get(category_name=category)
+    target_category = TransactionCategory.objects.get(category_name=category)
+    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     target.target_name = target_name
     target.target_description = target_description
     target.target_amount = target_amount
     target.category = target_category
+    target.sub_category = target_sub_category
 
     target.save()
 
@@ -376,6 +392,7 @@ def resolve_createTransaction(
     currency_code,
     description,
     category,
+    sub_category,
 ):
     request = info.context["request"]
 
@@ -385,7 +402,10 @@ def resolve_createTransaction(
 
     account = Account.objects.get(id=account_id)
 
-    transaction_category = Category.objects.get(category_name=category)
+    transaction_category = TransactionCategory.objects.get(category_name=category)
+    transaction_sub_category = TransactionSubCategory.objects.get(
+        category_name=sub_category
+    )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
 
@@ -396,6 +416,7 @@ def resolve_createTransaction(
         currency_code=currency_code,
         description=description,
         category=transaction_category,
+        sub_category=transaction_sub_category,
         account=account,
     )
 
@@ -432,6 +453,7 @@ def resolve_updateTransaction(
     currency_code,
     description,
     category,
+    sub_category,
 ):
     request = info.context["request"]
 
@@ -443,7 +465,10 @@ def resolve_updateTransaction(
 
     transaction = Transaction.objects.get(id=id)
 
-    transaction_category = Category.objects.get(category_name=category)
+    transaction_category = TransactionCategory.objects.get(category_name=category)
+    transaction_sub_category = TransactionSubCategory.objects.get(
+        category_name=sub_category
+    )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
 
@@ -484,6 +509,7 @@ def resolve_updateTransaction(
     transaction.currency_code = currency_code
     transaction.description = description
     transaction.category = transaction_category
+    transaction.sub_category = transaction_sub_category
 
     transaction.save()
 

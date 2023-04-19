@@ -239,7 +239,6 @@ type Mutation {
   createAccount(
     account_name: String!
     account_type: String!
-    account_number: String!
     account_balance: Float!
     currency_code: String!
   ): Account!
@@ -247,7 +246,6 @@ type Mutation {
     id: ID!
     account_name: String!
     account_type: String!
-    account_number: String!
     account_balance: Float!
     currency_code: String!
   ): Account!
