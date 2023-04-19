@@ -1,5 +1,5 @@
 from django.contrib import admin
-from billing.models import PlanBilling
+from billing.models import PlanBilling, Package
 
 
 # Register your models here.
@@ -8,6 +8,16 @@ class PlanBillingAdminView(admin.ModelAdmin):
     model = PlanBilling
 
     list_display = ("merchant_ref",)
+
+    list_filter = (
+        "created_at",
+        "updated_at",
+    )
+
+
+@admin.register(Package)
+class PackageAdminView(admin.ModelAdmin):
+    model = Package
 
     list_filter = (
         "created_at",

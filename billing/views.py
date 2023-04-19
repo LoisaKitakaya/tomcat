@@ -3,7 +3,8 @@ from django.shortcuts import render
 from billing.models import PlanBilling
 from django.core.mail import send_mail
 from django.conf import settings
-from users.models import Profile, Package
+from users.models import Profile
+from billing.models import Package
 from django.conf import settings
 
 

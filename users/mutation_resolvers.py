@@ -1,8 +1,9 @@
 import pyotp
 from uuid import uuid4
 from teams.models import Workspace
+from billing.models import Package
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice, Package
+from users.models import User, Profile, OTPDevice
 
 # User model mutation resolvers
 

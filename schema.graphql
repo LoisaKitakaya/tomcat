@@ -19,6 +19,7 @@ type Package {
   id: ID!
   name: String!
   accounts: Boolean!
+  inventory: Boolean!
   no_of_accounts: Int!
   budgets: Boolean!
   no_of_budgets: Int!
