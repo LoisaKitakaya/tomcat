@@ -36,9 +36,6 @@ type_defs = gql(load_schema_from_path(schema_path))
 # scaler types
 
 datetime_scalar = ScalarType("Datetime")
-date_scalar = ScalarType("Date")
-number_scalar = ScalarType("Number")
-time_scalar = ScalarType("Time")
 otp_scalar = ScalarType("Otp")
 qrcode_scalar = ScalarType("Qrcode")
 
@@ -48,27 +45,6 @@ def serialize_datetime(value):
     timestamp = str(time.mktime(value.timetuple()))
 
     return timestamp
-
-
-@date_scalar.serializer
-def serialize_date(value):
-    date = value.isoformat()
-
-    return date
-
-
-@number_scalar.serializer
-def serialize_number(value):
-    number = "{:,}".format(value)
-
-    return number
-
-
-@time_scalar.serializer
-def serialize_time(value):
-    date = value.strftime("%Y-%m-%d")
-
-    return date
 
 
 @otp_scalar.serializer
@@ -168,10 +144,7 @@ schema = make_executable_schema(
     query,
     mutation,
     otp_scalar,
-    date_scalar,
-    time_scalar,
     qrcode_scalar,
     GenericScalar,
-    number_scalar,
     datetime_scalar,
 )

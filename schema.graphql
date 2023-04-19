@@ -1,8 +1,5 @@
-scalar Date
 scalar Datetime
 scalar Qrcode
-scalar Number
-scalar Time
 scalar Otp
 
 type User {
@@ -105,14 +102,14 @@ type Target {
 type Transaction {
   id: ID!
   transaction_type: String!
-  transaction_amount: Number!
+  transaction_amount: Float!
   currency_code: String!
   description: String!
-  transaction_date: Date!
+  transaction_date: Datetime!
   account: Account!
   category: Category!
-  created_at: Time!
-  updated_at: Time!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type TeamLogs {
