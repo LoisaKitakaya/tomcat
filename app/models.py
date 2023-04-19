@@ -102,3 +102,65 @@ class Target(models.Model):
 
     def __str__(self) -> str:
         return self.target_name
+
+
+class Employee(models.Model):
+    account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=150, blank=False)
+    first_name = models.CharField(max_length=50, blank=False)
+    last_name = models.CharField(max_length=50, blank=False)
+    phone_number = models.CharField(max_length=20, blank=False)
+    ID_number = models.CharField(max_length=100, blank=False)
+    employment_status = models.CharField(max_length=20, blank=False)
+    job_title = models.CharField(max_length=255, blank=False)
+    is_manager = models.BooleanField(default=False, blank=False)
+    salary = models.FloatField(default=0.0, blank=False)
+    date_of_hire = models.DateField(blank=False)
+    passport = models.CharField(max_length=100, blank=True)
+    employee_id = models.CharField(max_length=50, blank=True)
+    department = models.CharField(max_length=255, blank=True)
+    job_description = models.TextField(blank=True)
+    emergency_contact_name = models.CharField(max_length=50, blank=True)
+    emergency_contact_phone_number = models.CharField(max_length=20, blank=True)
+    emergency_contact_email = models.EmailField(max_length=150, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-date_of_hire"]
+        verbose_name = "employee"
+        verbose_name_plural = "employees"
+        db_table = "Employees"
+
+    def __str__(self) -> str:
+        return self.first_name
+
+
+class Product(models.Model):
+    account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    sku = models.CharField(max_length=100)
+    category = models.CharField(max_length=255)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2)
+    current_stock_level = models.IntegerField()
+    units_sold = models.IntegerField()
+    reorder_level = models.IntegerField()
+    reorder_quantity = models.IntegerField()
+    supplier_name = models.CharField(max_length=255)
+    supplier_contact_phone_number = models.CharField(max_length=20)
+    supplier_contact_email = models.CharField(max_length=150)
+    profit_generated = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to="product_images/")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "product"
+        verbose_name_plural = "products"
+        db_table = "Products"
+
+    def __str__(self) -> str:
+        return self.name
