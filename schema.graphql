@@ -81,6 +81,7 @@ type Budget {
   workspace: Workspace!
   account: Account!
   category: Category!
+  sub_category: Category!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -95,6 +96,7 @@ type Target {
   workspace: Workspace!
   account: Account!
   category: Category!
+  sub_category: Category!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -108,6 +110,7 @@ type Transaction {
   transaction_date: Datetime!
   account: Account!
   category: Category!
+  sub_category: Category!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -131,6 +134,49 @@ type PlanBilling {
   currency: String!
   amount: Float!
   payment_confirmed: Boolean!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type Employee {
+  account: Account!
+  email: String!
+  first_name: String!
+  last_name: String!
+  phone_number: String!
+  ID_number: ID!
+  employment_status: String!
+  job_title: String!
+  job_description: String!
+  is_manager: Boolean!
+  salary: Float!
+  department: String!
+  employee_id: String!
+  emergency_contact_name: String!
+  emergency_contact_phone_number: String!
+  emergency_contact_email: String!
+  date_of_hire: Datetime!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type Product {
+  account: Account!
+  name: String!
+  description: String!
+  sku: String!
+  category: Category!
+  sub_category: Category!
+  buying_price: Float!
+  selling_price: Float!
+  current_stock_level: Int!
+  units_sold: Int!
+  reorder_level: Int
+  reorder_quantity: Int
+  supplier_name: String
+  supplier_contact_phone_number: String
+  supplier_contact_email: String
+  profit_generated: Float
   created_at: Datetime!
   updated_at: Datetime!
 }

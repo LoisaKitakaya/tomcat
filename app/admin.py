@@ -1,12 +1,38 @@
 from django.contrib import admin
-from .models import Account, Budget, Category, Transaction, Target, Employee, Product
+from .models import (
+    Account,
+    Budget,
+    TransactionCategory,
+    TransactionSubCategory,
+    Transaction,
+    ProductCategory,
+    ProductSubCategory,
+    Target,
+    Employee,
+    Product,
+)
 
 # Register your models here.
 
 
-@admin.register(Category)
-class CategoryAdminView(admin.ModelAdmin):
-    model = Category
+@admin.register(TransactionCategory)
+class TransactionCategoryAdminView(admin.ModelAdmin):
+    model = TransactionCategory
+
+
+@admin.register(TransactionSubCategory)
+class TransactionSubCategoryAdminView(admin.ModelAdmin):
+    model = TransactionSubCategory
+
+
+@admin.register(ProductCategory)
+class ProductCategoryAdminView(admin.ModelAdmin):
+    model = ProductCategory
+
+
+@admin.register(ProductSubCategory)
+class ProductSubCategoryAdminView(admin.ModelAdmin):
+    model = ProductSubCategory
 
 
 @admin.register(Account)

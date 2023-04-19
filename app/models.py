@@ -5,14 +5,55 @@ from teams.models import Workspace
 # Create your models here.
 
 
-class Category(models.Model):
+class TransactionCategory(models.Model):
     category_name = models.CharField(max_length=100, blank=False, unique=True)
     category_description = models.TextField(blank=False)
 
     class Meta:
-        verbose_name = "category"
-        verbose_name_plural = "categories"
-        db_table = "Categories"
+        verbose_name = "transaction category"
+        verbose_name_plural = "transaction categories"
+        db_table = "TransactionCategories"
+
+    def __str__(self) -> str:
+        return self.category_name
+
+
+class TransactionSubCategory(models.Model):
+    parent = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
+    category_name = models.CharField(max_length=100, blank=False, unique=True)
+    category_description = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "transaction sub category"
+        verbose_name_plural = "transaction sub categories"
+        db_table = "TransactionSubCategories"
+
+    def __str__(self) -> str:
+        return self.category_name
+
+
+class ProductCategory(models.Model):
+    category_name = models.CharField(max_length=100, blank=False, unique=True)
+    category_description = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "product category"
+        verbose_name_plural = "product categories"
+        db_table = "ProductCategories"
+
+    def __str__(self) -> str:
+        return self.category_name
+
+
+class ProductSubCategory(models.Model):
+    parent = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
+    category_name = models.CharField(max_length=100, blank=False, unique=True)
+    category_description = models.TextField(blank=False)
+
+    class Meta:
+        verbose_name = "product sub category"
+        verbose_name_plural = "product sub categories"
+        db_table = "ProductSubCategories"
 
     def __str__(self) -> str:
         return self.category_name
@@ -21,7 +62,6 @@ class Category(models.Model):
 class Account(models.Model):
     account_name = models.CharField(max_length=100, blank=False)
     account_type = models.CharField(max_length=50, blank=False)
-    account_number = models.CharField(max_length=254)
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     currency_code = models.CharField(max_length=3, blank=False)
@@ -46,7 +86,8 @@ class Transaction(models.Model):
     description = models.TextField(blank=False)  # type: ignore
     transaction_date = models.DateTimeField(blank=False)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(TransactionSubCategory, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -68,7 +109,8 @@ class Budget(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(TransactionSubCategory, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -90,7 +132,8 @@ class Target(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(TransactionSubCategory, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -113,16 +156,15 @@ class Employee(models.Model):
     ID_number = models.CharField(max_length=100, blank=False)
     employment_status = models.CharField(max_length=20, blank=False)
     job_title = models.CharField(max_length=255, blank=False)
+    job_description = models.TextField(blank=False)
     is_manager = models.BooleanField(default=False, blank=False)
     salary = models.FloatField(default=0.0, blank=False)
+    department = models.CharField(max_length=255, blank=False)
+    employee_id = models.CharField(max_length=50, blank=False)
+    emergency_contact_name = models.CharField(max_length=50, blank=False)
+    emergency_contact_phone_number = models.CharField(max_length=20, blank=False)
+    emergency_contact_email = models.EmailField(max_length=150, blank=False)
     date_of_hire = models.DateField(blank=False)
-    passport = models.CharField(max_length=100, blank=True)
-    employee_id = models.CharField(max_length=50, blank=True)
-    department = models.CharField(max_length=255, blank=True)
-    job_description = models.TextField(blank=True)
-    emergency_contact_name = models.CharField(max_length=50, blank=True)
-    emergency_contact_phone_number = models.CharField(max_length=20, blank=True)
-    emergency_contact_email = models.EmailField(max_length=150, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -138,21 +180,21 @@ class Employee(models.Model):
 
 class Product(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    description = models.TextField()
+    name = models.CharField(max_length=50, blank=False)
+    description = models.TextField(blank=False)
     sku = models.CharField(max_length=100)
-    category = models.CharField(max_length=255)
-    cost = models.DecimalField(max_digits=10, decimal_places=2)
-    selling_price = models.DecimalField(max_digits=10, decimal_places=2)
-    current_stock_level = models.IntegerField()
-    units_sold = models.IntegerField()
-    reorder_level = models.IntegerField()
-    reorder_quantity = models.IntegerField()
-    supplier_name = models.CharField(max_length=255)
-    supplier_contact_phone_number = models.CharField(max_length=20)
-    supplier_contact_email = models.CharField(max_length=150)
-    profit_generated = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to="product_images/")
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(ProductSubCategory, on_delete=models.CASCADE)
+    buying_price = models.FloatField(default=0.0, blank=False)
+    selling_price = models.FloatField(default=0.0, blank=False)
+    current_stock_level = models.IntegerField(default=0, blank=False)
+    units_sold = models.IntegerField(default=0, blank=False)
+    reorder_level = models.IntegerField(default=0, blank=True)
+    reorder_quantity = models.IntegerField(default=0, blank=True)
+    supplier_name = models.CharField(max_length=255, blank=True)
+    supplier_contact_phone_number = models.CharField(max_length=20, blank=True)
+    supplier_contact_email = models.CharField(max_length=150, blank=True)
+    profit_generated = models.FloatField(default=0.0, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
