@@ -2,51 +2,45 @@ import functools
 from users.models import Profile
 
 
-def check_plan_standard(info):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            request = info.context["request"]
+def check_plan_standard(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        info = args[1]
 
-            profile = Profile.objects.get(user__id=request.user.id)
+        request = info.context["request"]
 
-            allowed = ["Standard", "Pro"]
+        profile = Profile.objects.get(user__id=request.user.id)
 
-            plan = profile.package.name
+        allowed = ["Standard", "Pro"]
 
-            if plan in allowed:
-                return func(*args, **kwargs)
+        plan = profile.package.name
 
-            else:
-                raise Exception(
-                    "You cannot access this resource given your current plan"
-                )
+        if plan in allowed:
+            return func(*args, **kwargs)
 
-        return wrapper
+        else:
+            raise Exception("You cannot access this resource given your current plan")
 
-    return decorator
+    return wrapper
 
 
-def check_plan_pro(info):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            request = info.context["request"]
+def check_plan_pro(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        info = args[1]
 
-            profile = Profile.objects.get(user__id=request.user.id)
+        request = info.context["request"]
 
-            allowed = ["Pro"]
+        profile = Profile.objects.get(user__id=request.user.id)
 
-            plan = profile.package.name
+        allowed = ["Pro"]
 
-            if plan in allowed:
-                return func(*args, **kwargs)
+        plan = profile.package.name
 
-            else:
-                raise Exception(
-                    "You cannot access this resource given your current plan"
-                )
+        if plan in allowed:
+            return func(*args, **kwargs)
 
-        return wrapper
+        else:
+            raise Exception("You cannot access this resource given your current plan")
 
-    return decorator
+    return wrapper

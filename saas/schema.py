@@ -96,6 +96,12 @@ query.set_field("getWorkspace", resolve_getWorkspace)
 query.set_field("getTeamLogs", resolve_getTeamLogs)
 query.set_field("getTeamMembers", resolve_getTeamMembers)
 
+query.set_field("getAllEmployees", resolve_getAllEmployees)
+query.set_field("getEmployee", resolve_getEmployee)
+
+query.set_field("getAllProducts", resolve_getAllProducts)
+query.set_field("getProduct", resolve_getProduct)
+
 # # mutation resolvers
 
 # # # user model mutation resolvers
@@ -137,6 +143,14 @@ mutation.set_field("createTeamMember", resolve_createTeamMember)
 mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
 
 mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
+
+mutation.set_field("createEmployee", resolve_createEmployee)
+mutation.set_field("updateEmployee", resolve_updateEmployee)
+mutation.set_field("deleteEmployee", resolve_deleteEmployee)
+
+mutation.set_field("createProduct", resolve_createProduct)
+mutation.set_field("updateProduct", resolve_updateProduct)
+mutation.set_field("deleteProduct", resolve_deleteProduct)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],

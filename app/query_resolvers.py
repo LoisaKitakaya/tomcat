@@ -1,7 +1,8 @@
 from users.models import Profile
 from teams.models import Workspace
+from app.decorators import check_plan_standard
 from ariadne_jwt.decorators import login_required
-from app.models import Account, Budget, Transaction, Target
+from app.models import Account, Budget, Transaction, Target, Employee, Product
 
 
 # Account model query resolvers
@@ -105,3 +106,47 @@ def resolve_getTransaction(*_, id):
         raise Exception(str(e))
 
     return transaction
+
+
+@login_required
+@check_plan_standard
+def resolve_getAllEmployees(*_, account_id):
+    account = Account.objects.get(id=account_id)
+
+    employees = Employee.objects.filter(account__id=account.pk).all()
+
+    return employees
+
+
+@login_required
+@check_plan_standard
+def resolve_getEmployee(*_, id):
+    try:
+        employee = Employee.objects.get(id=id)
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return employee
+
+
+@login_required
+@check_plan_standard
+def resolve_getAllProducts(*_, account_id):
+    account = Account.objects.get(id=account_id)
+
+    product = Product.objects.filter(account_id=account.pk).all()
+
+    return product
+
+
+@login_required
+@check_plan_standard
+def resolve_getProduct(*_, id):
+    try:
+        product = Product.objects.get(id=id)
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return product

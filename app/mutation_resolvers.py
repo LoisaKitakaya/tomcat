@@ -2,16 +2,18 @@ from datetime import datetime
 from django.db.models import Q
 from users.models import Profile
 from teams.models import Workspace, TeamLogs
+from app.decorators import check_plan_standard
 from ariadne_jwt.decorators import login_required
-from app.decorators import check_plan_standard, check_plan_pro
 from app.models import (
     Account,
     Budget,
+    Target,
+    Product,
+    Employee,
     Transaction,
+    TransactionType,
     TransactionCategory,
     TransactionSubCategory,
-    Target,
-    TransactionType,
 )
 
 
@@ -563,6 +565,280 @@ def resolve_deleteTransaction(_, info, id, account_id):
             user=request.user,
             action=f"Deleted transaction of ID: {transaction.pk}, \
                 in account: {account.account_name}",
+        )
+
+    return True
+
+
+@login_required
+@check_plan_standard
+def resolve_createEmployee(
+    _,
+    info,
+    account_id,
+    email,
+    first_name,
+    last_name,
+    phone_number,
+    ID_number,
+    employment_status,
+    job_title,
+    job_description,
+    is_manager,
+    salary,
+    department,
+    employee_id,
+    emergency_contact_name,
+    emergency_contact_phone_number,
+    date_of_hire,
+):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    account = Account.objects.get(id=account_id)
+
+    employee = Employee.objects.create(
+        account=account,
+        workspace=workspace,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        phone_number=phone_number,
+        ID_number=ID_number,
+        employment_status=employment_status,
+        job_title=job_title,
+        job_description=job_description,
+        is_manager=is_manager,
+        salary=salary,
+        department=department,
+        employee_id=employee_id,
+        emergency_contact_name=emergency_contact_name,
+        emergency_contact_phone_number=emergency_contact_phone_number,
+        date_of_hire=date_of_hire,
+    )
+
+    if profile.is_employee:
+        TeamLogs.objects.create(
+            workspace=workspace,
+            user=request.user,
+            action=f"Created employee: {employee.first_name} {employee.last_name}",
+        )
+
+    return employee
+
+
+@login_required
+@check_plan_standard
+def resolve_updateEmployee(
+    _,
+    info,
+    id,
+    email,
+    first_name,
+    last_name,
+    phone_number,
+    ID_number,
+    employment_status,
+    job_title,
+    job_description,
+    is_manager,
+    salary,
+    department,
+    employee_id,
+    emergency_contact_name,
+    emergency_contact_phone_number,
+    emergency_contact_email,
+    date_of_hire,
+):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    employee = Employee.objects.get(id=id)
+
+    employee.email = email
+    employee.first_name = first_name
+    employee.last_name = last_name
+    employee.phone_number = phone_number
+    employee.ID_number = ID_number
+    employee.employment_status = employment_status
+    employee.job_title = job_title
+    employee.job_description = job_description
+    employee.is_manager = is_manager
+    employee.salary = salary
+    employee.department = department
+    employee.employee_id = employee_id
+    employee.emergency_contact_name = emergency_contact_name
+    employee.emergency_contact_phone_number = emergency_contact_phone_number
+    employee.emergency_contact_email = emergency_contact_email
+    employee.date_of_hire = date_of_hire
+
+    employee.save()
+
+    if profile.is_employee:
+        TeamLogs.objects.create(
+            workspace=workspace,
+            user=request.user,
+            action=f"Updated employee: {employee.first_name} {employee.last_name}",
+        )
+
+
+@login_required
+@check_plan_standard
+def resolve_deleteEmployee(_, info, id):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    try:
+        employee = Employee.objects.get(id=id)
+
+        employee_name = f"{employee.first_name} {employee.last_name}"
+
+        employee.delete()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    if profile.is_employee:
+        TeamLogs.objects.create(
+            workspace=workspace,
+            user=request.user,
+            action=f"Deleted employee: {employee_name}",
+        )
+
+    return True
+
+
+@login_required
+@check_plan_standard
+def resolve_createProduct(
+    _,
+    info,
+    account_id,
+    name,
+    description,
+    category,
+    sub_category,
+    buying_price,
+    selling_price,
+    current_stock_level,
+    units_sold,
+    supplier_name,
+    supplier_phone_number,
+):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    account = Account.objects.get(id=account_id)
+
+    product = Product.objects.create(
+        account=account,
+        workspace=workspace,
+        name=name,
+        description=description,
+        category=category,
+        sub_category=sub_category,
+        buying_price=buying_price,
+        selling_price=selling_price,
+        current_stock_level=current_stock_level,
+        units_sold=units_sold,
+        supplier_name=supplier_name,
+        supplier_phone_number=supplier_phone_number,
+    )
+
+    if profile.is_employee:
+        TeamLogs.objects.create(
+            workspace=workspace,
+            user=request.user,
+            action=f"Created product: {product.name}",
+        )
+
+    return product
+
+
+@login_required
+@check_plan_standard
+def resolve_updateProduct(
+    _,
+    info,
+    id,
+    name,
+    description,
+    category,
+    sub_category,
+    buying_price,
+    selling_price,
+    current_stock_level,
+    units_sold,
+    supplier_name,
+    supplier_phone_number,
+    supplier_email,
+):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    product = Product.objects.get(id=id)
+
+    product.name = name
+    product.description = description
+    product.category = category
+    product.sub_category = sub_category
+    product.buying_price = buying_price
+    product.selling_price = selling_price
+    product.current_stock_level = current_stock_level
+    product.units_sold = units_sold
+    product.supplier_name = supplier_name
+    product.supplier_phone_number = supplier_phone_number
+    product.supplier_email = supplier_email
+
+    product.save()
+
+    if profile.is_employee:
+        TeamLogs.objects.create(
+            workspace=workspace,
+            user=request.user,
+            action=f"Updated product: {product.name}",
+        )
+
+
+@login_required
+@check_plan_standard
+def resolve_deleteProduct(_, info, id):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    try:
+        product = Product.objects.get(id=id)
+
+        product_name = f"{product.name}"
+
+        product.delete()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    if profile.is_employee:
+        TeamLogs.objects.create(
+            workspace=workspace,
+            user=request.user,
+            action=f"Deleted product: {product_name}",
         )
 
     return True

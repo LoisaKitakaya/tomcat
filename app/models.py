@@ -162,6 +162,7 @@ class Target(models.Model):
 
 class Employee(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     email = models.EmailField(max_length=150, blank=False)
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
@@ -176,7 +177,7 @@ class Employee(models.Model):
     employee_id = models.CharField(max_length=50, blank=False)
     emergency_contact_name = models.CharField(max_length=50, blank=False)
     emergency_contact_phone_number = models.CharField(max_length=20, blank=False)
-    emergency_contact_email = models.EmailField(max_length=150, blank=False)
+    emergency_contact_email = models.EmailField(max_length=150, blank=True)
     date_of_hire = models.DateField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -193,9 +194,9 @@ class Employee(models.Model):
 
 class Product(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=False)
     description = models.TextField(blank=False)
-    sku = models.CharField(max_length=100)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(ProductSubCategory, on_delete=models.CASCADE)
     buying_price = models.FloatField(default=0.0, blank=False)
@@ -204,9 +205,9 @@ class Product(models.Model):
     units_sold = models.IntegerField(default=0, blank=False)
     reorder_level = models.IntegerField(default=0, blank=True)
     reorder_quantity = models.IntegerField(default=0, blank=True)
-    supplier_name = models.CharField(max_length=255, blank=True)
-    supplier_contact_phone_number = models.CharField(max_length=20, blank=True)
-    supplier_contact_email = models.CharField(max_length=150, blank=True)
+    supplier_name = models.CharField(max_length=255, blank=False)
+    supplier_phone_number = models.CharField(max_length=20, blank=False)
+    supplier_email = models.CharField(max_length=150, blank=True)
     profit_generated = models.FloatField(default=0.0, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

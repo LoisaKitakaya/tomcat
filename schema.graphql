@@ -49,6 +49,12 @@ type Category {
   category_description: String!
 }
 
+type SubCategory {
+  parent: Category!
+  category_name: String!
+  category_description: String!
+}
+
 type Workspace {
   id: ID!
   name: String!
@@ -81,7 +87,7 @@ type Budget {
   workspace: Workspace!
   account: Account!
   category: Category!
-  sub_category: Category!
+  sub_category: SubCategory!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -96,7 +102,7 @@ type Target {
   workspace: Workspace!
   account: Account!
   category: Category!
-  sub_category: Category!
+  sub_category: SubCategory!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -110,7 +116,7 @@ type Transaction {
   transaction_date: Datetime!
   account: Account!
   category: Category!
-  sub_category: Category!
+  sub_category: SubCategory!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -140,11 +146,12 @@ type PlanBilling {
 
 type Employee {
   account: Account!
+  workspace: Workspace!
   email: String!
   first_name: String!
   last_name: String!
   phone_number: String!
-  ID_number: ID!
+  ID_number: String!
   employment_status: String!
   job_title: String!
   job_description: String!
@@ -154,27 +161,27 @@ type Employee {
   employee_id: String!
   emergency_contact_name: String!
   emergency_contact_phone_number: String!
-  emergency_contact_email: String!
-  date_of_hire: Datetime!
+  emergency_contact_email: String
+  date_of_hire: String!
   created_at: Datetime!
   updated_at: Datetime!
 }
 
 type Product {
   account: Account!
+  workspace: Workspace!
   name: String!
   description: String!
-  sku: String!
   category: Category!
-  sub_category: Category!
+  sub_category: SubCategory!
   buying_price: Float!
   selling_price: Float!
   current_stock_level: Int!
   units_sold: Int!
   reorder_level: Int
   reorder_quantity: Int
-  supplier_name: String
-  supplier_contact_phone_number: String
+  supplier_name: String!
+  supplier_contact_phone_number: String!
   supplier_contact_email: String
   profit_generated: Float
   created_at: Datetime!
@@ -211,6 +218,12 @@ type Query {
 
   requestBilling: Boolean!
   cancelPlan: Boolean!
+
+  getAllEmployees(account_id: ID!): [Employee!]!
+  getEmployee(id: ID!): Employee!
+
+  getAllProducts(account_id: ID!): [Product!]!
+  getProduct(id: ID!): Product!
 }
 
 type Mutation {
@@ -324,4 +337,70 @@ type Mutation {
   deleteTeamMember(member_id: ID!): Boolean!
 
   subscribeToPlan(plan: String!): PlanBilling!
+
+  createEmployee(
+    account_id: ID!
+    email: String!
+    first_name: String!
+    last_name: String!
+    phone_number: String!
+    ID_number: String!
+    employment_status: String!
+    job_title: String!
+    job_description: String!
+    is_manager: Boolean!
+    salary: Float!
+    department: String!
+    employee_id: String!
+    emergency_contact_name: String!
+    emergency_contact_phone_number: String!
+    date_of_hire: String!
+  ): Employee!
+  updateEmployee(
+    email: String!
+    first_name: String!
+    last_name: String!
+    phone_number: String!
+    ID_number: String!
+    employment_status: String!
+    job_title: String!
+    job_description: String!
+    is_manager: Boolean!
+    salary: Float!
+    department: String!
+    employee_id: String!
+    emergency_contact_name: String!
+    emergency_contact_phone_number: String!
+    emergency_contact_email: String
+    date_of_hire: String!
+  ): Employee!
+  deleteEmployee(id: ID!): Boolean!
+
+  createProduct(
+    account_id: ID!
+    name: String!
+    description: String!
+    category: String!
+    sub_category: String!
+    buying_price: Float!
+    selling_price: Float!
+    current_stock_level: Int!
+    units_sold: Int!
+    supplier_name: String!
+    supplier_contact_phone_number: String!
+  ): Product!
+  updateProduct(
+    name: String!
+    description: String!
+    category: String!
+    sub_category: String!
+    buying_price: Float!
+    selling_price: Float!
+    current_stock_level: Int!
+    units_sold: Int!
+    supplier_name: String!
+    supplier_contact_phone_number: String!
+    supplier_contact_email: String
+  ): Product!
+  deleteProduct(id: ID!): Boolean!
 }
