@@ -62,7 +62,6 @@ def resolve_createUser(
 
 @login_required
 def resolve_verifyOTP(_, info, otp):
-    pass
 
     request = info.context["request"]
 
