@@ -24,7 +24,7 @@ def resolve_getUser(_, info):
 
 
 @login_required
-def resolve_generateOTP(_, info):
+def resolve_generateOTP(_, info, environment=None):
     request = info.context["request"]
 
     user = User.objects.get(id=request.user.id)
@@ -34,6 +34,13 @@ def resolve_generateOTP(_, info):
     totp = pyotp.TOTP(str(device.key))
 
     otp = totp.now()
+
+    payload = []
+
+    payload.append(otp)
+
+    if environment:
+        payload.append(environment)
 
     subject = "Account verification"
     body = f"Your One-Time-Password is:\n{otp}"
@@ -48,10 +55,7 @@ def resolve_generateOTP(_, info):
         fail_silently=False,
     )
 
-    return {
-        "success": True,
-        "message": f"A One-Time-Password has been sent to the email:\n{user.email}",
-    }
+    return payload
 
 
 @login_required

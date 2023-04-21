@@ -189,7 +189,7 @@ type Product {
 }
 
 type Query {
-  generateOTP: Otp!
+  generateOTP(environment: String): Otp!
 
   generateQRCode: Qrcode!
 
@@ -226,7 +226,7 @@ type Query {
 }
 
 type Mutation {
-  verifyOTP(otp: String!): Otp!
+  verifyOTP(otp: String!): String!
 
   createUser(
     email: String!

@@ -49,7 +49,18 @@ def serialize_datetime(value):
 
 @otp_scalar.serializer
 def serialize_otp(value):
-    return value
+    if len(value) == 2 and value[1] == "test":
+        return {
+            "success": True,
+            "otp_code": value[0],
+            "message": "A One-Time-Password has been sent to your email address.",
+        }
+
+    else:
+        return {
+            "success": True,
+            "message": "A One-Time-Password has been sent to your email address.",
+        }
 
 
 @qrcode_scalar.serializer

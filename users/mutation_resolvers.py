@@ -62,7 +62,6 @@ def resolve_createUser(
 
 @login_required
 def resolve_verifyOTP(_, info, otp):
-
     request = info.context["request"]
 
     user = User.objects.get(id=request.user.id)
@@ -70,24 +69,14 @@ def resolve_verifyOTP(_, info, otp):
     device = OTPDevice.objects.get(user__id=user.pk)
 
     totp = pyotp.TOTP(str(device.key))
-
-    try:
-        test = totp.verify(otp)
-
-    except Exception as e:
-        raise Exception(str(e))
+    
+    test = totp.verify(otp)
 
     if test:
-        return {
-            "success": True,
-            "message": f"Your account has been verified",
-        }
+        return "Your account has been verified"
 
     else:
-        return {
-            "success": False,
-            "message": f"Entered invalid OTP code",
-        }
+        raise Exception("Entered invalid OTP code")
 
 
 @login_required

@@ -74,7 +74,144 @@ create_test_user_mutation = gql(
 
 
 class TestAppFunctions(TestCase):
-    pass
+    def setUp(self) -> None:
+        self.client = Client()
+
+        self.package = Package.objects.create(name="Free")
+
+        create_test_user_variables = {
+            "email": "example@gmail.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "workspace_name": "Important Workspace",
+            "password": "#TestUser15",
+            "password2": "#TestUser15",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {
+                    "query": create_test_user_mutation,
+                    "variables": create_test_user_variables,
+                }
+            ),
+            content_type="application/json",
+        )
+
+        self.test_username = response.json()["data"]["createUser"]["username"]
+
+        token_auth_variables = {
+            "username": self.test_username,
+            "password": "#TestUser15",
+        }
+
+        get_token = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {"query": token_auth_mutation, "variables": token_auth_variables}
+            ),
+            content_type="application/json",
+        )
+
+        self.token = get_token.json()["data"]["tokenAuth"]["token"]
+
+    def tearDown(self) -> None:
+        self.client.logout()
+
+        self.package.delete()
+
+        self.test_username = None
+
+        self.token = None
+
+    def test_generate_and_verify_OTP(self):
+        query = gql(
+            """
+            query($environment: String!) {
+                generateOTP(environment: $environment)
+            }
+            """
+        )
+
+        variables = {"environment": "test"}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        received_otp_code = data["data"]["generateOTP"]["otp_code"]
+
+        self.assertIsNotNone(received_otp_code)
+
+        mutation = gql(
+            """
+            mutation($otp: String!) {
+                verifyOTP(otp: $otp)
+            }
+            """
+        )
+
+        variables = {"otp": str(received_otp_code)}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["verifyOTP"], "Your account has been verified")
+
+    def test_generate_OTP_QRcode(self):
+        query = gql(
+            """
+            query{
+                generateQRCode
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertIsNotNone(data["data"]["generateQRCode"])
+        self.assertEqual(
+            type(data["data"]["generateQRCode"]), type("is of type string")
+        )
 
 
 class TestAppMutations(TestCase):
