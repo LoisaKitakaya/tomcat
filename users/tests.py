@@ -1,7 +1,7 @@
 import json
 from ariadne import gql
 from django.test import TestCase, Client
-from users.models import User, Package, Profile, OTPDevice
+from users.models import User, Package
 
 # Create your tests here.
 
@@ -81,7 +81,7 @@ class TestAppMutations(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.free_package = Package.objects.create(name="Free")
+        self.package = Package.objects.create(name="Free")
 
         self.test_user = User.objects.create(
             username="test_user", email="test_user@example.com"
@@ -107,7 +107,7 @@ class TestAppMutations(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.free_package.delete()
+        self.package.delete()
 
         self.test_user.delete()
 
@@ -218,7 +218,7 @@ class TestAppQueries(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.free_package = Package.objects.create(name="Free")
+        self.package = Package.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -260,7 +260,7 @@ class TestAppQueries(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.free_package.delete()
+        self.package.delete()
 
         self.test_username = None
 
