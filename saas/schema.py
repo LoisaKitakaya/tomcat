@@ -71,11 +71,7 @@ mutation = MutationType()
 query.set_field("generateOTP", resolve_generateOTP)
 query.set_field("generateQRCode", resolve_generateQRCode)
 
-query.set_field("getAllUsers", resolve_getAllUsers)
 query.set_field("getUser", resolve_getUser)
-query.set_field("getUserByUsername", resolve_getUserByUsername)
-
-query.set_field("getAllProfiles", resolve_getAllProfiles)
 query.set_field("getProfile", resolve_getProfile)
 
 # # # app app query resolvers

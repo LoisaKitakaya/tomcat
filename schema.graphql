@@ -193,11 +193,7 @@ type Query {
 
   generateQRCode: Qrcode!
 
-  getAllUsers: [User!]!
   getUser: User!
-  getUserByUsername(username: String!): User!
-
-  getAllProfiles: [Profile!]!
   getProfile: Profile!
 
   getAllAccounts: [Account!]!

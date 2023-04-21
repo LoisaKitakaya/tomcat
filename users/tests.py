@@ -218,5 +218,132 @@ class TestAppQueries(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
+        self.free_package = Package.objects.create(name="Free")
+
+        create_test_user_variables = {
+            "email": "example@gmail.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "workspace_name": "Important Workspace",
+            "password": "#TestUser15",
+            "password2": "#TestUser15",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {
+                    "query": create_test_user_mutation,
+                    "variables": create_test_user_variables,
+                }
+            ),
+            content_type="application/json",
+        )
+
+        self.test_username = response.json()["data"]["createUser"]["username"]
+
+        token_auth_variables = {
+            "username": self.test_username,
+            "password": "#TestUser15",
+        }
+
+        get_token = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {"query": token_auth_mutation, "variables": token_auth_variables}
+            ),
+            content_type="application/json",
+        )
+
+        self.token = get_token.json()["data"]["tokenAuth"]["token"]
+
     def tearDown(self) -> None:
         self.client.logout()
+
+        self.free_package.delete()
+
+        self.test_username = None
+
+        self.token = None
+
+    def test_get_user(self):
+        query = gql(
+            """
+            query{
+                getUser{
+                    username
+                    email
+                    first_name
+                    last_name
+                    is_staff
+                    is_active
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getUser"]["email"], "example@gmail.com")
+        self.assertEqual(data["data"]["getUser"]["username"], "example@gmail.com")
+        self.assertEqual(data["data"]["getUser"]["first_name"], "Test")
+        self.assertEqual(data["data"]["getUser"]["last_name"], "User")
+        self.assertEqual(data["data"]["getUser"]["is_staff"], False)
+        self.assertEqual(data["data"]["getUser"]["is_active"], True)
+
+    def test_get_user_profile(self):
+        query = gql(
+            """
+            query{
+                getProfile {
+                    package {
+                        name
+                    }                                   
+                    workspace_uid
+                    phone_number
+                    payment_method
+                    is_paid_user
+                    is_employee
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertIsNotNone(data["data"]["getProfile"]["workspace_uid"])
+        self.assertEqual(data["data"]["getProfile"]["package"]["name"], "Free")
+        self.assertEqual(data["data"]["getProfile"]["phone_number"], "")
+        self.assertEqual(data["data"]["getProfile"]["payment_method"], "None")
+        self.assertEqual(data["data"]["getProfile"]["is_paid_user"], False)
+        self.assertEqual(data["data"]["getProfile"]["is_employee"], False)

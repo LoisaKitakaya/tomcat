@@ -11,33 +11,11 @@ from users.models import User, Profile, OTPDevice
 
 
 @login_required
-def resolve_getAllUsers(*_):
-    try:
-        all_users = User.objects.all()
-
-    except Exception as e:
-        raise Exception(str(e))
-
-    return all_users
-
-
-@login_required
 def resolve_getUser(_, info):
     request = info.context["request"]
 
     try:
         user = User.objects.get(id=request.user.id)
-
-    except Exception as e:
-        raise Exception(str(e))
-
-    return user
-
-
-@login_required
-def resolve_getUserByUsername(*_, username):
-    try:
-        user = User.objects.get(username=username)
 
     except Exception as e:
         raise Exception(str(e))
@@ -98,17 +76,6 @@ def resolve_generateQRCode(_, info):
 
 
 # Profile model query resolvers
-
-
-@login_required
-def resolve_getAllProfiles(*_):
-    try:
-        profiles = Profile.objects.all()
-
-    except Exception as e:
-        raise Exception(str(e))
-
-    return profiles
 
 
 @login_required
