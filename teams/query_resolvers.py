@@ -1,11 +1,11 @@
-from users.models import User, Profile
+from users.models import Profile
 from teams.models import Workspace, TeamLogs
 from ariadne_jwt.decorators import login_required
 from app.decorators import check_plan_standard
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getWorkspace(_, info):
     request = info.context["request"]
 
@@ -15,7 +15,7 @@ def resolve_getWorkspace(_, info):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getTeamLogs(*_, workspace_id):
     workspace = Workspace.objects.get(id=workspace_id)
 
@@ -25,7 +25,7 @@ def resolve_getTeamLogs(*_, workspace_id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getTeamMembers(_, info):
     request = info.context["request"]
 

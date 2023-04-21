@@ -1,6 +1,8 @@
 import json
+from uuid import uuid4
 from ariadne import gql
-from users.models import Package
+from teams.models import Workspace
+from users.models import Package, User
 from django.test import TestCase, Client
 
 # Create your tests here.
@@ -317,6 +319,18 @@ class TestAppQueries(TestCase):
 
         self.token = get_token.json()["data"]["tokenAuth"]["token"]
 
+        self.test_user = User.objects.create(
+            username="test_user", email="test_user@example.com"
+        )
+        self.test_user.set_password("#testpassword")
+        self.test_user.save()
+
+        self.workspace = Workspace.objects.create(
+            name="Test Workspace", owner=self.test_user
+        )
+        self.workspace.workspace_uid = str(uuid4().hex)
+        self.workspace.save()
+
     def tearDown(self) -> None:
         self.client.logout()
 
@@ -325,3 +339,124 @@ class TestAppQueries(TestCase):
         self.test_username = None
 
         self.token = None
+
+        self.test_user.delete()
+
+        self.workspace.delete()
+
+    def test_get_workspace(self):
+        query = gql(
+            """
+            query {
+                getWorkspace {
+                    name
+                    workspace_uid
+                    owner {
+                    username
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getWorkspace"]["name"], "Important Workspace")
+        self.assertEqual(
+            data["data"]["getWorkspace"]["owner"]["username"], "example@gmail.com"
+        )
+        self.assertIsNotNone(data["data"]["getWorkspace"]["workspace_uid"])
+
+    def test_get_team_logs(self):
+        query = gql(
+            """
+            query($workspace_id: ID!) {
+                getTeamLogs(workspace_id: $workspace_id) {
+                    workspace {
+                    name
+                    }
+                    user {
+                    username
+                    }
+                    action
+                }
+            }
+            """
+        )
+
+        variables = {"workspace_id": self.workspace.pk}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertListEqual(data["data"]["getTeamLogs"], [])
+
+    def test_get_team_members(self):
+        query = gql(
+            """
+            query {
+                getTeamMembers {
+                    user {
+                    username
+                    }
+                    package {
+                    name
+                    }
+                    phone_number
+                    workspace_uid
+                    payment_method
+                    is_paid_user
+                    is_employee
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        for member in data["data"]["getTeamMembers"]:
+            self.assertEqual(member["user"]["username"], "example@gmail.com")
+            self.assertEqual(member["package"]["name"], "Free")
+            self.assertIsNotNone(member["workspace_uid"])
