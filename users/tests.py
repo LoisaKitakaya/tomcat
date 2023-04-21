@@ -42,6 +42,36 @@ token_auth_mutation = gql(
     """
 )
 
+create_test_user_mutation = gql(
+    """
+    mutation(
+    $email: String!
+    $first_name: String!
+    $last_name: String!
+    $workspace_name: String!
+    $password: String!
+    $password2: String!
+    ) {
+        createUser(
+        email: $email
+        first_name: $first_name
+        last_name: $last_name
+        workspace_name: $workspace_name
+        password: $password
+        password2: $password2
+        ) {
+            id
+            email
+            username
+            first_name
+            last_name
+            is_staff
+            is_active
+        }
+    }
+    """
+)
+
 
 class TestAppFunctions(TestCase):
     pass
@@ -106,36 +136,6 @@ class TestAppMutations(TestCase):
         self.assertIsNotNone(token, "Did not get token")
 
     def test_create_user_mutation(self):
-        mutation = gql(
-            """
-            mutation(
-            $email: String!
-            $first_name: String!
-            $last_name: String!
-            $workspace_name: String!
-            $password: String!
-            $password2: String!
-            ) {
-                createUser(
-                email: $email
-                first_name: $first_name
-                last_name: $last_name
-                workspace_name: $workspace_name
-                password: $password
-                password2: $password2
-                ) {
-                    id
-                    email
-                    username
-                    first_name
-                    last_name
-                    is_staff
-                    is_active
-                }
-            }
-            """
-        )
-
         variables = {
             "email": "example@gmail.com",
             "first_name": "Test",
@@ -147,7 +147,7 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": mutation, "variables": variables}),
+            json.dumps({"query": create_test_user_mutation, "variables": variables}),
             content_type="application/json",
         )
 
