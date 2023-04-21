@@ -71,6 +71,9 @@ mutation = MutationType()
 query.set_field("generateOTP", resolve_generateOTP)
 query.set_field("generateQRCode", resolve_generateQRCode)
 
+query.set_field("testStandardDecorator", resolve_testStandardDecorator)
+query.set_field("testProDecorator", resolve_testProDecorator)
+
 query.set_field("getUser", resolve_getUser)
 query.set_field("getProfile", resolve_getProfile)
 

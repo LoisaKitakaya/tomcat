@@ -1,7 +1,8 @@
 from users.models import Profile
 from teams.models import Workspace
-from app.decorators import check_plan_standard
+from users.models import Profile, Package
 from ariadne_jwt.decorators import login_required
+from app.decorators import check_plan_standard, check_plan_pro
 from app.models import Account, Budget, Transaction, Target, Employee, Product
 
 
@@ -150,3 +151,27 @@ def resolve_getProduct(*_, id):
         raise Exception(str(e))
 
     return product
+
+
+@login_required
+@check_plan_standard
+def resolve_testStandardDecorator(_, info):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    plan = Package.objects.get(name=profile.package.name)
+
+    return plan
+
+
+@login_required
+@check_plan_pro
+def resolve_testProDecorator(_, info):
+    request = info.context["request"]
+
+    profile = Profile.objects.get(user__id=request.user.id)
+
+    plan = Package.objects.get(name=profile.package.name)
+
+    return plan

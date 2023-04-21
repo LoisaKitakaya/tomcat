@@ -193,6 +193,9 @@ type Query {
 
   generateQRCode: Qrcode!
 
+  testStandardDecorator: Package!
+  testProDecorator: Package!
+
   getUser: User!
   getProfile: Profile!
 
@@ -233,11 +236,7 @@ type Mutation {
     password: String!
     password2: String!
   ): User!
-  updateUser(
-    email: String!
-    first_name: String!
-    last_name: String
-  ): User!
+  updateUser(email: String!, first_name: String!, last_name: String): User!
 
   verifyToken(token: String!): VerifyToken!
   refreshToken(token: String!): RefreshToken!
