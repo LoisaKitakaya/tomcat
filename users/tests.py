@@ -272,7 +272,7 @@ class TestAppMutations(TestCase):
 
         self.assertIsNotNone(token, "Did not get token")
 
-    def test_create_user_mutation(self):
+    def test_create_user(self):
         variables = {
             "email": "example@gmail.com",
             "first_name": "Test",
@@ -303,7 +303,7 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["createUser"]["is_staff"], False)
         self.assertEqual(data["data"]["createUser"]["is_active"], True)
 
-    def test_update_user_mutation(self):
+    def test_update_user(self):
         mutation = gql(
             """
             mutation($email: String!, $first_name: String!, $last_name: String) {

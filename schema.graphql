@@ -322,7 +322,6 @@ type Mutation {
 
   createTeamMember(
     email: String!
-    username: String!
     first_name: String!
     last_name: String
     password: String!
