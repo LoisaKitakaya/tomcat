@@ -3,7 +3,7 @@ from uuid import uuid4
 from ariadne import gql
 from django.test import TestCase, Client
 from users.models import User, Profile, Package
-from app.models import Account, TransactionCategory, TransactionSubCategory
+from app.models import TransactionType, TransactionCategory, TransactionSubCategory
 
 
 def explain_status_code(status_code):
@@ -194,6 +194,46 @@ create_target_mutation = gql(
     """
 )
 
+create_transaction_mutation = gql(
+    """
+    mutation(
+        $account_id: ID!
+        $transaction_type: String!
+        $transaction_amount: Float!
+        $transaction_date: String!
+        $description: String!
+        $category: String!
+        $sub_category: String!
+        ) {
+        createTransaction(
+            account_id: $account_id
+            transaction_type: $transaction_type
+            transaction_amount: $transaction_amount
+            transaction_date: $transaction_date
+            description: $description
+            category: $category
+            sub_category: $sub_category
+        ) {
+            id
+            transaction_type
+            transaction_amount
+            currency_code
+            description
+            transaction_date
+            account {
+                account_balance
+            }
+            category {
+                category_name
+            }
+            sub_category {
+                category_name
+            }
+        }
+    }
+    """
+)
+
 
 # Create your tests here.
 class TestCustomDecorators(TestCase):
@@ -247,7 +287,8 @@ class TestCustomDecorators(TestCase):
             content_type="application/json",
         )
 
-        self.test_user_one_token = get_token.json()["data"]["tokenAuth"]["token"]
+        self.test_user_one_token = get_token.json()[
+            "data"]["tokenAuth"]["token"]
 
         user_two_token_auth_variables = {
             "username": self.test_user_two.username,
@@ -265,7 +306,8 @@ class TestCustomDecorators(TestCase):
             content_type="application/json",
         )
 
-        self.test_user_two_token = get_token.json()["data"]["tokenAuth"]["token"]
+        self.test_user_two_token = get_token.json()[
+            "data"]["tokenAuth"]["token"]
 
     def tearDown(self) -> None:
         self.client.logout()
@@ -313,7 +355,8 @@ class TestCustomDecorators(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["testStandardDecorator"]["name"], "Standard")
+        self.assertEqual(
+            data["data"]["testStandardDecorator"]["name"], "Standard")
 
     def test_check_plan_pro(self):
         query = gql(
@@ -399,6 +442,15 @@ class TestAppMutations(TestCase):
             category_description="Sales subcategory",
         )
 
+        self.transaction_type_payable = TransactionType.objects.create(
+            type_name="payable",
+            type_description="Payable description",
+        )
+        self.transaction_type_receivable = TransactionType.objects.create(
+            type_name="receivable",
+            type_description="Receivable description",
+        )
+
     def tearDown(self) -> None:
         self.client.logout()
 
@@ -412,6 +464,9 @@ class TestAppMutations(TestCase):
 
         self.transaction_subcategory.delete()
 
+        self.transaction_type_payable.delete()
+        self.transaction_type_receivable.delete()
+
     def test_create_account(self):
         variables = {
             "account_name": "KCB test account",
@@ -422,7 +477,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -435,8 +491,10 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["createAccount"]["account_type"], "Savings")
-        self.assertEqual(data["data"]["createAccount"]["account_balance"], 20000.00)
+        self.assertEqual(data["data"]["createAccount"]
+                         ["account_type"], "Savings")
+        self.assertEqual(data["data"]["createAccount"]
+                         ["account_balance"], 20000.00)
         self.assertEqual(data["data"]["createAccount"]["currency_code"], "USD")
         self.assertEqual(
             data["data"]["createAccount"]["account_name"], "KCB test account"
@@ -459,7 +517,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -528,8 +587,10 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["updateAccount"]["account_type"], "Checking")
-        self.assertEqual(data["data"]["updateAccount"]["account_balance"], 25000.00)
+        self.assertEqual(data["data"]["updateAccount"]
+                         ["account_type"], "Checking")
+        self.assertEqual(data["data"]["updateAccount"]
+                         ["account_balance"], 25000.00)
         self.assertEqual(data["data"]["updateAccount"]["currency_code"], "KES")
         self.assertEqual(
             data["data"]["updateAccount"]["account_name"], "Equity test account"
@@ -552,7 +613,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -602,7 +664,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -626,7 +689,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_budget_mutation, "variables": variables}),
+            json.dumps({"query": create_budget_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -639,13 +703,16 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["createBudget"]["budget_name"], "Test budget")
+        self.assertEqual(data["data"]["createBudget"]
+                         ["budget_name"], "Test budget")
         self.assertEqual(
             data["data"]["createBudget"]["budget_description"],
             "Test budget description",
         )
-        self.assertEqual(data["data"]["createBudget"]["budget_amount"], 5000.00)
-        self.assertEqual(data["data"]["createBudget"]["budget_is_active"], True)
+        self.assertEqual(data["data"]["createBudget"]
+                         ["budget_amount"], 5000.00)
+        self.assertEqual(data["data"]["createBudget"]
+                         ["budget_is_active"], True)
         self.assertEqual(
             data["data"]["createBudget"]["category"]["category_name"], "Sales"
         )
@@ -664,7 +731,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -688,7 +756,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_budget_mutation, "variables": variables}),
+            json.dumps({"query": create_budget_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -769,12 +838,14 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["updateBudget"]["budget_name"], "New budget")
+        self.assertEqual(data["data"]["updateBudget"]
+                         ["budget_name"], "New budget")
         self.assertEqual(
             data["data"]["updateBudget"]["budget_description"],
             "New budget description",
         )
-        self.assertEqual(data["data"]["updateBudget"]["budget_amount"], 2500.00)
+        self.assertEqual(data["data"]["updateBudget"]
+                         ["budget_amount"], 2500.00)
 
     def test_delete_budget(self):
         variables = {
@@ -786,7 +857,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -810,7 +882,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_budget_mutation, "variables": variables}),
+            json.dumps({"query": create_budget_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -860,7 +933,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -884,7 +958,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_target_mutation, "variables": variables}),
+            json.dumps({"query": create_target_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -897,13 +972,16 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["createTarget"]["target_name"], "Test target")
+        self.assertEqual(data["data"]["createTarget"]
+                         ["target_name"], "Test target")
         self.assertEqual(
             data["data"]["createTarget"]["target_description"],
             "Test target description",
         )
-        self.assertEqual(data["data"]["createTarget"]["target_amount"], 5000.00)
-        self.assertEqual(data["data"]["createTarget"]["target_is_active"], True)
+        self.assertEqual(data["data"]["createTarget"]
+                         ["target_amount"], 5000.00)
+        self.assertEqual(data["data"]["createTarget"]
+                         ["target_is_active"], True)
         self.assertEqual(
             data["data"]["createTarget"]["category"]["category_name"], "Sales"
         )
@@ -922,7 +1000,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -946,7 +1025,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_target_mutation, "variables": variables}),
+            json.dumps({"query": create_target_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -1027,12 +1107,14 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["updateTarget"]["target_name"], "New target")
+        self.assertEqual(data["data"]["updateTarget"]
+                         ["target_name"], "New target")
         self.assertEqual(
             data["data"]["updateTarget"]["target_description"],
             "New target description",
         )
-        self.assertEqual(data["data"]["updateTarget"]["target_amount"], 2500.00)
+        self.assertEqual(data["data"]["updateTarget"]
+                         ["target_amount"], 2500.00)
 
     def test_delete_target(self):
         variables = {
@@ -1044,7 +1126,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_account_mutation, "variables": variables}),
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -1068,7 +1151,8 @@ class TestAppMutations(TestCase):
 
         response = self.client.post(
             "/graphql/",
-            json.dumps({"query": create_target_mutation, "variables": variables}),
+            json.dumps({"query": create_target_mutation,
+                       "variables": variables}),
             content_type="application/json",
             HTTP_AUTHORIZATION=f"JWT {self.token}",
         )
@@ -1107,6 +1191,285 @@ class TestAppMutations(TestCase):
         )
 
         self.assertEqual(data["data"]["deleteTarget"], True)
+
+    def test_create_transaction(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "transaction_type": self.transaction_type_receivable.type_name,
+            "transaction_amount": 2500.00,
+            "transaction_date": "2023-04-22T13:30",
+            "description": "Test transaction description",
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_transaction_mutation,
+                       "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            data["data"]["createTransaction"]["transaction_type"], "receivable"
+        )
+        self.assertEqual(
+            data["data"]["createTransaction"]["transaction_amount"], 2500.00
+        )
+        self.assertEqual(
+            data["data"]["createTransaction"]["transaction_date"], "1682159400.0"
+        )
+        self.assertEqual(
+            data["data"]["createTransaction"]["account"]["account_balance"], 22500.00
+        )
+
+    def test_update_transaction(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        account_id = data["data"]["createAccount"]["id"]
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "transaction_type": self.transaction_type_receivable.type_name,
+            "transaction_amount": 2500.00,
+            "transaction_date": "2023-04-22T13:30",
+            "description": "Test transaction description",
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_transaction_mutation,
+                       "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        transaction_id = data["data"]["createTransaction"]["id"]
+
+        mutation = gql(
+            """
+            mutation(
+                $id: ID!
+                $account_id: ID!
+                $transaction_type: String!
+                $transaction_amount: Float!
+                $transaction_date: String!
+                $description: String!
+                $category: String!
+                $sub_category: String!
+                ) {
+                updateTransaction(
+                    id: $id
+                    account_id: $account_id
+                    transaction_type: $transaction_type
+                    transaction_amount: $transaction_amount
+                    transaction_date: $transaction_date
+                    description: $description
+                    category: $category
+                    sub_category: $sub_category
+                ) {
+                    id
+                    transaction_type
+                    transaction_amount
+                    currency_code
+                    description
+                    transaction_date
+                    account {
+                        account_balance
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {
+            "id": transaction_id,
+            "account_id": account_id,
+            "transaction_type": self.transaction_type_payable.type_name,
+            "transaction_amount": 3500.00,
+            "transaction_date": "2023-03-20T15:30",
+            "description": "Test transaction update",
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            data["data"]["updateTransaction"]["transaction_type"], "payable"
+        )
+        self.assertEqual(
+            data["data"]["updateTransaction"]["transaction_amount"], 3500.00
+        )
+        self.assertEqual(
+            data["data"]["updateTransaction"]["transaction_date"], "1679315400.0"
+        )
+        self.assertEqual(
+            data["data"]["updateTransaction"]["account"]["account_balance"], 16500.00
+        )
+
+    def test_delete_transaction(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation,
+                       "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        account_id = data["data"]["createAccount"]["id"]
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "transaction_type": self.transaction_type_receivable.type_name,
+            "transaction_amount": 2500.00,
+            "transaction_date": "2023-04-22T13:30",
+            "description": "Test transaction description",
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_transaction_mutation,
+                       "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        transaction_id = data["data"]["createTransaction"]["id"]
+
+        mutation = gql(
+            """
+            mutation($id: ID!, $account_id: ID!) {
+                deleteTransaction(id: $id, account_id: $account_id)
+            }
+            """
+        )
+
+        variables = {"id": transaction_id, "account_id": account_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["deleteTransaction"], True)
 
 
 class TestAppQueries(TestCase):

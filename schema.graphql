@@ -299,7 +299,6 @@ type Mutation {
     transaction_type: String!
     transaction_amount: Float!
     transaction_date: String!
-    currency_code: String!
     description: String!
     category: String!
     sub_category: String!
@@ -310,7 +309,6 @@ type Mutation {
     transaction_type: String!
     transaction_amount: Float!
     transaction_date: String!
-    currency_code: String!
     description: String!
     category: String!
     sub_category: String!

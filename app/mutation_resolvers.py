@@ -1,6 +1,6 @@
 from datetime import datetime
-from django.db.models import Q
 from users.models import Profile
+from django.utils import timezone
 from teams.models import Workspace, TeamLogs
 from app.decorators import check_plan_standard
 from ariadne_jwt.decorators import login_required
@@ -392,7 +392,6 @@ def resolve_createTransaction(
     transaction_type,
     transaction_amount,
     transaction_date,
-    currency_code,
     description,
     category,
     sub_category,
@@ -413,12 +412,13 @@ def resolve_createTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
+    new_date_object = timezone.make_aware(date_object)
 
     new_transaction = Transaction.objects.create(
         transaction_type=type,
         transaction_amount=transaction_amount,
-        transaction_date=date_object,
-        currency_code=currency_code,
+        transaction_date=new_date_object,
+        currency_code=account.currency_code,
         description=description,
         category=transaction_category,
         sub_category=transaction_sub_category,
@@ -455,7 +455,6 @@ def resolve_updateTransaction(
     transaction_type,
     transaction_amount,
     transaction_date,
-    currency_code,
     description,
     category,
     sub_category,
@@ -478,8 +477,12 @@ def resolve_updateTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
+    new_date_object = timezone.make_aware(date_object)
 
-    if transaction.transaction_type == "payable" and transaction_type == "payable":
+    if (
+        transaction_type == "payable"
+        and transaction.transaction_type.type_name == "payable"
+    ):
         previous_balance = account.account_balance + transaction.transaction_amount
 
         account.account_balance = previous_balance - transaction_amount
@@ -487,8 +490,8 @@ def resolve_updateTransaction(
         account.save()
 
     elif (
-        transaction.transaction_type == "receivable"
-        and transaction_type == "receivable"
+        transaction_type == "receivable"
+        and transaction.transaction_type.type_name == "receivable"
     ):
         previous_balance = account.account_balance - transaction.transaction_amount
 
@@ -496,14 +499,20 @@ def resolve_updateTransaction(
 
         account.save()
 
-    elif transaction.transaction_type == "receivable" and transaction_type == "payable":
+    elif (
+        transaction_type == "payable"
+        and transaction.transaction_type.type_name == "receivable"
+    ):
         previous_balance = account.account_balance - transaction.transaction_amount
 
         account.account_balance = previous_balance - transaction_amount
 
         account.save()
 
-    elif transaction.transaction_type == "payable" and transaction_type == "receivable":
+    elif (
+        transaction_type == "receivable"
+        and transaction.transaction_type.type_name == "payable"
+    ):
         previous_balance = account.account_balance + transaction.transaction_amount
 
         account.account_balance = previous_balance + transaction_amount
@@ -512,8 +521,7 @@ def resolve_updateTransaction(
 
     transaction.transaction_type = type
     transaction.transaction_amount = transaction_amount
-    transaction.transaction_date = date_object
-    transaction.currency_code = currency_code
+    transaction.transaction_date = new_date_object
     transaction.description = description
     transaction.category = transaction_category
     transaction.sub_category = transaction_sub_category
