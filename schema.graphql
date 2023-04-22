@@ -68,7 +68,6 @@ type Account {
   id: ID!
   account_name: String!
   account_type: String!
-  account_number: String
   owner: Profile!
   workspace: Workspace!
   currency_code: String!

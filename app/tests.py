@@ -3,6 +3,7 @@ from uuid import uuid4
 from ariadne import gql
 from django.test import TestCase, Client
 from users.models import User, Profile, Package
+from app.models import Account, TransactionCategory, TransactionSubCategory
 
 
 def explain_status_code(status_code):
@@ -66,6 +67,83 @@ create_test_user_mutation = gql(
             last_name
             is_staff
             is_active
+        }
+    }
+    """
+)
+
+create_account_mutation = gql(
+    """
+    mutation(
+        $account_name: String!
+        $account_type: String!
+        $account_balance: Float!
+        $currency_code: String!
+        ) {
+        createAccount(
+            account_name: $account_name
+            account_type: $account_type
+            account_balance: $account_balance
+            currency_code: $currency_code
+        ) {
+            id
+            account_name
+            account_type
+            owner {
+                user {
+                    username
+                }
+            }
+            workspace {
+                name
+            }
+            currency_code
+            account_balance
+        }
+    }
+    """
+)
+
+create_budget_mutation = gql(
+    """
+    mutation(
+        $account_id: ID!
+        $budget_name: String!
+        $budget_description: String!
+        $budget_amount: Float!
+        $category: String!
+        $sub_category: String!
+        ) {
+        createBudget(
+            account_id: $account_id
+            budget_name: $budget_name
+            budget_description: $budget_description
+            budget_amount: $budget_amount
+            category: $category
+            sub_category: $sub_category
+        ) {
+            id
+            budget_name
+            budget_description
+            budget_amount
+            budget_is_active
+            owner {
+                user {
+                    username
+                }
+            }
+            workspace {
+                name
+            }
+            account {
+                account_name
+            }
+            category {
+                category_name
+            }
+            sub_category {
+                category_name
+            }
         }
     }
     """
@@ -221,3 +299,490 @@ class TestCustomDecorators(TestCase):
         )
 
         self.assertEqual(data["data"]["testStandardDecorator"]["name"], "Pro")
+
+
+class TestAppMutations(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+
+        self.package = Package.objects.create(name="Free")
+
+        create_test_user_variables = {
+            "email": "example@gmail.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "workspace_name": "Important Workspace",
+            "password": "#TestUser15",
+            "password2": "#TestUser15",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {
+                    "query": create_test_user_mutation,
+                    "variables": create_test_user_variables,
+                }
+            ),
+            content_type="application/json",
+        )
+
+        self.test_username = response.json()["data"]["createUser"]["username"]
+
+        token_auth_variables = {
+            "username": self.test_username,
+            "password": "#TestUser15",
+        }
+
+        get_token = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {"query": token_auth_mutation, "variables": token_auth_variables}
+            ),
+            content_type="application/json",
+        )
+
+        self.token = get_token.json()["data"]["tokenAuth"]["token"]
+
+        self.transaction_category = TransactionCategory.objects.create(
+            category_name="Sales", category_description="Sales category"
+        )
+
+        self.transaction_subcategory = TransactionSubCategory.objects.create(
+            parent=self.transaction_category,
+            category_name="Product sales",
+            category_description="Sales subcategory",
+        )
+
+    def tearDown(self) -> None:
+        self.client.logout()
+
+        self.package.delete()
+
+        self.test_username = None
+
+        self.token = None
+
+        self.transaction_category.delete()
+
+        self.transaction_subcategory.delete()
+
+    def test_create_account(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["createAccount"]["account_type"], "Savings")
+        self.assertEqual(data["data"]["createAccount"]["account_balance"], 20000.00)
+        self.assertEqual(data["data"]["createAccount"]["currency_code"], "USD")
+        self.assertEqual(
+            data["data"]["createAccount"]["account_name"], "KCB test account"
+        )
+        self.assertEqual(
+            data["data"]["createAccount"]["owner"]["user"]["username"],
+            "example@gmail.com",
+        )
+        self.assertEqual(
+            data["data"]["createAccount"]["workspace"]["name"], "Important Workspace"
+        )
+
+    def test_update_account(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        mutation = gql(
+            """
+            mutation(
+            $id: ID!
+            $account_name: String!
+            $account_type: String!
+            $account_balance: Float!
+            $currency_code: String!
+            ) {
+                updateAccount(
+                    id: $id
+                    account_name: $account_name
+                    account_type: $account_type
+                    account_balance: $account_balance
+                    currency_code: $currency_code
+                ) {
+                    account_name
+                    account_type
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    currency_code
+                    account_balance
+                }
+            }
+            """
+        )
+
+        variables = {
+            "id": data["data"]["createAccount"]["id"],
+            "account_name": "Equity test account",
+            "account_type": "Checking",
+            "account_balance": 25000.00,
+            "currency_code": "KES",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["updateAccount"]["account_type"], "Checking")
+        self.assertEqual(data["data"]["updateAccount"]["account_balance"], 25000.00)
+        self.assertEqual(data["data"]["updateAccount"]["currency_code"], "KES")
+        self.assertEqual(
+            data["data"]["updateAccount"]["account_name"], "Equity test account"
+        )
+        self.assertEqual(
+            data["data"]["updateAccount"]["owner"]["user"]["username"],
+            "example@gmail.com",
+        )
+        self.assertEqual(
+            data["data"]["updateAccount"]["workspace"]["name"], "Important Workspace"
+        )
+
+    def test_delete_account(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        mutation = gql(
+            """
+            mutation($id: ID!) {
+                deleteAccount(id: $id)
+            }
+            """
+        )
+
+        variables = {"id": data["data"]["createAccount"]["id"]}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["deleteAccount"], True)
+
+    def test_create_budget(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "budget_name": "Test budget",
+            "budget_description": "Test budget description",
+            "budget_amount": 5000.00,
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_budget_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["createBudget"]["budget_name"], "Test budget")
+        self.assertEqual(
+            data["data"]["createBudget"]["budget_description"],
+            "Test budget description",
+        )
+        self.assertEqual(data["data"]["createBudget"]["budget_amount"], 5000.00)
+        self.assertEqual(data["data"]["createBudget"]["budget_is_active"], True)
+        self.assertEqual(
+            data["data"]["createBudget"]["category"]["category_name"], "Sales"
+        )
+        self.assertEqual(
+            data["data"]["createBudget"]["sub_category"]["category_name"],
+            "Product sales",
+        )
+
+    def test_update_budget(self):
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "budget_name": "Test budget",
+            "budget_description": "Test budget description",
+            "budget_amount": 5000.00,
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_budget_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        mutation = gql(
+            """
+            mutation(
+                $id: ID!
+                $budget_name: String!
+                $budget_description: String!
+                $budget_amount: Float!
+                $category: String!
+                $sub_category: String!
+                ) {
+                updateBudget(
+                    id: $id
+                    budget_name: $budget_name
+                    budget_description: $budget_description
+                    budget_amount: $budget_amount
+                    category: $category
+                    sub_category: $sub_category
+                ) {
+                    budget_name
+                    budget_description
+                    budget_amount
+                    budget_is_active
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    account {
+                        account_name
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {
+            "id": data["data"]["createBudget"]["id"],
+            "budget_name": "New budget",
+            "budget_description": "New budget description",
+            "budget_amount": 2500.00,
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["updateBudget"]["budget_name"], "New budget")
+        self.assertEqual(
+            data["data"]["updateBudget"]["budget_description"],
+            "New budget description",
+        )
+        self.assertEqual(data["data"]["updateBudget"]["budget_amount"], 2500.00)
+
+    def test_delete_budget(self):
+        pass
+
+
+class TestAppQueries(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+
+        self.package = Package.objects.create(name="Free")
+
+        create_test_user_variables = {
+            "email": "example@gmail.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "workspace_name": "Important Workspace",
+            "password": "#TestUser15",
+            "password2": "#TestUser15",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {
+                    "query": create_test_user_mutation,
+                    "variables": create_test_user_variables,
+                }
+            ),
+            content_type="application/json",
+        )
+
+        self.test_username = response.json()["data"]["createUser"]["username"]
+
+        token_auth_variables = {
+            "username": self.test_username,
+            "password": "#TestUser15",
+        }
+
+        get_token = self.client.post(
+            "/graphql/",
+            json.dumps(
+                {"query": token_auth_mutation, "variables": token_auth_variables}
+            ),
+            content_type="application/json",
+        )
+
+        self.token = get_token.json()["data"]["tokenAuth"]["token"]
+
+    def tearDown(self) -> None:
+        self.client.logout()
+
+        self.package.delete()
+
+        self.test_username = None
+
+        self.token = None
