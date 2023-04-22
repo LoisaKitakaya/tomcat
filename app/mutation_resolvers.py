@@ -134,7 +134,8 @@ def resolve_createBudget(
     account = Account.objects.get(id=account_id)
 
     budget_category = TransactionCategory.objects.get(category_name=category)
-    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
+    budget_sub_category = TransactionSubCategory.objects.get(
+        category_name=sub_category)
 
     new_budget = Budget.objects.create(
         budget_name=budget_name,
@@ -177,7 +178,8 @@ def resolve_updateBudget(
     budget = Budget.objects.get(id=id)
 
     budget_category = TransactionCategory.objects.get(category_name=category)
-    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
+    budget_sub_category = TransactionSubCategory.objects.get(
+        category_name=sub_category)
 
     budget.budget_name = budget_name
     budget.budget_description = budget_description
@@ -269,7 +271,8 @@ def resolve_createTarget(
     account = Account.objects.get(id=account_id)
 
     target_category = TransactionCategory.objects.get(category_name=category)
-    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
+    target_sub_category = TransactionSubCategory.objects.get(
+        category_name=sub_category)
 
     new_target = Target.objects.create(
         target_name=target_name,
@@ -312,7 +315,8 @@ def resolve_updateTarget(
     target = Target.objects.get(id=id)
 
     target_category = TransactionCategory.objects.get(category_name=category)
-    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
+    target_sub_category = TransactionSubCategory.objects.get(
+        category_name=sub_category)
 
     target.target_name = target_name
     target.target_description = target_description
@@ -406,7 +410,8 @@ def resolve_createTransaction(
 
     type = TransactionType.objects.get(type_name=transaction_type)
 
-    transaction_category = TransactionCategory.objects.get(category_name=category)
+    transaction_category = TransactionCategory.objects.get(
+        category_name=category)
     transaction_sub_category = TransactionSubCategory.objects.get(
         category_name=sub_category
     )
@@ -471,7 +476,8 @@ def resolve_updateTransaction(
 
     type = TransactionType.objects.get(type_name=transaction_type)
 
-    transaction_category = TransactionCategory.objects.get(category_name=category)
+    transaction_category = TransactionCategory.objects.get(
+        category_name=category)
     transaction_sub_category = TransactionSubCategory.objects.get(
         category_name=sub_category
     )
@@ -579,7 +585,7 @@ def resolve_deleteTransaction(_, info, id, account_id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_createEmployee(
     _,
     info,
@@ -639,7 +645,7 @@ def resolve_createEmployee(
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_updateEmployee(
     _,
     info,
@@ -697,7 +703,7 @@ def resolve_updateEmployee(
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_deleteEmployee(_, info, id):
     request = info.context["request"]
 
@@ -726,7 +732,7 @@ def resolve_deleteEmployee(_, info, id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_createProduct(
     _,
     info,
@@ -776,7 +782,7 @@ def resolve_createProduct(
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_updateProduct(
     _,
     info,
@@ -824,7 +830,7 @@ def resolve_updateProduct(
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_deleteProduct(_, info, id):
     request = info.context["request"]
 
