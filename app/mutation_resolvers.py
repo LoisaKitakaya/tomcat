@@ -134,8 +134,7 @@ def resolve_createBudget(
     account = Account.objects.get(id=account_id)
 
     budget_category = TransactionCategory.objects.get(category_name=category)
-    budget_sub_category = TransactionSubCategory.objects.get(
-        category_name=sub_category)
+    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     new_budget = Budget.objects.create(
         budget_name=budget_name,
@@ -178,8 +177,7 @@ def resolve_updateBudget(
     budget = Budget.objects.get(id=id)
 
     budget_category = TransactionCategory.objects.get(category_name=category)
-    budget_sub_category = TransactionSubCategory.objects.get(
-        category_name=sub_category)
+    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     budget.budget_name = budget_name
     budget.budget_description = budget_description
@@ -271,8 +269,7 @@ def resolve_createTarget(
     account = Account.objects.get(id=account_id)
 
     target_category = TransactionCategory.objects.get(category_name=category)
-    target_sub_category = TransactionSubCategory.objects.get(
-        category_name=sub_category)
+    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     new_target = Target.objects.create(
         target_name=target_name,
@@ -315,8 +312,7 @@ def resolve_updateTarget(
     target = Target.objects.get(id=id)
 
     target_category = TransactionCategory.objects.get(category_name=category)
-    target_sub_category = TransactionSubCategory.objects.get(
-        category_name=sub_category)
+    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
 
     target.target_name = target_name
     target.target_description = target_description
@@ -410,8 +406,7 @@ def resolve_createTransaction(
 
     type = TransactionType.objects.get(type_name=transaction_type)
 
-    transaction_category = TransactionCategory.objects.get(
-        category_name=category)
+    transaction_category = TransactionCategory.objects.get(category_name=category)
     transaction_sub_category = TransactionSubCategory.objects.get(
         category_name=sub_category
     )
@@ -476,8 +471,7 @@ def resolve_updateTransaction(
 
     type = TransactionType.objects.get(type_name=transaction_type)
 
-    transaction_category = TransactionCategory.objects.get(
-        category_name=category)
+    transaction_category = TransactionCategory.objects.get(category_name=category)
     transaction_sub_category = TransactionSubCategory.objects.get(
         category_name=sub_category
     )
@@ -604,6 +598,7 @@ def resolve_createEmployee(
     employee_id,
     emergency_contact_name,
     emergency_contact_phone_number,
+    emergency_contact_email,
     date_of_hire,
 ):
     request = info.context["request"]
@@ -613,6 +608,9 @@ def resolve_createEmployee(
     workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
     account = Account.objects.get(id=account_id)
+
+    date_object = datetime.strptime(date_of_hire, "%Y-%m-%d")
+    new_date_object = timezone.make_aware(date_object)
 
     employee = Employee.objects.create(
         account=account,
@@ -631,7 +629,8 @@ def resolve_createEmployee(
         employee_id=employee_id,
         emergency_contact_name=emergency_contact_name,
         emergency_contact_phone_number=emergency_contact_phone_number,
-        date_of_hire=date_of_hire,
+        emergency_contact_email=emergency_contact_email,
+        date_of_hire=new_date_object,
     )
 
     if profile.is_employee:
@@ -675,22 +674,44 @@ def resolve_updateEmployee(
 
     employee = Employee.objects.get(id=id)
 
-    employee.email = email
-    employee.first_name = first_name
-    employee.last_name = last_name
-    employee.phone_number = phone_number
-    employee.ID_number = ID_number
-    employee.employment_status = employment_status
-    employee.job_title = job_title
-    employee.job_description = job_description
-    employee.is_manager = is_manager
-    employee.salary = salary
-    employee.department = department
-    employee.employee_id = employee_id
-    employee.emergency_contact_name = emergency_contact_name
-    employee.emergency_contact_phone_number = emergency_contact_phone_number
-    employee.emergency_contact_email = emergency_contact_email
-    employee.date_of_hire = date_of_hire
+    new_date_object = employee.date_of_hire
+
+    if date_of_hire:
+        date_object = datetime.strptime(date_of_hire, "%Y-%m-%d")
+        new_date_object = timezone.make_aware(date_object)
+
+    employee.email = email if email else employee.email
+    employee.first_name = first_name if first_name else employee.first_name
+    employee.last_name = last_name if last_name else employee.last_name
+    employee.phone_number = phone_number if phone_number else employee.phone_number
+    employee.ID_number = ID_number if ID_number else employee.ID_number
+    employee.employment_status = (
+        employment_status if employment_status else employee.employment_status
+    )
+    employee.job_title = job_title if job_title else employee.job_title
+    employee.job_description = (
+        job_description if job_description else employee.job_description
+    )
+    employee.is_manager = is_manager if is_manager else employee.is_manager
+    employee.salary = salary if salary else employee.salary
+    employee.department = department if department else employee.department
+    employee.employee_id = employee_id if employee_id else employee.employee_id
+    employee.emergency_contact_name = (
+        emergency_contact_name
+        if emergency_contact_name
+        else employee.emergency_contact_name
+    )
+    employee.emergency_contact_phone_number = (
+        emergency_contact_phone_number
+        if emergency_contact_phone_number
+        else employee.emergency_contact_phone_number
+    )
+    employee.emergency_contact_email = (
+        emergency_contact_email
+        if emergency_contact_email
+        else employee.emergency_contact_email
+    )
+    employee.date_of_hire = new_date_object
 
     employee.save()
 
@@ -700,6 +721,8 @@ def resolve_updateEmployee(
             user=request.user,
             action=f"Updated employee: {employee.first_name} {employee.last_name}",
         )
+
+    return employee
 
 
 @login_required
@@ -745,6 +768,7 @@ def resolve_createProduct(
     selling_price,
     current_stock_level,
     units_sold,
+    reorder_level,
     supplier_name,
     supplier_phone_number,
 ):
@@ -755,6 +779,8 @@ def resolve_createProduct(
     workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
     account = Account.objects.get(id=account_id)
+
+    profit = (selling_price - buying_price) * units_sold
 
     product = Product.objects.create(
         account=account,
@@ -767,8 +793,11 @@ def resolve_createProduct(
         selling_price=selling_price,
         current_stock_level=current_stock_level,
         units_sold=units_sold,
+        reorder_level=reorder_level,
+        reorder_quantity=units_sold,
         supplier_name=supplier_name,
         supplier_phone_number=supplier_phone_number,
+        profit_generated=profit,
     )
 
     if profile.is_employee:

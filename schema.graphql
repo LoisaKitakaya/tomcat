@@ -130,6 +130,7 @@ type TeamLogs {
 }
 
 type PlanBilling {
+  id: ID!
   customer: User!
   order_tracking_id: String!
   merchant_ref: String!
@@ -144,6 +145,7 @@ type PlanBilling {
 }
 
 type Employee {
+  id: ID!
   account: Account!
   workspace: Workspace!
   email: String!
@@ -161,12 +163,13 @@ type Employee {
   emergency_contact_name: String!
   emergency_contact_phone_number: String!
   emergency_contact_email: String
-  date_of_hire: String!
+  date_of_hire: Datetime!
   created_at: Datetime!
   updated_at: Datetime!
 }
 
 type Product {
+  id: ID!
   account: Account!
   workspace: Workspace!
   name: String!
@@ -343,9 +346,11 @@ type Mutation {
     employee_id: String!
     emergency_contact_name: String!
     emergency_contact_phone_number: String!
+    emergency_contact_email: String!
     date_of_hire: String!
   ): Employee!
   updateEmployee(
+    id: ID!
     email: String!
     first_name: String!
     last_name: String!
@@ -360,7 +365,7 @@ type Mutation {
     employee_id: String!
     emergency_contact_name: String!
     emergency_contact_phone_number: String!
-    emergency_contact_email: String
+    emergency_contact_email: String!
     date_of_hire: String!
   ): Employee!
   deleteEmployee(id: ID!): Boolean!
@@ -375,6 +380,7 @@ type Mutation {
     selling_price: Float!
     current_stock_level: Int!
     units_sold: Int!
+    reorder_level: Int!
     supplier_name: String!
     supplier_contact_phone_number: String!
   ): Product!
@@ -387,6 +393,7 @@ type Mutation {
     selling_price: Float!
     current_stock_level: Int!
     units_sold: Int!
+    reorder_level: Int!
     supplier_name: String!
     supplier_contact_phone_number: String!
     supplier_contact_email: String
