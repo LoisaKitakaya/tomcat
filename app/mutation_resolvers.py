@@ -14,6 +14,8 @@ from app.models import (
     TransactionType,
     TransactionCategory,
     TransactionSubCategory,
+    ProductCategory,
+    ProductSubCategory,
 )
 
 
@@ -771,6 +773,7 @@ def resolve_createProduct(
     reorder_level,
     supplier_name,
     supplier_phone_number,
+    supplier_email,
 ):
     request = info.context["request"]
 
@@ -782,13 +785,16 @@ def resolve_createProduct(
 
     profit = (selling_price - buying_price) * units_sold
 
+    prod_category = ProductCategory.objects.get(category_name=category)
+    prod_sub_category = ProductSubCategory.objects.get(category_name=sub_category)
+
     product = Product.objects.create(
         account=account,
         workspace=workspace,
         name=name,
         description=description,
-        category=category,
-        sub_category=sub_category,
+        category=prod_category,
+        sub_category=prod_sub_category,
         buying_price=buying_price,
         selling_price=selling_price,
         current_stock_level=current_stock_level,
@@ -797,6 +803,7 @@ def resolve_createProduct(
         reorder_quantity=units_sold,
         supplier_name=supplier_name,
         supplier_phone_number=supplier_phone_number,
+        supplier_email=supplier_email,
         profit_generated=profit,
     )
 
@@ -824,6 +831,7 @@ def resolve_updateProduct(
     selling_price,
     current_stock_level,
     units_sold,
+    reorder_level,
     supplier_name,
     supplier_phone_number,
     supplier_email,
@@ -836,17 +844,36 @@ def resolve_updateProduct(
 
     product = Product.objects.get(id=id)
 
-    product.name = name
-    product.description = description
-    product.category = category
-    product.sub_category = sub_category
-    product.buying_price = buying_price
-    product.selling_price = selling_price
-    product.current_stock_level = current_stock_level
-    product.units_sold = units_sold
-    product.supplier_name = supplier_name
-    product.supplier_phone_number = supplier_phone_number
-    product.supplier_email = supplier_email
+    profit = product.profit_generated
+
+    if selling_price or buying_price or units_sold:
+        profit = (selling_price - buying_price) * units_sold
+
+    prod_category = ProductCategory.objects.get(category_name=category)
+    prod_sub_category = ProductSubCategory.objects.get(category_name=sub_category)
+
+    product.name = name if name else product.name
+    product.description = description if description else product.description
+    product.category = prod_category if category else product.category
+    product.sub_category = prod_sub_category if sub_category else product.sub_category
+    product.buying_price = buying_price if buying_price else product.buying_price
+    product.selling_price = selling_price if selling_price else product.selling_price
+    product.current_stock_level = (
+        current_stock_level if current_stock_level else product.current_stock_level
+    )
+    product.units_sold = units_sold if units_sold else product.units_sold
+    product.reorder_level = reorder_level if reorder_level else product.reorder_level
+    product.reorder_quantity = units_sold if units_sold else product.reorder_quantity
+    product.supplier_name = supplier_name if supplier_name else product.supplier_name
+    product.supplier_phone_number = (
+        supplier_phone_number
+        if supplier_phone_number
+        else product.supplier_phone_number
+    )
+    product.supplier_email = (
+        supplier_email if supplier_email else product.supplier_email
+    )
+    product.profit_generated = profit
 
     product.save()
 
@@ -856,6 +883,8 @@ def resolve_updateProduct(
             user=request.user,
             action=f"Updated product: {product.name}",
         )
+
+    return product
 
 
 @login_required

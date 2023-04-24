@@ -183,8 +183,8 @@ type Product {
   reorder_level: Int
   reorder_quantity: Int
   supplier_name: String!
-  supplier_contact_phone_number: String!
-  supplier_contact_email: String
+  supplier_phone_number: String!
+  supplier_email: String
   profit_generated: Float
   created_at: Datetime!
   updated_at: Datetime!
@@ -382,9 +382,11 @@ type Mutation {
     units_sold: Int!
     reorder_level: Int!
     supplier_name: String!
-    supplier_contact_phone_number: String!
+    supplier_phone_number: String!
+    supplier_email: String!
   ): Product!
   updateProduct(
+    id: ID!
     name: String!
     description: String!
     category: String!
@@ -395,8 +397,8 @@ type Mutation {
     units_sold: Int!
     reorder_level: Int!
     supplier_name: String!
-    supplier_contact_phone_number: String!
-    supplier_contact_email: String
+    supplier_phone_number: String!
+    supplier_email: String!
   ): Product!
   deleteProduct(id: ID!): Boolean!
 }

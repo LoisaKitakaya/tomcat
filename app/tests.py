@@ -3,7 +3,13 @@ from uuid import uuid4
 from ariadne import gql
 from django.test import TestCase, Client
 from users.models import User, Profile, Package
-from app.models import TransactionType, TransactionCategory, TransactionSubCategory
+from app.models import (
+    TransactionType,
+    TransactionCategory,
+    TransactionSubCategory,
+    ProductCategory,
+    ProductSubCategory,
+)
 
 
 def explain_status_code(status_code):
@@ -302,6 +308,68 @@ create_employee_mutation = gql(
     """
 )
 
+create_product_mutation = gql(
+    """
+    mutation(
+        $account_id: ID!
+        $name: String!
+        $description: String!
+        $category: String!
+        $sub_category: String!
+        $buying_price: Float!
+        $selling_price: Float!
+        $current_stock_level: Int!
+        $units_sold: Int!
+        $reorder_level: Int!
+        $supplier_name: String!
+        $supplier_phone_number: String!
+        $supplier_email: String!
+        ) {
+        createProduct(
+            account_id: $account_id
+            name: $name
+            description: $description
+            category: $category
+            sub_category: $sub_category
+            buying_price: $buying_price
+            selling_price: $selling_price
+            current_stock_level: $current_stock_level
+            units_sold: $units_sold
+            reorder_level: $reorder_level
+            supplier_name: $supplier_name
+            supplier_phone_number: $supplier_phone_number
+            supplier_email: $supplier_email
+        ) {
+            id
+            account {
+                account_name
+            }
+            workspace {
+                name
+            }
+            name
+            description
+            category {
+                category_name
+            }
+            sub_category {
+                category_name
+            }
+            buying_price
+            selling_price
+            current_stock_level
+            units_sold
+            reorder_level
+            reorder_quantity
+            supplier_name
+            supplier_phone_number
+            supplier_email
+            profit_generated
+        }
+    }
+    """
+)
+
 
 # Create your tests here.
 class TestCustomDecorators(TestCase):
@@ -331,7 +399,7 @@ class TestCustomDecorators(TestCase):
         self.test_user_two.set_password("#testpassword")
         self.test_user_two.save()
 
-        self.user_two_workspace_uid = str(uuid4().hex)  # type: ignore
+        self.user_two_workspace_uid = str(uuid4().hex)
 
         self.test_user_two_profile = Profile.objects.create(
             user=self.test_user_two,
@@ -500,7 +568,6 @@ class TestAppMutations(TestCase):
         self.transaction_category = TransactionCategory.objects.create(
             category_name="Sales", category_description="Sales category"
         )
-
         self.transaction_subcategory = TransactionSubCategory.objects.create(
             parent=self.transaction_category,
             category_name="Product sales",
@@ -516,6 +583,16 @@ class TestAppMutations(TestCase):
             type_description="Receivable description",
         )
 
+        self.product_category = ProductCategory.objects.create(
+            category_name="Product category",
+            category_description="Product category description",
+        )
+        self.product_subcategory = ProductSubCategory.objects.create(
+            parent=self.product_category,
+            category_name="Product subcategory",
+            category_description="Product subcategory description",
+        )
+
     def tearDown(self) -> None:
         self.client.logout()
 
@@ -526,11 +603,13 @@ class TestAppMutations(TestCase):
         self.token = None
 
         self.transaction_category.delete()
-
         self.transaction_subcategory.delete()
 
         self.transaction_type_payable.delete()
         self.transaction_type_receivable.delete()
+
+        self.product_category.delete()
+        self.product_subcategory.delete()
 
     def test_create_account(self):
         variables = {
@@ -1875,13 +1954,333 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["deleteEmployee"], True)
 
     def test_create_product(self):
-        pass
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "name": "Product One",
+            "description": "This is a test product",
+            "category": self.product_category.category_name,
+            "sub_category": self.product_subcategory.category_name,
+            "buying_price": 300.00,
+            "selling_price": 500.00,
+            "current_stock_level": 100,
+            "units_sold": 0,
+            "reorder_level": 20,
+            "supplier_name": "Supplier",
+            "supplier_phone_number": "+254787654321",
+            "supplier_email": "supplier@example.com",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_product_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["createProduct"]["name"], "Product One")
+        self.assertEqual(
+            data["data"]["createProduct"]["category"]["category_name"],
+            "Product category",
+        )
+        self.assertEqual(
+            data["data"]["createProduct"]["sub_category"]["category_name"],
+            "Product subcategory",
+        )
+        self.assertEqual(data["data"]["createProduct"]["buying_price"], 300.00)
+        self.assertEqual(data["data"]["createProduct"]["selling_price"], 500.00)
+        self.assertEqual(data["data"]["createProduct"]["current_stock_level"], 100)
+        self.assertEqual(data["data"]["createProduct"]["units_sold"], 0)
+        self.assertEqual(data["data"]["createProduct"]["reorder_level"], 20)
+        self.assertEqual(data["data"]["createProduct"]["reorder_quantity"], 0)
+        self.assertEqual(data["data"]["createProduct"]["profit_generated"], 0)
+        self.assertEqual(data["data"]["createProduct"]["supplier_name"], "Supplier")
+        self.assertEqual(
+            data["data"]["createProduct"]["supplier_phone_number"], "+254787654321"
+        )
+        self.assertEqual(
+            data["data"]["createProduct"]["supplier_email"], "supplier@example.com"
+        )
 
     def test_update_product(self):
-        pass
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "name": "Product One",
+            "description": "This is a test product",
+            "category": self.product_category.category_name,
+            "sub_category": self.product_subcategory.category_name,
+            "buying_price": 300.00,
+            "selling_price": 500.00,
+            "current_stock_level": 100,
+            "units_sold": 0,
+            "reorder_level": 20,
+            "supplier_name": "Supplier",
+            "supplier_phone_number": "+254787654321",
+            "supplier_email": "supplier@example.com",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_product_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        mutation = gql(
+            """
+            mutation(
+                $id: ID!
+                $name: String!
+                $description: String!
+                $category: String!
+                $sub_category: String!
+                $buying_price: Float!
+                $selling_price: Float!
+                $current_stock_level: Int!
+                $units_sold: Int!
+                $reorder_level: Int!
+                $supplier_name: String!
+                $supplier_phone_number: String!
+                $supplier_email: String!
+                ) {
+                updateProduct(
+                    id: $id
+                    name: $name
+                    description: $description
+                    category: $category
+                    sub_category: $sub_category
+                    buying_price: $buying_price
+                    selling_price: $selling_price
+                    current_stock_level: $current_stock_level
+                    units_sold: $units_sold
+                    reorder_level: $reorder_level
+                    supplier_name: $supplier_name
+                    supplier_phone_number: $supplier_phone_number
+                    supplier_email: $supplier_email
+                ) {
+                    account {
+                        account_name
+                    }
+                    workspace {
+                        name
+                    }
+                    name
+                    description
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                    buying_price
+                    selling_price
+                    current_stock_level
+                    units_sold
+                    reorder_level
+                    reorder_quantity
+                    supplier_name
+                    supplier_phone_number
+                    supplier_email
+                    profit_generated
+                }
+            }
+            """
+        )
+
+        variables = {
+            "id": data["data"]["createProduct"]["id"],
+            "name": "Product One Update",
+            "description": "",
+            "category": self.product_category.category_name,
+            "sub_category": self.product_subcategory.category_name,
+            "buying_price": 350.00,
+            "selling_price": 450.00,
+            "current_stock_level": 100,
+            "units_sold": 5,
+            "reorder_level": 20,
+            "supplier_name": "",
+            "supplier_phone_number": "",
+            "supplier_email": "supplierupdate@example.com",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["updateProduct"]["name"], "Product One Update")
+        self.assertEqual(
+            data["data"]["updateProduct"]["category"]["category_name"],
+            "Product category",
+        )
+        self.assertEqual(
+            data["data"]["updateProduct"]["sub_category"]["category_name"],
+            "Product subcategory",
+        )
+        self.assertEqual(data["data"]["updateProduct"]["buying_price"], 350.00)
+        self.assertEqual(data["data"]["updateProduct"]["selling_price"], 450.00)
+        self.assertEqual(data["data"]["updateProduct"]["current_stock_level"], 100)
+        self.assertEqual(data["data"]["updateProduct"]["units_sold"], 5)
+        self.assertEqual(data["data"]["updateProduct"]["reorder_level"], 20)
+        self.assertEqual(data["data"]["updateProduct"]["reorder_quantity"], 5)
+        self.assertEqual(data["data"]["updateProduct"]["profit_generated"], 500)
+        self.assertEqual(data["data"]["updateProduct"]["supplier_name"], "Supplier")
+        self.assertEqual(
+            data["data"]["updateProduct"]["supplier_phone_number"], "+254787654321"
+        )
+        self.assertEqual(
+            data["data"]["updateProduct"]["supplier_email"], "supplierupdate@example.com"
+        )
 
     def test_delete_product(self):
-        pass
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        variables = {
+            "account_id": data["data"]["createAccount"]["id"],
+            "name": "Product One",
+            "description": "This is a test product",
+            "category": self.product_category.category_name,
+            "sub_category": self.product_subcategory.category_name,
+            "buying_price": 300.00,
+            "selling_price": 500.00,
+            "current_stock_level": 100,
+            "units_sold": 0,
+            "reorder_level": 20,
+            "supplier_name": "Supplier",
+            "supplier_phone_number": "+254787654321",
+            "supplier_email": "supplier@example.com",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_product_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        mutation = gql(
+            """
+            mutation($id: ID!) {
+                deleteProduct(id: $id)
+            }
+            """
+        )
+
+        variables = {"id": data["data"]["createProduct"]["id"]}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["deleteProduct"], True)
 
 
 class TestAppQueries(TestCase):

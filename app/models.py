@@ -59,7 +59,7 @@ class ProductCategory(models.Model):
 
 
 class ProductSubCategory(models.Model):
-    parent = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
+    parent = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     category_name = models.CharField(max_length=100, blank=False, unique=True)
     category_description = models.TextField(blank=False)
 
