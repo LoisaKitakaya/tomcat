@@ -110,7 +110,7 @@ def resolve_getTransaction(*_, id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getAllEmployees(*_, account_id):
     account = Account.objects.get(id=account_id)
 
@@ -120,7 +120,7 @@ def resolve_getAllEmployees(*_, account_id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getEmployee(*_, id):
     try:
         employee = Employee.objects.get(id=id)
@@ -132,7 +132,7 @@ def resolve_getEmployee(*_, id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getAllProducts(*_, account_id):
     account = Account.objects.get(id=account_id)
 
@@ -142,7 +142,7 @@ def resolve_getAllProducts(*_, account_id):
 
 
 @login_required
-@check_plan_standard
+# @check_plan_standard
 def resolve_getProduct(*_, id):
     try:
         product = Product.objects.get(id=id)

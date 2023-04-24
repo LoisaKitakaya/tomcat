@@ -2198,7 +2198,8 @@ class TestAppMutations(TestCase):
             data["data"]["updateProduct"]["supplier_phone_number"], "+254787654321"
         )
         self.assertEqual(
-            data["data"]["updateProduct"]["supplier_email"], "supplierupdate@example.com"
+            data["data"]["updateProduct"]["supplier_email"],
+            "supplierupdate@example.com",
         )
 
     def test_delete_product(self):
@@ -2326,6 +2327,207 @@ class TestAppQueries(TestCase):
 
         self.token = get_token.json()["data"]["tokenAuth"]["token"]
 
+        self.transaction_category = TransactionCategory.objects.create(
+            category_name="Sales", category_description="Sales category"
+        )
+        self.transaction_subcategory = TransactionSubCategory.objects.create(
+            parent=self.transaction_category,
+            category_name="Product sales",
+            category_description="Sales subcategory",
+        )
+
+        self.transaction_type_payable = TransactionType.objects.create(
+            type_name="payable",
+            type_description="Payable description",
+        )
+        self.transaction_type_receivable = TransactionType.objects.create(
+            type_name="receivable",
+            type_description="Receivable description",
+        )
+
+        self.product_category = ProductCategory.objects.create(
+            category_name="Product category",
+            category_description="Product category description",
+        )
+        self.product_subcategory = ProductSubCategory.objects.create(
+            parent=self.product_category,
+            category_name="Product subcategory",
+            category_description="Product subcategory description",
+        )
+
+        variables = {
+            "account_name": "KCB test account",
+            "account_type": "Savings",
+            "account_balance": 20000.00,
+            "currency_code": "USD",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_account_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.account_id = data["data"]["createAccount"]["id"]
+
+        variables = {
+            "account_id": self.account_id,
+            "budget_name": "Test budget",
+            "budget_description": "Test budget description",
+            "budget_amount": 5000.00,
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_budget_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.budget_id = data["data"]["createBudget"]["id"]
+
+        variables = {
+            "account_id": self.account_id,
+            "target_name": "Test target",
+            "target_description": "Test target description",
+            "target_amount": 5000.00,
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_target_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.target_id = data["data"]["createTarget"]["id"]
+
+        variables = {
+            "account_id": self.account_id,
+            "transaction_type": self.transaction_type_receivable.type_name,
+            "transaction_amount": 2500.00,
+            "transaction_date": "2023-04-22T13:30",
+            "description": "Test transaction description",
+            "category": self.transaction_category.category_name,
+            "sub_category": self.transaction_subcategory.category_name,
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_transaction_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.transaction_id = data["data"]["createTransaction"]["id"]
+
+        variables = {
+            "account_id": self.account_id,
+            "email": "employee@example.com",
+            "first_name": "New",
+            "last_name": "Employee",
+            "phone_number": "+254712345678",
+            "ID_number": "123456789",
+            "employment_status": "Contract",
+            "job_title": "Consultant",
+            "job_description": "Consulting ting",
+            "is_manager": False,
+            "salary": 3000.00,
+            "department": "IT",
+            "employee_id": "987654321",
+            "emergency_contact_name": "Emergency Contact",
+            "emergency_contact_phone_number": "+254787654321",
+            "emergency_contact_email": "emergency@example.com",
+            "date_of_hire": "2023-04-22",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_employee_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.employee_id = data["data"]["createEmployee"]["id"]
+
+        variables = {
+            "account_id": self.account_id,
+            "name": "Product One",
+            "description": "This is a test product",
+            "category": self.product_category.category_name,
+            "sub_category": self.product_subcategory.category_name,
+            "buying_price": 300.00,
+            "selling_price": 500.00,
+            "current_stock_level": 100,
+            "units_sold": 0,
+            "reorder_level": 20,
+            "supplier_name": "Supplier",
+            "supplier_phone_number": "+254787654321",
+            "supplier_email": "supplier@example.com",
+        }
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": create_product_mutation, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.product_id = data["data"]["createProduct"]["id"]
+
     def tearDown(self) -> None:
         self.client.logout()
 
@@ -2334,3 +2536,811 @@ class TestAppQueries(TestCase):
         self.test_username = None
 
         self.token = None
+
+        self.transaction_category.delete()
+        self.transaction_subcategory.delete()
+
+        self.transaction_type_payable.delete()
+        self.transaction_type_receivable.delete()
+
+        self.product_category.delete()
+        self.product_subcategory.delete()
+
+        self.account_id = None
+
+        self.budget_id = None
+
+        self.target_id = None
+
+        self.transaction_id = None
+
+        self.employee_id = None
+
+        self.product_id = None
+
+    def test_get_all_accounts(self):
+        query = gql(
+            """
+            query {
+                getAllAccounts {
+                    account_name
+                    account_type
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    currency_code
+                    account_balance
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getAllAccounts"][0]["account_type"], "Savings")
+        self.assertEqual(data["data"]["getAllAccounts"][0]["account_balance"], 22500.00)
+        self.assertEqual(data["data"]["getAllAccounts"][0]["currency_code"], "USD")
+        self.assertEqual(
+            data["data"]["getAllAccounts"][0]["account_name"], "KCB test account"
+        )
+        self.assertEqual(
+            data["data"]["getAllAccounts"][0]["owner"]["user"]["username"],
+            "example@gmail.com",
+        )
+        self.assertEqual(
+            data["data"]["getAllAccounts"][0]["workspace"]["name"],
+            "Important Workspace",
+        )
+
+    def test_get_account(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getAccount(id: $id) {
+                    account_name
+                    account_type
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    currency_code
+                    account_balance
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.account_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getAccount"]["account_type"], "Savings")
+        self.assertEqual(data["data"]["getAccount"]["account_balance"], 22500.00)
+        self.assertEqual(data["data"]["getAccount"]["currency_code"], "USD")
+        self.assertEqual(data["data"]["getAccount"]["account_name"], "KCB test account")
+        self.assertEqual(
+            data["data"]["getAccount"]["owner"]["user"]["username"],
+            "example@gmail.com",
+        )
+        self.assertEqual(
+            data["data"]["getAccount"]["workspace"]["name"], "Important Workspace"
+        )
+
+    def test_get_all_budgets(self):
+        query = gql(
+            """
+            query {
+                getAllBudgets {
+                    budget_name
+                    budget_description
+                    budget_is_active
+                    budget_amount
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    account {
+                        account_name
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getAllBudgets"][0]["budget_name"], "Test budget")
+        self.assertEqual(
+            data["data"]["getAllBudgets"][0]["budget_description"],
+            "Test budget description",
+        )
+        self.assertEqual(data["data"]["getAllBudgets"][0]["budget_amount"], 5000.00)
+        self.assertEqual(data["data"]["getAllBudgets"][0]["budget_is_active"], True)
+        self.assertEqual(
+            data["data"]["getAllBudgets"][0]["category"]["category_name"], "Sales"
+        )
+        self.assertEqual(
+            data["data"]["getAllBudgets"][0]["sub_category"]["category_name"],
+            "Product sales",
+        )
+
+    def test_get_budget(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getBudget(id: $id) {
+                    budget_name
+                    budget_description
+                    budget_is_active
+                    budget_amount
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    account {
+                        account_name
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.budget_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getBudget"]["budget_name"], "Test budget")
+        self.assertEqual(
+            data["data"]["getBudget"]["budget_description"],
+            "Test budget description",
+        )
+        self.assertEqual(data["data"]["getBudget"]["budget_amount"], 5000.00)
+        self.assertEqual(data["data"]["getBudget"]["budget_is_active"], True)
+        self.assertEqual(
+            data["data"]["getBudget"]["category"]["category_name"], "Sales"
+        )
+        self.assertEqual(
+            data["data"]["getBudget"]["sub_category"]["category_name"],
+            "Product sales",
+        )
+
+    def test_get_all_targets(self):
+        query = gql(
+            """
+            query {
+                getAllTargets {
+                    target_name
+                    target_description
+                    target_is_active
+                    target_amount
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    account {
+                        account_name
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getAllTargets"][0]["target_name"], "Test target")
+        self.assertEqual(
+            data["data"]["getAllTargets"][0]["target_description"],
+            "Test target description",
+        )
+        self.assertEqual(data["data"]["getAllTargets"][0]["target_amount"], 5000.00)
+        self.assertEqual(data["data"]["getAllTargets"][0]["target_is_active"], True)
+        self.assertEqual(
+            data["data"]["getAllTargets"][0]["category"]["category_name"], "Sales"
+        )
+        self.assertEqual(
+            data["data"]["getAllTargets"][0]["sub_category"]["category_name"],
+            "Product sales",
+        )
+
+    def test_get_target(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getTarget(id: $id) {
+                    target_name
+                    target_description
+                    target_is_active
+                    target_amount
+                    owner {
+                        user {
+                            username
+                        }
+                    }
+                    workspace {
+                        name
+                    }
+                    account {
+                        account_name
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.target_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getTarget"]["target_name"], "Test target")
+        self.assertEqual(
+            data["data"]["getTarget"]["target_description"],
+            "Test target description",
+        )
+        self.assertEqual(data["data"]["getTarget"]["target_amount"], 5000.00)
+        self.assertEqual(data["data"]["getTarget"]["target_is_active"], True)
+        self.assertEqual(
+            data["data"]["getTarget"]["category"]["category_name"], "Sales"
+        )
+        self.assertEqual(
+            data["data"]["getTarget"]["sub_category"]["category_name"],
+            "Product sales",
+        )
+
+    def test_get_all_transactions(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getAllTransactions(id: $id) {
+                    transaction_type
+                    transaction_amount
+                    currency_code
+                    description
+                    transaction_date
+                    account {
+                        account_balance
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.account_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            data["data"]["getAllTransactions"][0]["transaction_type"], "receivable"
+        )
+        self.assertEqual(
+            data["data"]["getAllTransactions"][0]["transaction_amount"], 2500.00
+        )
+        self.assertEqual(
+            data["data"]["getAllTransactions"][0]["transaction_date"], "1682148600.0"
+        )
+        self.assertEqual(
+            data["data"]["getAllTransactions"][0]["account"]["account_balance"],
+            22500.00,
+        )
+
+    def test_get_transaction(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getTransaction(id: $id) {
+                    transaction_type
+                    transaction_amount
+                    currency_code
+                    description
+                    transaction_date
+                    account {
+                        account_balance
+                    }
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.transaction_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            data["data"]["getTransaction"]["transaction_type"], "receivable"
+        )
+        self.assertEqual(data["data"]["getTransaction"]["transaction_amount"], 2500.00)
+        self.assertEqual(
+            data["data"]["getTransaction"]["transaction_date"], "1682148600.0"
+        )
+        self.assertEqual(
+            data["data"]["getTransaction"]["account"]["account_balance"],
+            22500.00,
+        )
+
+    def test_get_all_employees(self):
+        query = gql(
+            """
+            query($account_id: ID!) {
+                getAllEmployees(account_id: $account_id) {
+                    account {
+                        account_name
+                    }
+                    workspace {
+                        name
+                    }
+                    email
+                    first_name
+                    last_name
+                    phone_number
+                    ID_number
+                    employment_status
+                    job_title
+                    job_description
+                    is_manager
+                    salary
+                    department
+                    employee_id
+                    emergency_contact_name
+                    emergency_contact_phone_number
+                    emergency_contact_email
+                    date_of_hire
+                }
+            }
+            """
+        )
+
+        variables = {"account_id": self.account_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["email"], "employee@example.com"
+        )
+        self.assertEqual(data["data"]["getAllEmployees"][0]["first_name"], "New")
+        self.assertEqual(data["data"]["getAllEmployees"][0]["last_name"], "Employee")
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["phone_number"], "+254712345678"
+        )
+        self.assertEqual(data["data"]["getAllEmployees"][0]["ID_number"], "123456789")
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["employment_status"], "Contract"
+        )
+        self.assertEqual(data["data"]["getAllEmployees"][0]["job_title"], "Consultant")
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["job_description"], "Consulting ting"
+        )
+        self.assertEqual(data["data"]["getAllEmployees"][0]["is_manager"], False)
+        self.assertEqual(data["data"]["getAllEmployees"][0]["salary"], 3000.00)
+        self.assertEqual(data["data"]["getAllEmployees"][0]["department"], "IT")
+        self.assertEqual(data["data"]["getAllEmployees"][0]["employee_id"], "987654321")
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["emergency_contact_name"],
+            "Emergency Contact",
+        )
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["emergency_contact_phone_number"],
+            "+254787654321",
+        )
+        self.assertEqual(
+            data["data"]["getAllEmployees"][0]["emergency_contact_email"],
+            "emergency@example.com",
+        )
+        self.assertEqual(data["data"]["getAllEmployees"][0]["date_of_hire"], "1682110800.0")
+
+    def test_get_employee(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getEmployee(id: $id) {
+                    account {
+                        account_name
+                    }
+                    workspace {
+                        name
+                    }
+                    email
+                    first_name
+                    last_name
+                    phone_number
+                    ID_number
+                    employment_status
+                    job_title
+                    job_description
+                    is_manager
+                    salary
+                    department
+                    employee_id
+                    emergency_contact_name
+                    emergency_contact_phone_number
+                    emergency_contact_email
+                    date_of_hire
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.employee_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(
+            data["data"]["getEmployee"]["email"], "employee@example.com"
+        )
+        self.assertEqual(data["data"]["getEmployee"]["first_name"], "New")
+        self.assertEqual(data["data"]["getEmployee"]["last_name"], "Employee")
+        self.assertEqual(
+            data["data"]["getEmployee"]["phone_number"], "+254712345678"
+        )
+        self.assertEqual(data["data"]["getEmployee"]["ID_number"], "123456789")
+        self.assertEqual(
+            data["data"]["getEmployee"]["employment_status"], "Contract"
+        )
+        self.assertEqual(data["data"]["getEmployee"]["job_title"], "Consultant")
+        self.assertEqual(
+            data["data"]["getEmployee"]["job_description"], "Consulting ting"
+        )
+        self.assertEqual(data["data"]["getEmployee"]["is_manager"], False)
+        self.assertEqual(data["data"]["getEmployee"]["salary"], 3000.00)
+        self.assertEqual(data["data"]["getEmployee"]["department"], "IT")
+        self.assertEqual(data["data"]["getEmployee"]["employee_id"], "987654321")
+        self.assertEqual(
+            data["data"]["getEmployee"]["emergency_contact_name"],
+            "Emergency Contact",
+        )
+        self.assertEqual(
+            data["data"]["getEmployee"]["emergency_contact_phone_number"],
+            "+254787654321",
+        )
+        self.assertEqual(
+            data["data"]["getEmployee"]["emergency_contact_email"],
+            "emergency@example.com",
+        )
+        self.assertEqual(data["data"]["getEmployee"]["date_of_hire"], "1682110800.0")
+
+    def test_get_all_products(self):
+        query = gql(
+            """
+            query($account_id: ID!) {
+                getAllProducts(account_id: $account_id) {
+                    account {
+                        account_name
+                    }
+                    workspace {
+                        name
+                    }
+                    name
+                    description
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                    buying_price
+                    selling_price
+                    current_stock_level
+                    units_sold
+                    reorder_level
+                    reorder_quantity
+                    supplier_name
+                    supplier_phone_number
+                    supplier_email
+                    profit_generated
+                }
+            }
+            """
+        )
+
+        variables = {"account_id": self.account_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getAllProducts"][0]["name"], "Product One")
+        self.assertEqual(
+            data["data"]["getAllProducts"][0]["category"]["category_name"],
+            "Product category",
+        )
+        self.assertEqual(
+            data["data"]["getAllProducts"][0]["sub_category"]["category_name"],
+            "Product subcategory",
+        )
+        self.assertEqual(data["data"]["getAllProducts"][0]["buying_price"], 300.00)
+        self.assertEqual(data["data"]["getAllProducts"][0]["selling_price"], 500.00)
+        self.assertEqual(data["data"]["getAllProducts"][0]["current_stock_level"], 100)
+        self.assertEqual(data["data"]["getAllProducts"][0]["units_sold"], 0)
+        self.assertEqual(data["data"]["getAllProducts"][0]["reorder_level"], 20)
+        self.assertEqual(data["data"]["getAllProducts"][0]["reorder_quantity"], 0)
+        self.assertEqual(data["data"]["getAllProducts"][0]["profit_generated"], 0)
+        self.assertEqual(data["data"]["getAllProducts"][0]["supplier_name"], "Supplier")
+        self.assertEqual(
+            data["data"]["getAllProducts"][0]["supplier_phone_number"], "+254787654321"
+        )
+        self.assertEqual(
+            data["data"]["getAllProducts"][0]["supplier_email"], "supplier@example.com"
+        )
+
+    def test_get_product(self):
+        query = gql(
+            """
+            query($id: ID!) {
+                getProduct(id: $id) {
+                    account {
+                        account_name
+                    }
+                    workspace {
+                        name
+                    }
+                    name
+                    description
+                    category {
+                        category_name
+                    }
+                    sub_category {
+                        category_name
+                    }
+                    buying_price
+                    selling_price
+                    current_stock_level
+                    units_sold
+                    reorder_level
+                    reorder_quantity
+                    supplier_name
+                    supplier_phone_number
+                    supplier_email
+                    profit_generated
+                }
+            }
+            """
+        )
+
+        variables = {"id": self.product_id}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["getProduct"]["name"], "Product One")
+        self.assertEqual(
+            data["data"]["getProduct"]["category"]["category_name"],
+            "Product category",
+        )
+        self.assertEqual(
+            data["data"]["getProduct"]["sub_category"]["category_name"],
+            "Product subcategory",
+        )
+        self.assertEqual(data["data"]["getProduct"]["buying_price"], 300.00)
+        self.assertEqual(data["data"]["getProduct"]["selling_price"], 500.00)
+        self.assertEqual(data["data"]["getProduct"]["current_stock_level"], 100)
+        self.assertEqual(data["data"]["getProduct"]["units_sold"], 0)
+        self.assertEqual(data["data"]["getProduct"]["reorder_level"], 20)
+        self.assertEqual(data["data"]["getProduct"]["reorder_quantity"], 0)
+        self.assertEqual(data["data"]["getProduct"]["profit_generated"], 0)
+        self.assertEqual(data["data"]["getProduct"]["supplier_name"], "Supplier")
+        self.assertEqual(
+            data["data"]["getProduct"]["supplier_phone_number"], "+254787654321"
+        )
+        self.assertEqual(
+            data["data"]["getProduct"]["supplier_email"], "supplier@example.com"
+        )
