@@ -44,7 +44,8 @@ def check_plan_pro(func):
             raise Exception("You cannot access this resource given your current plan")
 
     return wrapper
-    
+
+
 def check_is_employee(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -56,7 +57,7 @@ def check_is_employee(func):
 
         if not profile.is_employee:
             return func(*args, **kwargs)
-        
+
         else:
             raise Exception("Access denied, you are not the owner")
 

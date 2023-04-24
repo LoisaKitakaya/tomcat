@@ -3,6 +3,11 @@ from users.models import Profile
 from django.utils import timezone
 from teams.models import Workspace, TeamLogs
 from app.decorators import check_plan_standard
+from users.limit import (
+    check_create_account_limit,
+    check_create_budget_limit,
+    check_create_target_limit,
+)
 from ariadne_jwt.decorators import login_required
 from app.models import (
     Account,
@@ -29,6 +34,8 @@ def resolve_createAccount(
     currency_code,
 ):
     request = info.context["request"]
+
+    check_create_account_limit(request.user.id)
 
     profile = Profile.objects.get(user__id=request.user.id)
 
@@ -128,6 +135,8 @@ def resolve_createBudget(
     sub_category,
 ):
     request = info.context["request"]
+
+    check_create_budget_limit(request.user.id)
 
     profile = Profile.objects.get(user__id=request.user.id)
 
@@ -263,6 +272,8 @@ def resolve_createTarget(
     sub_category,
 ):
     request = info.context["request"]
+
+    check_create_target_limit(request.user.id)
 
     profile = Profile.objects.get(user__id=request.user.id)
 
@@ -581,7 +592,7 @@ def resolve_deleteTransaction(_, info, id, account_id):
 
 
 @login_required
-# @check_plan_standard
+@check_plan_standard
 def resolve_createEmployee(
     _,
     info,
@@ -646,7 +657,7 @@ def resolve_createEmployee(
 
 
 @login_required
-# @check_plan_standard
+@check_plan_standard
 def resolve_updateEmployee(
     _,
     info,
@@ -728,7 +739,7 @@ def resolve_updateEmployee(
 
 
 @login_required
-# @check_plan_standard
+@check_plan_standard
 def resolve_deleteEmployee(_, info, id):
     request = info.context["request"]
 
@@ -757,7 +768,7 @@ def resolve_deleteEmployee(_, info, id):
 
 
 @login_required
-# @check_plan_standard
+@check_plan_standard
 def resolve_createProduct(
     _,
     info,
@@ -818,7 +829,7 @@ def resolve_createProduct(
 
 
 @login_required
-# @check_plan_standard
+@check_plan_standard
 def resolve_updateProduct(
     _,
     info,
@@ -888,7 +899,7 @@ def resolve_updateProduct(
 
 
 @login_required
-# @check_plan_standard
+@check_plan_standard
 def resolve_deleteProduct(_, info, id):
     request = info.context["request"]
 

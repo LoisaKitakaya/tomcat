@@ -8,10 +8,11 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
+
 class Package(models.Model):
     name = models.CharField(max_length=50, blank=False)
+    inventory = models.BooleanField(default=False, blank=False)
     accounts = models.BooleanField(default=False, blank=False)
-    inventory = models.IntegerField(default=0, blank=False)
     no_of_accounts = models.IntegerField(default=0, blank=False)
     budgets = models.BooleanField(default=False, blank=False)
     no_of_budgets = models.IntegerField(default=0, blank=False)
@@ -35,7 +36,7 @@ class Package(models.Model):
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     workspace_uid = models.CharField(max_length=50, blank=False)
     phone_number = models.CharField(max_length=50, blank=True)

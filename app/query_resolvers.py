@@ -176,6 +176,7 @@ def resolve_testProDecorator(_, info):
 
     return plan
 
+
 @login_required
 @check_is_employee
 def resolve_testIfIsEmployee(_, info):
@@ -183,6 +184,6 @@ def resolve_testIfIsEmployee(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    assert(profile.user.pk == request.user.id)
+    assert profile.user.pk == request.user.id
 
     return True
