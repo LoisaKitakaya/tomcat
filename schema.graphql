@@ -197,6 +197,7 @@ type Query {
 
   testStandardDecorator: Package!
   testProDecorator: Package!
+  testIfIsEmployee: Boolean!
 
   getUser: User!
   getProfile: Profile!

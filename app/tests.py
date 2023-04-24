@@ -521,6 +521,34 @@ class TestCustomDecorators(TestCase):
 
         self.assertEqual(data["data"]["testStandardDecorator"]["name"], "Pro")
 
+    def test_check_if_employee(self):
+        query = gql(
+            """
+            query{
+                testIfIsEmployee
+            }
+            """
+        )
+
+        variables = {}
+
+        response = self.client.post(
+            "/graphql/",
+            json.dumps({"query": query, "variables": variables}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"JWT {self.test_user_one_token}",
+        )
+
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"Something went wrong, {explain_status_code(response.status_code)}",
+        )
+
+        self.assertEqual(data["data"]["testIfIsEmployee"], True)
+
 
 class TestAppMutations(TestCase):
     def setUp(self) -> None:
