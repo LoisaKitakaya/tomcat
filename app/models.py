@@ -161,7 +161,7 @@ class Target(models.Model):
 
 
 class Employee(models.Model):
-    account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     email = models.EmailField(max_length=150, blank=False)
     first_name = models.CharField(max_length=50, blank=False)
@@ -193,7 +193,7 @@ class Employee(models.Model):
 
 
 class Product(models.Model):
-    account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=False)
     description = models.TextField(blank=False)
