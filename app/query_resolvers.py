@@ -3,10 +3,74 @@ from teams.models import Workspace
 from users.models import Profile, Package
 from ariadne_jwt.decorators import login_required
 from app.decorators import check_plan_standard, check_plan_pro, check_is_employee
-from app.models import Account, Budget, Transaction, Target, Employee, Product
+from app.models import (
+    Account,
+    Budget,
+    Transaction,
+    Target,
+    Employee,
+    Product,
+    TransactionType,
+    TransactionCategory,
+    TransactionSubCategory,
+    ProductCategory,
+    ProductSubCategory,
+)
 
 
 # Account model query resolvers
+def resolve_getTransactionType(*_):
+    try:
+        types = TransactionType.objects.all()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return types
+
+
+def resolve_getTransactionCategory(*_):
+    try:
+        categories = TransactionCategory.objects.all()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return categories
+
+
+def resolve_getTransactionSubCategory(*_, parent):
+    try:
+        sub_categories = TransactionSubCategory.objects.filter(
+            parent__category_name=parent
+        ).all()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return sub_categories
+
+
+def resolve_getProductCategory(*_):
+    try:
+        categories = ProductCategory.objects.all()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return categories
+
+
+def resolve_getProductSubCategory(*_, parent):
+    try:
+        sub_categories = ProductSubCategory.objects.filter(
+            parent__category_name=parent
+        ).all()
+
+    except Exception as e:
+        raise Exception(str(e))
+
+    return sub_categories
 
 
 @login_required

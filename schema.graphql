@@ -43,6 +43,12 @@ type Profile {
   updated_at: Datetime!
 }
 
+type Type {
+  id: ID!
+  type_name: String!
+  type_description: String!
+}
+
 type Category {
   id: ID!
   category_name: String!
@@ -50,6 +56,7 @@ type Category {
 }
 
 type SubCategory {
+  id: ID!
   parent: Category!
   category_name: String!
   category_description: String!
@@ -194,6 +201,12 @@ type Query {
   generateOTP(environment: String): Otp!
 
   generateQRCode: Qrcode!
+
+  getTransactionType: [Type!]!
+  getTransactionCategory: [Category!]!
+  getTransactionSubCategory(parent: String!): [SubCategory!]!
+  getProductCategory: [Category!]!
+  getProductSubCategory(parent: String!): [SubCategory!]!
 
   testStandardDecorator: Package!
   testProDecorator: Package!
