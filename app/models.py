@@ -105,7 +105,7 @@ class Transaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
         verbose_name = "transaction"
         verbose_name_plural = "transactions"
         db_table = "Transactions"

@@ -564,14 +564,17 @@ def resolve_deleteTransaction(_, info, id, account_id):
 
     transaction = Transaction.objects.get(id=id)
 
-    if transaction.transaction_type == "payable":
+    type_payable = TransactionType.objects.get(type_name="payable")
+    type_receivable = TransactionType.objects.get(type_name="receivable")
+
+    if transaction.transaction_type == type_payable:
         previous_balance = account.account_balance + transaction.transaction_amount
 
         account.account_balance = previous_balance
 
         account.save()
 
-    elif transaction.transaction_type == "receivable":
+    elif transaction.transaction_type == type_receivable:
         previous_balance = account.account_balance - transaction.transaction_amount
 
         account.account_balance = previous_balance
