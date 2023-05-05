@@ -38,7 +38,7 @@ def resolve_createUser(
 
             Profile.objects.create(
                 user=new_user,
-                Plan=starter_plan,
+                plan=starter_plan,
                 workspace_uid=workspace.workspace_uid,
             )
 
