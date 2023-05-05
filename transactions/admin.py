@@ -6,8 +6,6 @@ from transactions.models import (
     TransactionSubCategory,
 )
 
-# Register your models here.
-
 
 @admin.register(TransactionType)
 class TransactionTypeAdminView(admin.ModelAdmin):

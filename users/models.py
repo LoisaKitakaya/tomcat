@@ -3,8 +3,6 @@ from django.db import models
 from billing.models import Plan
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-
 
 class User(AbstractUser):
     pass

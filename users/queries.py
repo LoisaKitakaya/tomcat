@@ -7,8 +7,6 @@ from django.core.mail import send_mail
 from ariadne_jwt.decorators import login_required
 from users.models import User, Profile, OTPDevice
 
-# User model query resolvers
-
 
 @login_required
 def resolve_getUser(_, info):

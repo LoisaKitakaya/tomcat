@@ -4,8 +4,6 @@ from teams.models import Workspace
 from accounts.models import Account
 from transactions.models import TransactionCategory, TransactionSubCategory
 
-# Create your models here.
-
 
 class Target(models.Model):
     target_name = models.CharField(max_length=100, blank=False)

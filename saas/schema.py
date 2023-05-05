@@ -19,14 +19,14 @@ from ariadne_jwt import (
     resolve_verify,
 )
 
-from users.query_resolvers import *
-from users.mutation_resolvers import *
-from app.query_resolvers import *
-from app.mutation_resolvers import *
-from teams.query_resolvers import *
-from teams.mutation_resolvers import *
-from billing.query_resolvers import *
-from billing.mutation_resolvers import *
+from users.queries import *
+from users.mutations import *
+from app.queries import *
+from app.mutations import *
+from teams.queries import *
+from teams.mutations import *
+from billing.queries import *
+from billing.mutations import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")

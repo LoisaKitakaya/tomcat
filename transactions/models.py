@@ -1,8 +1,6 @@
 from django.db import models
 from accounts.models import Account
 
-# Create your models here.
-
 
 class TransactionType(models.Model):
     type_name = models.CharField(max_length=100, blank=False, unique=True)

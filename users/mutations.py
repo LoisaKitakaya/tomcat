@@ -4,8 +4,6 @@ from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 from users.models import User, Profile, OTPDevice, Plan
 
-# User model mutation resolvers
-
 
 def resolve_createUser(
     *_, email, first_name, last_name, workspace_name, password, password2
@@ -69,7 +67,7 @@ def resolve_verifyOTP(_, info, otp):
     device = OTPDevice.objects.get(user__id=user.pk)
 
     totp = pyotp.TOTP(str(device.key))
-    
+
     test = totp.verify(otp)
 
     if test:

@@ -5,8 +5,6 @@ from teams.models import Workspace
 from users.models import Plan, User
 from django.test import TestCase, Client
 
-# Create your tests here.
-
 
 def explain_status_code(status_code):
     status_codes = {

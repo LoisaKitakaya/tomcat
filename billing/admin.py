@@ -2,7 +2,6 @@ from django.contrib import admin
 from billing.models import PlanBilling, Plan
 
 
-# Register your models here.
 @admin.register(PlanBilling)
 class PlanBillingAdminView(admin.ModelAdmin):
     model = PlanBilling

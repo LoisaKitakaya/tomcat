@@ -2,8 +2,6 @@ from django.db import models
 from teams.models import Workspace
 from accounts.models import Account
 
-# Create your models here.
-
 
 class ProductCategory(models.Model):
     category_name = models.CharField(max_length=100, blank=False, unique=True)

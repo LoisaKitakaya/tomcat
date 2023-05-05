@@ -1,5 +1,8 @@
-from app.models import Account, Budget, Target
-from users.models import User, Profile, Plan
+from billing.models import Plan
+from targets.models import Target
+from budgets.models import Budget
+from accounts.models import Account
+from users.models import User, Profile
 
 
 def check_create_account_limit(user_id):
@@ -12,9 +15,9 @@ def check_create_account_limit(user_id):
     plan = profile.Plan.name
 
     if plan == "Free":
-        Plan = Plan.objects.get(name="Free")
+        plan = Plan.objects.get(name="Free")
 
-        account_limit = Plan.no_of_accounts
+        account_limit = plan.no_of_accounts
 
         if len(all_accounts) != account_limit:
             return
@@ -24,9 +27,9 @@ def check_create_account_limit(user_id):
             )
 
     elif plan == "Standard":
-        Plan = Plan.objects.get(name="Standard")
+        plan = Plan.objects.get(name="Standard")
 
-        account_limit = Plan.no_of_accounts
+        account_limit = plan.no_of_accounts
 
         if len(all_accounts) != account_limit:
             return
@@ -36,9 +39,9 @@ def check_create_account_limit(user_id):
             )
 
     elif plan == "Pro":
-        Plan = Plan.objects.get(name="Pro")
+        plan = Plan.objects.get(name="Pro")
 
-        account_limit = Plan.no_of_accounts
+        account_limit = plan.no_of_accounts
 
         if len(all_accounts) != account_limit:
             return
@@ -57,12 +60,12 @@ def check_create_budget_limit(user_id):
 
     all_budgets = Budget.objects.filter(account=user_account).all()
 
-    plan = profile.Plan.name
+    plan = profile.plan.name
 
     if plan == "Free":
-        Plan = Plan.objects.get(name="Free")
+        plan = Plan.objects.get(name="Free")
 
-        budget_limit = Plan.no_of_budgets
+        budget_limit = plan.no_of_budgets
 
         if len(all_budgets) != budget_limit:
             return
@@ -71,9 +74,9 @@ def check_create_budget_limit(user_id):
             raise Exception("you cannot create more budgets based on you current plan")
 
     elif plan == "Standard":
-        Plan = Plan.objects.get(name="Standard")
+        plan = Plan.objects.get(name="Standard")
 
-        budget_limit = Plan.no_of_budgets
+        budget_limit = plan.no_of_budgets
 
         if len(all_budgets) != budget_limit:
             return
@@ -82,9 +85,9 @@ def check_create_budget_limit(user_id):
             raise Exception("you cannot create more budgets based on you current plan")
 
     elif plan == "Pro":
-        Plan = Plan.objects.get(name="Pro")
+        plan = Plan.objects.get(name="Pro")
 
-        budget_limit = Plan.no_of_budgets
+        budget_limit = plan.no_of_budgets
 
         if len(all_budgets) != budget_limit:
             return
@@ -102,12 +105,12 @@ def check_create_target_limit(user_id):
 
     all_targets = Target.objects.filter(account=user_account).all()
 
-    plan = profile.Plan.name
+    plan = profile.plan.name
 
     if plan == "Free":
-        Plan = Plan.objects.get(name="Free")
+        plan = Plan.objects.get(name="Free")
 
-        target_limit = Plan.no_of_targets
+        target_limit = plan.no_of_targets
 
         if len(all_targets) != target_limit:
             return
@@ -116,9 +119,9 @@ def check_create_target_limit(user_id):
             raise Exception("You cannot create more targets based on your current plan")
 
     elif plan == "Standard":
-        Plan = Plan.objects.get(name="Standard")
+        plan = Plan.objects.get(name="Standard")
 
-        target_limit = Plan.no_of_targets
+        target_limit = plan.no_of_targets
 
         if len(all_targets) != target_limit:
             return
@@ -127,9 +130,9 @@ def check_create_target_limit(user_id):
             raise Exception("You cannot create more targets based on your current plan")
 
     elif plan == "Pro":
-        Plan = Plan.objects.get(name="Pro")
+        plan = Plan.objects.get(name="Pro")
 
-        target_limit = Plan.no_of_targets
+        target_limit = plan.no_of_targets
 
         if len(all_targets) != target_limit:
             return
@@ -145,37 +148,37 @@ def check_create_teams_limit(user_id):
 
     all_profiles = Profile.objects.filter(workspace_uid=profile.workspace_uid).all()
 
-    plan = profile.Plan.name
+    plan = profile.plan.name
 
     if plan == "Free":
-        Plan = Plan.objects.get(name="Free")
+        plan = Plan.objects.get(name="Free")
 
-        teams_limit = Plan.no_of_teams
+        teams_limit = plan.no_of_teams
 
         if len(all_profiles) != teams_limit:
             return
-        
+
         else:
             raise Exception("You cannot add more members giver your current plan")
 
     elif plan == "Standard":
-        Plan = Plan.objects.get(name="Standard")
+        plan = Plan.objects.get(name="Standard")
 
-        teams_limit = Plan.no_of_teams
+        teams_limit = plan.no_of_teams
 
         if len(all_profiles) != teams_limit:
             return
-        
+
         else:
             raise Exception("You cannot add more members giver your current plan")
 
     elif plan == "Pro":
-        Plan = Plan.objects.get(name="Pro")
+        plan = Plan.objects.get(name="Pro")
 
-        teams_limit = Plan.no_of_teams
+        teams_limit = plan.no_of_teams
 
         if len(all_profiles) != teams_limit:
             return
-        
+
         else:
             raise Exception("You cannot add more members giver your current plan")

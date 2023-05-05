@@ -5,7 +5,6 @@ from accounts.models import Account
 from transactions.models import TransactionCategory, TransactionSubCategory
 
 
-# Create your models here.
 class Budget(models.Model):
     budget_name = models.CharField(max_length=100, blank=False)
     budget_description = models.TextField(blank=False)

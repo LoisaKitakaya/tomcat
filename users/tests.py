@@ -1,9 +1,7 @@
 import json
 from ariadne import gql
-from django.test import TestCase, Client
 from users.models import User, Plan
-
-# Create your tests here.
+from django.test import TestCase, Client
 
 
 def explain_status_code(status_code):

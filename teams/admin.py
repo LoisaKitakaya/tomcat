@@ -1,10 +1,9 @@
 from django.contrib import admin
 from teams.models import Workspace, TeamLogs
 
-# Register your models here.
+
 @admin.register(Workspace)
 class WorkspaceAdminView(admin.ModelAdmin):
-
     model = Workspace
 
     list_display = ("name",)
@@ -17,7 +16,6 @@ class WorkspaceAdminView(admin.ModelAdmin):
 
 @admin.register(TeamLogs)
 class TeamLogsAdminView(admin.ModelAdmin):
-
     model = TeamLogs
 
     list_filter = (

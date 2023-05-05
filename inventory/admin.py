@@ -1,8 +1,6 @@
 from django.contrib import admin
 from inventory.models import Product, ProductCategory, ProductSubCategory
 
-# Register your models here.
-
 
 @admin.register(ProductCategory)
 class ProductCategoryAdminView(admin.ModelAdmin):
