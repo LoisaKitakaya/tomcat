@@ -40,9 +40,9 @@ def resolve_getTransactionSubCategory(*_, parent):
 
 
 @login_required
-def resolve_getAllTransactions(*_, id):
+def resolve_getAllTransactions(*_, account_id):
     try:
-        transactions = Transaction.objects.filter(account__id=id).all()
+        transactions = Transaction.objects.filter(account__id=account_id).all()
 
     except Exception as e:
         raise Exception(str(e))

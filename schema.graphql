@@ -115,7 +115,7 @@ type Target {
 
 type Transaction {
   id: ID!
-  transaction_type: String!
+  transaction_type: Type!
   transaction_amount: Float!
   currency_code: String!
   description: String!
@@ -147,30 +147,6 @@ type PlanBilling {
   currency: String!
   amount: Float!
   payment_confirmed: Boolean!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type Employee {
-  id: ID!
-  account: Account!
-  workspace: Workspace!
-  email: String!
-  first_name: String!
-  last_name: String!
-  phone_number: String!
-  ID_number: String!
-  employment_status: String!
-  job_title: String!
-  job_description: String!
-  is_manager: Boolean!
-  salary: Float!
-  department: String!
-  employee_id: String!
-  emergency_contact_name: String!
-  emergency_contact_phone_number: String!
-  emergency_contact_email: String
-  date_of_hire: Datetime!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -224,7 +200,7 @@ type Query {
   getAllTargets: [Target!]!
   getTarget(id: ID!): Target!
 
-  getAllTransactions(id: ID!): [Transaction!]!
+  getAllTransactions(account_id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
 
   getWorkspace: Workspace!
@@ -233,9 +209,6 @@ type Query {
 
   requestBilling: Boolean!
   cancelPlan: Boolean!
-
-  getAllEmployees(account_id: ID!): [Employee!]!
-  getEmployee(id: ID!): Employee!
 
   getAllProducts(account_id: ID!): [Product!]!
   getProduct(id: ID!): Product!
@@ -343,46 +316,6 @@ type Mutation {
   deleteTeamMember(member_id: ID!): Boolean!
 
   subscribeToPlan(plan: String!): PlanBilling!
-
-  createEmployee(
-    account_id: ID!
-    email: String!
-    first_name: String!
-    last_name: String!
-    phone_number: String!
-    ID_number: String!
-    employment_status: String!
-    job_title: String!
-    job_description: String!
-    is_manager: Boolean!
-    salary: Float!
-    department: String!
-    employee_id: String!
-    emergency_contact_name: String!
-    emergency_contact_phone_number: String!
-    emergency_contact_email: String!
-    date_of_hire: String!
-  ): Employee!
-  updateEmployee(
-    id: ID!
-    email: String!
-    first_name: String!
-    last_name: String!
-    phone_number: String!
-    ID_number: String!
-    employment_status: String!
-    job_title: String!
-    job_description: String!
-    is_manager: Boolean!
-    salary: Float!
-    department: String!
-    employee_id: String!
-    emergency_contact_name: String!
-    emergency_contact_phone_number: String!
-    emergency_contact_email: String!
-    date_of_hire: String!
-  ): Employee!
-  deleteEmployee(id: ID!): Boolean!
 
   createProduct(
     account_id: ID!
