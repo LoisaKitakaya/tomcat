@@ -1,8 +1,9 @@
 import pyotp
 from uuid import uuid4
+from plans.models import Plan
 from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice, Plan
+from users.models import User, Profile, OTPDevice
 
 
 def resolve_createUser(

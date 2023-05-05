@@ -1,6 +1,6 @@
 import pyotp
 from django.db import models
-from billing.models import Plan
+from plans.models import Plan
 from django.contrib.auth.models import AbstractUser
 
 

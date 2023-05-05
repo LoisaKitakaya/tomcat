@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "debts",
     "users",
     "teams",
+    "plans",
     "billing",
     "budgets",
     "targets",

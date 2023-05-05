@@ -1,9 +1,10 @@
+from plans.models import Plan
 from django.conf import settings
+from users.models import Profile
 from django.shortcuts import render
 from controls.pesapal import PesaPal
 from billing.models import PlanBilling
 from django.core.mail import send_mail
-from users.models import Profile, Plan
 
 
 def notifications(request):
