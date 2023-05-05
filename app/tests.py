@@ -2,7 +2,7 @@ import json
 from uuid import uuid4
 from ariadne import gql
 from django.test import TestCase, Client
-from users.models import User, Profile, Package
+from users.models import User, Profile, Plan
 from app.models import (
     TransactionType,
     TransactionCategory,
@@ -376,8 +376,8 @@ class TestCustomDecorators(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.standard_package = Package.objects.create(name="Standard")
-        self.pro_package = Package.objects.create(name="Pro")
+        self.standard_plan = Plan.objects.create(name="Standard")
+        self.pro_plan = Plan.objects.create(name="Pro")
 
         self.test_user_one = User.objects.create(
             username="testuserone", email="testuserone@example.com"
@@ -389,7 +389,7 @@ class TestCustomDecorators(TestCase):
 
         self.test_user_one_profile = Profile.objects.create(
             user=self.test_user_one,
-            package=self.standard_package,
+            Plan=self.standard_plan,
             workspace_uid=self.user_one_workspace_uid,
         )
 
@@ -403,7 +403,7 @@ class TestCustomDecorators(TestCase):
 
         self.test_user_two_profile = Profile.objects.create(
             user=self.test_user_two,
-            package=self.pro_package,
+            Plan=self.pro_plan,
             workspace_uid=self.user_two_workspace_uid,
         )
 
@@ -446,8 +446,8 @@ class TestCustomDecorators(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.standard_package.delete()
-        self.pro_package.delete()
+        self.standard_plan.delete()
+        self.pro_plan.delete()
 
         self.test_user_one.delete()
         self.test_user_two.delete()
@@ -554,7 +554,7 @@ class TestAppMutations(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -624,7 +624,7 @@ class TestAppMutations(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_username = None
 
@@ -2316,7 +2316,7 @@ class TestAppQueries(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -2559,7 +2559,7 @@ class TestAppQueries(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_username = None
 

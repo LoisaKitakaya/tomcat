@@ -1,7 +1,7 @@
 import json
 from ariadne import gql
 from django.test import TestCase, Client
-from users.models import User, Package
+from users.models import User, Plan
 
 # Create your tests here.
 
@@ -77,7 +77,7 @@ class TestAppFunctions(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -119,7 +119,7 @@ class TestAppFunctions(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_username = None
 
@@ -218,7 +218,7 @@ class TestAppMutations(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         self.test_user = User.objects.create(
             username="test_user", email="test_user@example.com"
@@ -244,7 +244,7 @@ class TestAppMutations(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_user.delete()
 
@@ -355,7 +355,7 @@ class TestAppQueries(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -397,7 +397,7 @@ class TestAppQueries(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_username = None
 
@@ -448,7 +448,7 @@ class TestAppQueries(TestCase):
             """
             query{
                 getProfile {
-                    package {
+                    Plan {
                         name
                     }                                   
                     workspace_uid
@@ -479,7 +479,7 @@ class TestAppQueries(TestCase):
         )
 
         self.assertIsNotNone(data["data"]["getProfile"]["workspace_uid"])
-        self.assertEqual(data["data"]["getProfile"]["package"]["name"], "Free")
+        self.assertEqual(data["data"]["getProfile"]["Plan"]["name"], "Free")
         self.assertEqual(data["data"]["getProfile"]["phone_number"], "")
         self.assertEqual(data["data"]["getProfile"]["payment_method"], "None")
         self.assertEqual(data["data"]["getProfile"]["is_paid_user"], False)

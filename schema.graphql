@@ -12,7 +12,7 @@ type User {
   is_active: Boolean!
 }
 
-type Package {
+type Plan {
   id: ID!
   name: String!
   accounts: Boolean!
@@ -33,7 +33,7 @@ type Package {
 type Profile {
   id: ID!
   user: User!
-  package: Package!
+  Plan: Plan!
   phone_number: String!
   workspace_uid: String!
   payment_method: String!
@@ -208,8 +208,8 @@ type Query {
   getProductCategory: [Category!]!
   getProductSubCategory(parent: String!): [SubCategory!]!
 
-  testStandardDecorator: Package!
-  testProDecorator: Package!
+  testStandardDecorator: Plan!
+  testProDecorator: Plan!
   testIfIsEmployee: Boolean!
 
   getUser: User!

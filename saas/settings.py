@@ -35,10 +35,16 @@ INSTALLED_APPS = [
     "ariadne_django",
     "corsheaders",
     # my apps
+    "debts",
     "users",
-    "app",
     "teams",
     "billing",
+    "budgets",
+    "targets",
+    "accounts",
+    "controls",
+    "inventory",
+    "transactions",
 ]
 
 MIDDLEWARE = [
@@ -189,5 +195,3 @@ CONSUMER_KEY = os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 
 # Django storage settings
-
-

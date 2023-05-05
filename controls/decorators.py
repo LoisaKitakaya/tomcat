@@ -1,5 +1,5 @@
 import functools
-from users.models import Profile, Package
+from users.models import Profile, Plan
 
 
 def check_plan_standard(func):
@@ -13,7 +13,7 @@ def check_plan_standard(func):
 
         allowed = ["Standard", "Pro"]
 
-        plan = profile.package.name
+        plan = profile.Plan.name
 
         if plan in allowed:
             return func(*args, **kwargs)
@@ -35,7 +35,7 @@ def check_plan_pro(func):
 
         allowed = ["Pro"]
 
-        plan = profile.package.name
+        plan = profile.Plan.name
 
         if plan in allowed:
             return func(*args, **kwargs)

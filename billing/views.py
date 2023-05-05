@@ -1,10 +1,9 @@
-from billing.pesapal import PesaPal
+from django.conf import settings
 from django.shortcuts import render
+from controls.pesapal import PesaPal
 from billing.models import PlanBilling
 from django.core.mail import send_mail
-from django.conf import settings
-from users.models import Profile, Package
-from django.conf import settings
+from users.models import Profile, Plan
 
 
 def notifications(request):
@@ -59,9 +58,14 @@ def pesapal_ipn_callback(request):
 
         print(transaction_status)
 
-        account_ref = transaction_status["subscription_transaction_info"]["account_reference"]  # type: ignore
+        account_ref = transaction_status["subscription_transaction_info"][
+            "account_reference"
+        ]
 
-        if transaction_status["status_code"] == 1 and transaction_status["status"] == "200":  # type: ignore
+        if (
+            transaction_status["status_code"] == 1
+            and transaction_status["status"] == "200"
+        ):
             user_billing = PlanBilling.objects.get(order_tracking_id=order_tracking_id)
 
             user_billing.account_ref = account_ref if account_ref else "NOT RECURRING"
@@ -69,20 +73,20 @@ def pesapal_ipn_callback(request):
 
             user_billing.save()
 
-            plan = Package.objects.get(name=user_billing.plan)
+            plan = Plan.objects.get(name=user_billing.plan)
 
             user_profile = Profile.objects.get(user__id=user_billing.customer.pk)
 
-            user_profile.package = plan
+            user_profile.plan = plan
             user_profile.is_paid_user = True
-            user_profile.payment_method = transaction_status["payment_method"]  # type: ignore
+            user_profile.payment_method = transaction_status["payment_method"]
 
             user_profile.save()
 
-            payment_status = transaction_status["payment_status"]  # type: ignore
-            amount = transaction_status["amount"]  # type: ignore
-            currency = transaction_status["currency"]  # type: ignore
-            created_date = transaction_status["created_date"]  # type: ignore
+            payment_status = transaction_status["payment_status"]
+            amount = transaction_status["amount"]
+            currency = transaction_status["currency"]
+            created_date = transaction_status["created_date"]
 
             subject = f"Transaction Status"
             body = f"Order tracking ID: {order_tracking_id}\n\

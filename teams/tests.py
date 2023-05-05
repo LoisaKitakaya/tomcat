@@ -2,7 +2,7 @@ import json
 from uuid import uuid4
 from ariadne import gql
 from teams.models import Workspace
-from users.models import Package, User
+from users.models import Plan, User
 from django.test import TestCase, Client
 
 # Create your tests here.
@@ -105,7 +105,7 @@ class TestAppMutations(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -147,7 +147,7 @@ class TestAppMutations(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_username = None
 
@@ -280,7 +280,7 @@ class TestAppQueries(TestCase):
     def setUp(self) -> None:
         self.client = Client()
 
-        self.package = Package.objects.create(name="Free")
+        self.Plan = Plan.objects.create(name="Free")
 
         create_test_user_variables = {
             "email": "example@gmail.com",
@@ -334,7 +334,7 @@ class TestAppQueries(TestCase):
     def tearDown(self) -> None:
         self.client.logout()
 
-        self.package.delete()
+        self.Plan.delete()
 
         self.test_username = None
 
@@ -426,7 +426,7 @@ class TestAppQueries(TestCase):
                     user {
                     username
                     }
-                    package {
+                    Plan {
                     name
                     }
                     phone_number
@@ -458,5 +458,5 @@ class TestAppQueries(TestCase):
 
         for member in data["data"]["getTeamMembers"]:
             self.assertEqual(member["user"]["username"], "example@gmail.com")
-            self.assertEqual(member["package"]["name"], "Free")
+            self.assertEqual(member["Plan"]["name"], "Free")
             self.assertIsNotNone(member["workspace_uid"])

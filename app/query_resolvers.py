@@ -1,20 +1,21 @@
+from billing.models import Plan
+from users.models import Profile
 from users.models import Profile
 from teams.models import Workspace
-from users.models import Profile, Package
 from ariadne_jwt.decorators import login_required
-from app.decorators import check_plan_standard, check_plan_pro, check_is_employee
+from controls.decorators import check_plan_standard, check_plan_pro, check_is_employee
 from app.models import (
-    Account,
     Budget,
-    Transaction,
     Target,
-    Employee,
     Product,
+    Account,
+    Employee,
+    Transaction,
+    ProductCategory,
     TransactionType,
+    ProductSubCategory,
     TransactionCategory,
     TransactionSubCategory,
-    ProductCategory,
-    ProductSubCategory,
 )
 
 
@@ -174,7 +175,6 @@ def resolve_getTransaction(*_, id):
 
 
 @login_required
-@check_plan_standard
 def resolve_getAllEmployees(*_, account_id):
     account = Account.objects.get(id=account_id)
 
@@ -184,7 +184,6 @@ def resolve_getAllEmployees(*_, account_id):
 
 
 @login_required
-@check_plan_standard
 def resolve_getEmployee(*_, id):
     try:
         employee = Employee.objects.get(id=id)
@@ -196,7 +195,6 @@ def resolve_getEmployee(*_, id):
 
 
 @login_required
-@check_plan_standard
 def resolve_getAllProducts(*_, account_id):
     account = Account.objects.get(id=account_id)
 
@@ -206,7 +204,6 @@ def resolve_getAllProducts(*_, account_id):
 
 
 @login_required
-@check_plan_standard
 def resolve_getProduct(*_, id):
     try:
         product = Product.objects.get(id=id)
@@ -224,7 +221,7 @@ def resolve_testStandardDecorator(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    plan = Package.objects.get(name=profile.package.name)
+    plan = Plan.objects.get(name=profile.Plan.name)
 
     return plan
 
@@ -236,7 +233,7 @@ def resolve_testProDecorator(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    plan = Package.objects.get(name=profile.package.name)
+    plan = Plan.objects.get(name=profile.Plan.name)
 
     return plan
 

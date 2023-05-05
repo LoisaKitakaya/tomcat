@@ -2,7 +2,7 @@ import pyotp
 from uuid import uuid4
 from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice, Package
+from users.models import User, Profile, OTPDevice, Plan
 
 # User model mutation resolvers
 
@@ -35,11 +35,11 @@ def resolve_createUser(
 
             workspace.save()
 
-            starter_package = Package.objects.get(name="Free")
+            starter_plan = Plan.objects.get(name="Free")
 
             Profile.objects.create(
                 user=new_user,
-                package=starter_package,
+                Plan=starter_plan,
                 workspace_uid=workspace.workspace_uid,
             )
 

@@ -1,22 +1,22 @@
 from django.conf import settings
-from ariadne_jwt.decorators import login_required
+from controls.pesapal import PesaPal
 from billing.models import PlanBilling
-from billing.pesapal import PesaPal
+from ariadne_jwt.decorators import login_required
 
 
 @login_required
 def resolve_subscribeToPlan(_, info, plan):
     request = info.context["request"]
-    amount = 0.003
+    amount = 0.0
     currency = "USD"
     description = ""
 
     if plan == "Standard":
-        # amount = 10.00
+        amount = 10.00
         description = "Subscription payment for Standard plan"
 
     elif plan == "Pro":
-        # amount = 15.00
+        amount = 15.00
         description = "Subscription payment for Pro plan"
 
     consumer_key = settings.CONSUMER_KEY
@@ -51,9 +51,9 @@ def resolve_subscribeToPlan(_, info, plan):
         last_name=request.user.last_name,
     )
 
-    order_tracking_id = subscription_payment["order_tracking_id"]  # type: ignore
-    merchant_ref = subscription_payment["merchant_reference"]  # type: ignore
-    redirect_url = subscription_payment["redirect_url"]  # type: ignore
+    order_tracking_id = subscription_payment["order_tracking_id"]
+    merchant_ref = subscription_payment["merchant_reference"]
+    redirect_url = subscription_payment["redirect_url"]
 
     new_billing = PlanBilling.objects.create(
         customer=request.user,

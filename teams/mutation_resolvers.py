@@ -1,13 +1,10 @@
 import pyotp
 from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
-from users.models import User, Profile, OTPDevice, Package
-from app.decorators import check_plan_standard
-from users.limit import check_create_teams_limit
+from users.models import User, Profile, OTPDevice, Plan
 
 
 @login_required
-@check_plan_standard
 def resolve_updateWorkspace(_, info, name):
     request = info.context["request"]
 
@@ -21,11 +18,8 @@ def resolve_updateWorkspace(_, info, name):
 
 
 @login_required
-@check_plan_standard
 def resolve_createTeamMember(_, info, email, first_name, last_name, password):
     request = info.context["request"]
-
-    check_create_teams_limit(request.user.id)
 
     if not User.objects.filter(email=email).exists():
         if len(password) > 8:
@@ -44,12 +38,12 @@ def resolve_createTeamMember(_, info, email, first_name, last_name, password):
 
             new_user.save()
 
-            starter_package = Package.objects.get(id=owner_profile.package.pk)
+            starter_plan = Plan.objects.get(id=owner_profile.plan.pk)
 
             Profile.objects.create(
                 user=new_user,
                 is_employee=True,
-                package=starter_package,
+                plan=starter_plan,
                 workspace_uid=workspace.workspace_uid,
             )
 
@@ -71,7 +65,6 @@ def resolve_createTeamMember(_, info, email, first_name, last_name, password):
 
 
 @login_required
-@check_plan_standard
 def resolve_deleteTeamMember(_, info, member_id):
     request = info.context["request"]
 
