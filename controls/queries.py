@@ -1,4 +1,4 @@
-from billing.models import Plan
+from plans.models import Plan
 from users.models import Profile
 from ariadne_jwt.decorators import login_required
 from controls.decorators import check_plan_standard, check_plan_pro, check_is_employee
