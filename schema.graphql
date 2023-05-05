@@ -33,7 +33,7 @@ type Plan {
 type Profile {
   id: ID!
   user: User!
-  Plan: Plan!
+  plan: Plan!
   phone_number: String!
   workspace_uid: String!
   payment_method: String!
