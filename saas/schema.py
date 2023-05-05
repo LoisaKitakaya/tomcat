@@ -20,13 +20,21 @@ from ariadne_jwt import (
 )
 
 from users.queries import *
-from users.mutations import *
-from app.queries import *
-from app.mutations import *
 from teams.queries import *
 from teams.mutations import *
-from billing.queries import *
+from budgets.queries import *
+from users.mutations import *
+from targets.queries import *
+from controls.queries import *
+from accounts.queries import *
 from billing.mutations import *
+from budgets.mutations import *
+from targets.mutations import *
+from inventory.queries import *
+from accounts.mutations import *
+from inventory.mutations import *
+from transactions.queries import *
+from transactions.mutations import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")
@@ -113,9 +121,6 @@ query.set_field("getWorkspace", resolve_getWorkspace)
 query.set_field("getTeamLogs", resolve_getTeamLogs)
 query.set_field("getTeamMembers", resolve_getTeamMembers)
 
-query.set_field("getAllEmployees", resolve_getAllEmployees)
-query.set_field("getEmployee", resolve_getEmployee)
-
 query.set_field("getAllProducts", resolve_getAllProducts)
 query.set_field("getProduct", resolve_getProduct)
 
@@ -160,10 +165,6 @@ mutation.set_field("createTeamMember", resolve_createTeamMember)
 mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
 
 mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
-
-mutation.set_field("createEmployee", resolve_createEmployee)
-mutation.set_field("updateEmployee", resolve_updateEmployee)
-mutation.set_field("deleteEmployee", resolve_deleteEmployee)
 
 mutation.set_field("createProduct", resolve_createProduct)
 mutation.set_field("updateProduct", resolve_updateProduct)
