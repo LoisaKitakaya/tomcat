@@ -197,7 +197,7 @@ create_budget = gql(
         $account_id: ID!
         $budget_name: String!
         $budget_description: String!
-        $account_amount: Float!
+        $budget_amount: Float!
         $category: String!
         $sub_category: String!
     ) {
@@ -205,13 +205,14 @@ create_budget = gql(
             account_id: $account_id
             budget_name: $budget_name
             budget_description: $budget_description
-            budget_amount: $account_amount
+            budget_amount: $budget_amount
             category: $category
             sub_category: $sub_category
         ) {
             id
             budget_name
             budget_description
+            budget_amount
             budget_is_active
             owner {
                 user {
@@ -249,25 +250,24 @@ update_budget = gql(
     """
     mutation updateBudget(
         $id: ID!
-        $account_id: ID!
         $budget_name: String!
         $budget_description: String!
-        $account_amount: Float!
+        $budget_amount: Float!
         $category: String!
         $sub_category: String!
     ) {
         updateBudget(
             id: $id
-            account_id: $account_id
             budget_name: $budget_name
             budget_description: $budget_description
-            budget_amount: $account_amount
+            budget_amount: $budget_amount
             category: $category
             sub_category: $sub_category
         ) {
             id
             budget_name
             budget_description
+            budget_amount
             budget_is_active
             owner {
                 user {
