@@ -338,6 +338,7 @@ create_target = gql(
             id
             target_name
             target_description
+            target_amount
             target_is_active
             owner {
                 user {
@@ -373,18 +374,16 @@ create_target = gql(
 
 update_target = gql(
     """
-    mutation createTarget(
+    mutation updateTarget(
         $id: ID!
-        $account_id: ID!
         $target_name: String!
         $target_description: String!
         $target_amount: Float!
         $category: String!
         $sub_category: String!
     ) {
-        createTarget(
+        updateTarget(
             id: $id
-            account_id: $account_id
             target_name: $target_name
             target_description: $target_description
             target_amount: $target_amount
@@ -394,6 +393,7 @@ update_target = gql(
             id
             target_name
             target_description
+            target_amount
             target_is_active
             owner {
                 user {
