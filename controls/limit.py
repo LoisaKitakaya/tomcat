@@ -1,4 +1,4 @@
-from billing.models import Plan
+from plans.models import Plan
 from targets.models import Target
 from budgets.models import Budget
 from accounts.models import Account
@@ -12,7 +12,7 @@ def check_create_account_limit(user_id):
 
     all_accounts = Account.objects.filter(owner=profile).all()
 
-    plan = profile.Plan.name
+    plan = profile.plan.name
 
     if plan == "Free":
         plan = Plan.objects.get(name="Free")

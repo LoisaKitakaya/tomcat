@@ -17,6 +17,6 @@ def explain_status_code(status_code):
         503: "Service Unavailable",
     }
 
-    for key, value in status_codes.items():
+    for key, value in status_codes.items():  # type: ignore
         if status_code == key:
             return value

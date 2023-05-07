@@ -22,6 +22,7 @@ def generate_account_number():
         "".join(random.choices(letters_and_digits, k=group_size))
         for _ in range(group_count)
     ]
+
     return "-".join(groups)
 
 
@@ -32,6 +33,7 @@ def authenticate(consumer_key, consumer_secret, url):
             "consumer_secret": consumer_secret,
         }
     )
+
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
 
     response = requests.request("POST", url, headers=headers, data=payload)
@@ -56,10 +58,10 @@ def register_ipn_url(notification_url, registration_url, token):
 class PesaPal:
     def __init__(
         self,
-        consumer_key="",
-        consumer_secret="",
-        notification_url="",
-        environment="",
+        consumer_key: str = "",
+        consumer_secret: str = "",
+        notification_url: str = "",
+        environment: str = "",
     ) -> None:
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
@@ -100,14 +102,14 @@ class PesaPal:
 
             self.ipn_id = ipn_registration_response["ipn_id"]
 
-    def __repr__(self) -> str:  # type: ignore
+    def __repr__(self) -> str:
         return f"Pesapal object \
             <Consumer key: {self.consumer_key}> \
             <Consumer secret: {self.consumer_secret}> \
                 <Notification URL: {self.notification_url}> \
                     <IPN ID: {self.ipn_id}> <Environment: {self.environment}>"
 
-    def __str__(self) -> str:  # type: ignore
+    def __str__(self) -> str:
         return f"Pesapal object \
             <Consumer key: {self.consumer_key}> \
             <Consumer secret: {self.consumer_secret}> \
@@ -283,7 +285,7 @@ class PesaPal:
 
             return response.json()
 
-    def get_transaction_status(self, order_tracking_id):
+    def get_transaction_status(self, order_tracking_id: str = ""):
         sandbox_get_transaction_status = f"{sandbox_url}/api/Transactions/GetOrderByTrackingId\
             ?orderTrackingId={order_tracking_id}"
         live_get_transaction_status = f"{live_url}/api/Transactions/GetOrderByTrackingId\
