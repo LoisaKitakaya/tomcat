@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "plans",
     "billing",
     "budgets",
+    "reports",
     "targets",
     "accounts",
     "controls",
