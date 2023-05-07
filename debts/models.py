@@ -1,8 +1,10 @@
 from django.db import models
+from teams.models import Workspace
 from accounts.models import Account
 
 
 class Customer(models.Model):
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=False)
     email = models.EmailField(max_length=100, blank=False)
@@ -21,6 +23,7 @@ class Customer(models.Model):
 
 
 class Debt(models.Model):
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     amount = models.FloatField(default=0.0, blank=False)

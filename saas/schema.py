@@ -21,6 +21,8 @@ from ariadne_jwt import (
 
 from users.queries import *
 from teams.queries import *
+from debts.queries import *
+from debts.mutations import *
 from teams.mutations import *
 from budgets.queries import *
 from users.mutations import *
@@ -120,6 +122,12 @@ query.set_field("getTeamMembers", resolve_getTeamMembers)
 query.set_field("getAllProducts", resolve_getAllProducts)
 query.set_field("getProduct", resolve_getProduct)
 
+query.set_field("getAllCustomers", resolve_getAllCustomers)
+query.set_field("getCustomer", resolve_getCustomer)
+
+query.set_field("getAllDebts", resolve_getAllDebts)
+query.set_field("getDebt", resolve_getDebt)
+
 # # mutation resolvers
 
 mutation.set_field("createUser", resolve_createUser)
@@ -159,6 +167,14 @@ mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
 mutation.set_field("createProduct", resolve_createProduct)
 mutation.set_field("updateProduct", resolve_updateProduct)
 mutation.set_field("deleteProduct", resolve_deleteProduct)
+
+mutation.set_field("createCustomer", resolve_createCustomer)
+mutation.set_field("updateCustomer", resolve_updateCustomer)
+mutation.set_field("deleteCustomer", resolve_deleteCustomer)
+
+mutation.set_field("recordDebt", resolve_recordDebt)
+mutation.set_field("updateDebt", resolve_updateDebt)
+mutation.set_field("deleteDebt", resolve_deleteDebt)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],

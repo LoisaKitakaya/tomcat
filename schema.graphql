@@ -173,6 +173,25 @@ type Product {
   updated_at: Datetime!
 }
 
+type Customer {
+  id: ID!
+  workspace: Workspace!
+  account: Account!
+  name: String!
+  email: String!
+  phone: String!
+}
+
+type Debt {
+  id: ID!
+  workspace: Workspace!
+  account: Account!
+  customer: Customer!
+  amount: Float!
+  due_date: Datetime!
+  is_paid: Boolean!
+}
+
 type Query {
   generateOTP(environment: String): Otp!
 
@@ -212,6 +231,12 @@ type Query {
 
   getAllProducts(account_id: ID!): [Product!]!
   getProduct(id: ID!): Product!
+
+  getAllCustomers(account_id: ID!): [Customer!]!
+  getCustomer(id: ID!): Customer!
+
+  getAllDebts(account_id: ID!): [Debt!]!
+  getDebt(id: ID!): Debt!
 }
 
 type Mutation {
@@ -348,4 +373,32 @@ type Mutation {
     supplier_email: String!
   ): Product!
   deleteProduct(id: ID!): Boolean!
+
+  createCustomer(
+    account_id: ID!
+    name: String!
+    email: String!
+    phone: String!
+  ): Product!
+  updateCustomer(
+    id: ID!
+    name: String!
+    email: String!
+    phone: String!
+  ): Product!
+  deleteCustomer(id: ID!): Boolean!
+
+  recordDebt(
+    account_id: ID!
+    customer_id: ID!
+    amount: Float!
+    due_date: String!
+  ): Product!
+  updateDebt(
+    id: ID!
+    amount: Float!
+    due_date: String!
+    is_paid: Boolean!
+  ): Product!
+  deleteDebt(id: ID!): Boolean!
 }
