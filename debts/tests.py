@@ -1,6 +1,5 @@
 import json
 from plans.models import Plan
-from debts.models import Customer, Debt
 from django.test import TestCase, Client
 from controls.test_ref import explain_status_code
 
