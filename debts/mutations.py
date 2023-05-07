@@ -18,6 +18,7 @@ def resolve_createCustomer(_, info, account_id, name, email, phone):
     account = Account.objects.get(id=account_id)
 
     new_customer = Customer.objects.create(
+        workspace=workspace,
         account=account,
         name=name,
         email=email,
@@ -104,6 +105,7 @@ def resolve_recordDebt(_, info, account_id, customer_id, amount, due_date):
     new_date_object = timezone.make_aware(date_object)
 
     debt_record = Debt.objects.create(
+        workspace=workspace,
         account=account,
         customer=customer,
         amount=amount,
@@ -156,7 +158,7 @@ def resolve_deleteDebt(_, info, id):
     workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
     try:
-        debt = Customer.objects.get(id=id)
+        debt = Debt.objects.get(id=id)
 
         debt.delete()
 
