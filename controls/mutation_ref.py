@@ -758,3 +758,151 @@ delete_product = gql(
     }
     """
 )
+
+create_customer = gql(
+    """
+    mutation createCustomer(
+        $account_id: ID!
+        $name: String!
+        $email: String!
+        $phone: String!
+    ) {
+        createCustomer(
+            account_id: $account_id
+            name: $name
+            email: $email
+            phone: $phone
+        ) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            name
+            email
+            phone
+        }
+    }
+    """
+)
+
+update_customer = gql(
+    """
+    mutation updateCustomer(
+        $id: ID!
+        $name: String!
+        $email: String!
+        $phone: String!
+    ) {
+        updateCustomer(
+            id: $id
+            name: $name
+            email: $email
+            phone: $phone
+        ) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            name
+            email
+            phone
+        }
+    }
+    """
+)
+
+delete_customer = gql(
+    """
+    mutation deleteCustomer($id: ID!) {
+        deleteCustomer(id: $id)
+    }
+    """
+)
+
+record_debt = gql(
+    """
+    mutation recordDebt(
+        $account_id: ID!
+        $customer_id: ID!
+        $amount: Float!
+        $due_date: String!
+    ) {
+        recordDebt(
+            account_id: $account_id
+            customer_id: $customer_id
+            amount: $amount
+            due_date: $due_date
+        ) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            customer {
+                id
+                name
+            }
+            amount
+            due_date
+            is_paid
+        }
+    }
+    """
+)
+
+update_debt = gql(
+    """
+    mutation updateDebt(
+        $id: ID!
+        $amount: Float!
+        $due_date: String!
+        $is_paid: Boolean!
+    ) {
+        updateDebt(
+            id: $id
+            amount: $amount
+            due_date: $due_date
+            is_paid: $is_paid
+        ) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            customer {
+                id
+                name
+            }
+            amount
+            due_date
+            is_paid
+        }
+    }
+    """
+)
+
+delete_debt = gql(
+    """
+    mutation deleteDebt($id: ID!) {
+        deleteDebt(id: $id)
+    }
+    """
+)

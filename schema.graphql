@@ -379,13 +379,13 @@ type Mutation {
     name: String!
     email: String!
     phone: String!
-  ): Product!
+  ): Customer!
   updateCustomer(
     id: ID!
     name: String!
     email: String!
     phone: String!
-  ): Product!
+  ): Customer!
   deleteCustomer(id: ID!): Boolean!
 
   recordDebt(
@@ -393,12 +393,12 @@ type Mutation {
     customer_id: ID!
     amount: Float!
     due_date: String!
-  ): Product!
+  ): Debt!
   updateDebt(
     id: ID!
     amount: Float!
     due_date: String!
     is_paid: Boolean!
-  ): Product!
+  ): Debt!
   deleteDebt(id: ID!): Boolean!
 }

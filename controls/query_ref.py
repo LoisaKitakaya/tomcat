@@ -597,3 +597,95 @@ get_product = gql(
     }
     """
 )
+
+get_all_customers = gql(
+    """
+    query getAllCustomers($account_id: ID!) {
+        getAllCustomers(account_id: $account_id) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            name
+            email
+            phone
+        }
+    }
+    """
+)
+
+get_customer = gql(
+    """
+    query getCustomer($id: ID!) {
+        getCustomer(id: $id) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            name
+            email
+            phone
+        }
+    }
+    """
+)
+
+get_all_debts = gql(
+    """
+    query getAllDebts($account_id: ID!) {
+        getAllDebts(account_id: $account_id) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            customer {
+                id
+                name
+            }
+            amount
+            due_date
+            is_paid
+        }
+    }
+    """
+)
+
+get_debt = gql(
+    """
+    query getDebt($id: ID!) {
+        getDebt(id: $id) {
+            id
+            workspace {
+                id
+                name
+            }
+            account {
+                id
+                account_name
+            }
+            customer {
+                id
+                name
+            }
+            amount
+            due_date
+            is_paid
+        }
+    }
+    """
+)
