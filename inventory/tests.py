@@ -2,7 +2,7 @@ import json
 from plans.models import Plan
 from django.test import TestCase, Client
 from controls.test_ref import explain_status_code
-from inventory.models import Product, ProductCategory, ProductSubCategory
+from inventory.models import ProductCategory, ProductSubCategory
 
 from controls.mutation_ref import (
     token_auth,

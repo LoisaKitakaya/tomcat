@@ -13,7 +13,7 @@ def check_plan_standard(func):
 
         allowed = ["Standard", "Pro"]
 
-        plan = profile.Plan.name
+        plan = profile.plan.name
 
         if plan in allowed:
             return func(*args, **kwargs)
@@ -35,7 +35,7 @@ def check_plan_pro(func):
 
         allowed = ["Pro"]
 
-        plan = profile.Plan.name
+        plan = profile.plan.name
 
         if plan in allowed:
             return func(*args, **kwargs)

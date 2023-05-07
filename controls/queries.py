@@ -11,7 +11,7 @@ def resolve_testStandardDecorator(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    plan = Plan.objects.get(name=profile.Plan.name)
+    plan = Plan.objects.get(name=profile.plan.name)
 
     return plan
 
@@ -23,7 +23,7 @@ def resolve_testProDecorator(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    plan = Plan.objects.get(name=profile.Plan.name)
+    plan = Plan.objects.get(name=profile.plan.name)
 
     return plan
 
