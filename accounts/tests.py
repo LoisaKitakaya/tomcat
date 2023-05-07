@@ -294,5 +294,3 @@ class TestAppQueries(TestCase):
         self.assertEqual(data["data"]["getAccount"]["account_balance"], 20000.00)
         self.assertEqual(data["data"]["getAccount"]["currency_code"], "USD")
         self.assertEqual(data["data"]["getAccount"]["account_name"], "KCB test account")
-
-    

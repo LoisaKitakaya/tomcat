@@ -236,6 +236,7 @@ class TestAppMutations(TestCase):
 
         self.assertEqual(data["data"]["deleteTarget"], True)
 
+
 class TestAppQueries(TestCase):
     def setUp(self) -> None:
         self.client = Client()
@@ -411,5 +412,3 @@ class TestAppQueries(TestCase):
             data["data"]["getTarget"]["sub_category"]["category_name"],
             "Product sales",
         )
-
-    

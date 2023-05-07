@@ -475,6 +475,7 @@ create_transaction = gql(
             account {
                 id
                 account_name
+                account_balance
             }
             category {
                 id
@@ -523,6 +524,7 @@ update_transaction = gql(
             account {
                 id
                 account_name
+                account_balance
             }
             category {
                 id

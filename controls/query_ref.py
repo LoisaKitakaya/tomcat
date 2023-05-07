@@ -403,6 +403,7 @@ get_all_transactions = gql(
             account {
                 id
                 account_name
+                account_balance
             }
             category {
                 id
@@ -433,6 +434,7 @@ get_transaction = gql(
             account {
                 id
                 account_name
+                account_balance
             }
             category {
                 id
