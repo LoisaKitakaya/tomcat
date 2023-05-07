@@ -108,6 +108,14 @@ class TestAppMutations(TestCase):
 
         self.account_id = None
 
+        self.transaction_category.delete()
+
+        self.transaction_subcategory.delete()
+
+        self.transaction_type_payable.delete()
+
+        self.transaction_type_receivable.delete()
+
     def test_create_target(self):
         variables = {
             "account_id": self.account_id,

@@ -524,7 +524,7 @@ cancel_plan = gql(
 
 get_all_products = gql(
     """
-    query getAllProducts($account: ID!) {
+    query getAllProducts($account_id: ID!) {
         getAllProducts(account_id: $account_id) {
             id
             account {
@@ -553,7 +553,7 @@ get_all_products = gql(
             reorder_quantity
             supplier_name
             supplier_phone_number
-            supplier_name
+            supplier_email
             profit_generated
         }
     }
@@ -591,7 +591,7 @@ get_product = gql(
             reorder_quantity
             supplier_name
             supplier_phone_number
-            supplier_name
+            supplier_email
             profit_generated
         }
     }

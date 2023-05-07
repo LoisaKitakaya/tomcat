@@ -678,7 +678,7 @@ create_product = gql(
             reorder_quantity
             supplier_name
             supplier_phone_number
-            supplier_name
+            supplier_email
             profit_generated
         }
     }
@@ -744,7 +744,7 @@ update_product = gql(
             reorder_quantity
             supplier_name
             supplier_phone_number
-            supplier_name
+            supplier_email
             profit_generated
         }
     }
