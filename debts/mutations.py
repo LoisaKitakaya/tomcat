@@ -141,12 +141,12 @@ def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
     debt.due_date = new_date_object if due_date else debt.due_date
     debt.is_paid = is_paid or debt.is_paid
 
+    debt.save()
+
     if is_paid:
         account.account_balance = account.account_balance + amount
 
         account.save()
-
-    debt.save()
 
     if profile.is_employee:
         TeamLogs.objects.create(
