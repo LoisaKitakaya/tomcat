@@ -121,6 +121,7 @@ def resolve_recordDebt(_, info, account_id, customer_id, amount, due_date):
 
     return debt_record
 
+
 @login_required
 def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
     request = info.context["request"]
@@ -128,6 +129,8 @@ def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
     profile = Profile.objects.get(user__id=request.user.id)
 
     workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+
+    account = Account.objects.get(owner__id=profile.pk)
 
     debt = Debt.objects.get(id=id)
 
@@ -137,6 +140,11 @@ def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
     debt.amount = amount or debt.amount
     debt.due_date = new_date_object if due_date else debt.due_date
     debt.is_paid = is_paid or debt.is_paid
+
+    if is_paid:
+        account.account_balance = account.account_balance + amount
+
+        account.save()
 
     debt.save()
 
@@ -148,6 +156,7 @@ def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
         )
 
     return debt
+
 
 @login_required
 def resolve_deleteDebt(_, info, id):

@@ -302,6 +302,9 @@ class TestAppMutations(TestCase):
             data["data"]["updateDebt"]["customer"]["name"], "Test Customer"
         )
         self.assertEqual(data["data"]["updateDebt"]["amount"], 200.00)
+        self.assertEqual(
+            data["data"]["updateDebt"]["account"]["account_balance"], 20200.00
+        )
         self.assertEqual(data["data"]["updateDebt"]["due_date"], "1682110800.0")
         self.assertEqual(data["data"]["updateDebt"]["is_paid"], True)
 

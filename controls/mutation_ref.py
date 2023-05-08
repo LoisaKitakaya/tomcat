@@ -886,6 +886,7 @@ update_debt = gql(
             account {
                 id
                 account_name
+                account_balance
             }
             customer {
                 id
