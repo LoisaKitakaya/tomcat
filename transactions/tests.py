@@ -1,9 +1,11 @@
 import json
 from plans.models import Plan
 from django.test import TestCase, Client
+from reports.models import BusinessActivity
 from controls.test_ref import explain_status_code
 from transactions.models import (
     TransactionType,
+    TransactionGroup,
     TransactionCategory,
     TransactionSubCategory,
 )
@@ -60,8 +62,18 @@ class TestAppMutations(TestCase):
 
         self.token = get_token.json()["data"]["tokenAuth"]["token"]
 
+        self.business_activity = BusinessActivity.objects.create(
+            name="Operating Activity"
+        )
+
+        self.transaction_group = TransactionGroup.objects.create(
+            activity=self.business_activity, group_name="Revenue Transactions"
+        )
+
         self.transaction_category = TransactionCategory.objects.create(
-            category_name="Sales", category_description="Sales category"
+            parent=self.transaction_group,
+            category_name="Sales",
+            category_description="Sales category",
         )
         self.transaction_subcategory = TransactionSubCategory.objects.create(
             parent=self.transaction_category,
@@ -287,8 +299,18 @@ class TestAppQueries(TestCase):
 
         self.token = get_token.json()["data"]["tokenAuth"]["token"]
 
+        self.business_activity = BusinessActivity.objects.create(
+            name="Operating Activity"
+        )
+
+        self.transaction_group = TransactionGroup.objects.create(
+            activity=self.business_activity, group_name="Revenue Transactions"
+        )
+
         self.transaction_category = TransactionCategory.objects.create(
-            category_name="Sales", category_description="Sales category"
+            parent=self.transaction_group,
+            category_name="Sales",
+            category_description="Sales category",
         )
         self.transaction_subcategory = TransactionSubCategory.objects.create(
             parent=self.transaction_category,
@@ -376,7 +398,8 @@ class TestAppQueries(TestCase):
         )
 
         self.assertEqual(
-            data["data"]["getAllTransactions"][0]["transaction_type"]["type_name"], "receivable"
+            data["data"]["getAllTransactions"][0]["transaction_type"]["type_name"],
+            "receivable",
         )
         self.assertEqual(
             data["data"]["getAllTransactions"][0]["transaction_amount"], 2500.00
@@ -408,7 +431,8 @@ class TestAppQueries(TestCase):
         )
 
         self.assertEqual(
-            data["data"]["getTransaction"]["transaction_type"]["type_name"], "receivable"
+            data["data"]["getTransaction"]["transaction_type"]["type_name"],
+            "receivable",
         )
         self.assertEqual(data["data"]["getTransaction"]["transaction_amount"], 2500.00)
         self.assertEqual(

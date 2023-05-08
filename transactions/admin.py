@@ -2,6 +2,7 @@ from django.contrib import admin
 from transactions.models import (
     Transaction,
     TransactionType,
+    TransactionGroup,
     TransactionCategory,
     TransactionSubCategory,
 )
@@ -10,6 +11,11 @@ from transactions.models import (
 @admin.register(TransactionType)
 class TransactionTypeAdminView(admin.ModelAdmin):
     model = TransactionType
+
+
+@admin.register(TransactionGroup)
+class TransactionGroupAdminView(admin.ModelAdmin):
+    model = TransactionGroup
 
 
 @admin.register(TransactionCategory)

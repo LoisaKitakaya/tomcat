@@ -43,21 +43,44 @@ type Profile {
   updated_at: Datetime!
 }
 
+type Activity {
+  name: String!
+}
+
+type Group {
+  activity: Activity!
+  group_name: String!
+}
+
 type Type {
   id: ID!
   type_name: String!
   type_description: String!
 }
 
-type Category {
+type TransactionCategory {
+  id: ID!
+  parent: Group!
+  category_name: String!
+  category_description: String!
+}
+
+type ProductCategory {
   id: ID!
   category_name: String!
   category_description: String!
 }
 
-type SubCategory {
+type TransactionSubCategory {
   id: ID!
-  parent: Category!
+  parent: TransactionCategory!
+  category_name: String!
+  category_description: String!
+}
+
+type ProductSubCategory {
+  id: ID!
+  parent: ProductCategory!
   category_name: String!
   category_description: String!
 }
@@ -92,8 +115,8 @@ type Budget {
   owner: Profile!
   workspace: Workspace!
   account: Account!
-  category: Category!
-  sub_category: SubCategory!
+  category: TransactionCategory!
+  sub_category: TransactionSubCategory!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -107,8 +130,8 @@ type Target {
   owner: Profile!
   workspace: Workspace!
   account: Account!
-  category: Category!
-  sub_category: SubCategory!
+  category: TransactionCategory!
+  sub_category: TransactionSubCategory!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -121,8 +144,8 @@ type Transaction {
   description: String!
   transaction_date: Datetime!
   account: Account!
-  category: Category!
-  sub_category: SubCategory!
+  category: TransactionCategory!
+  sub_category: TransactionSubCategory!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -157,8 +180,8 @@ type Product {
   workspace: Workspace!
   name: String!
   description: String!
-  category: Category!
-  sub_category: SubCategory!
+  category: ProductCategory!
+  sub_category: ProductSubCategory!
   buying_price: Float!
   selling_price: Float!
   current_stock_level: Int!
@@ -198,10 +221,10 @@ type Query {
   generateQRCode: Qrcode!
 
   getTransactionType: [Type!]!
-  getTransactionCategory: [Category!]!
-  getTransactionSubCategory(parent: String!): [SubCategory!]!
-  getProductCategory: [Category!]!
-  getProductSubCategory(parent: String!): [SubCategory!]!
+  getTransactionCategory: [TransactionCategory!]!
+  getTransactionSubCategory(parent: String!): [TransactionSubCategory!]!
+  getProductCategory: [ProductCategory!]!
+  getProductSubCategory(parent: String!): [ProductSubCategory!]!
 
   testStandardDecorator: Plan!
   testProDecorator: Plan!
