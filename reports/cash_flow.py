@@ -4,9 +4,15 @@ from reports.models import (
     BusinessActivity,
 )
 
-OPERATING_ACTIVITY = BusinessActivity.objects.get(name="Operating Activity")
-INVESTING_ACTIVITY = BusinessActivity.objects.get(name="Investing Activity")
-FINANCING_ACTIVITY = BusinessActivity.objects.get(name="Financing Activity")
+try:
+    OPERATING_ACTIVITY = BusinessActivity.objects.get(name="Operating Activity")
+    INVESTING_ACTIVITY = BusinessActivity.objects.get(name="Investing Activity")
+    FINANCING_ACTIVITY = BusinessActivity.objects.get(name="Financing Activity")
+
+except:
+    BusinessActivity.objects.create(name="Operating Activity")
+    BusinessActivity.objects.create(name="Investing Activity")
+    BusinessActivity.objects.create(name="Financing Activity")
 
 
 def choose_activity(activity: str = ...):

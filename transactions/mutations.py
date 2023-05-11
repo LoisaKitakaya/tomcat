@@ -1,5 +1,6 @@
 from datetime import datetime
 from users.models import Profile
+from django.utils import timezone
 from accounts.models import Account
 from teams.models import Workspace, TeamLogs
 from ariadne_jwt.decorators import login_required
@@ -39,6 +40,7 @@ def resolve_createTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
+    date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
 
     new_transaction = Transaction.objects.create(
         transaction_type=type,
@@ -103,6 +105,7 @@ def resolve_updateTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
+    date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
 
     if (
         transaction_type == "payable"
