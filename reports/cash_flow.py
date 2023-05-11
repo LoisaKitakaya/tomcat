@@ -9,7 +9,7 @@ INVESTING_ACTIVITY = BusinessActivity.objects.get(name="Investing Activity")
 FINANCING_ACTIVITY = BusinessActivity.objects.get(name="Financing Activity")
 
 
-def choose_activity(activity: str):
+def choose_activity(activity: str = ...):
     if activity == OPERATING_ACTIVITY.name:
         return OPERATING_ACTIVITY
 
@@ -54,7 +54,7 @@ class GenerateCFReport:
         self.financing_activities_inflow = []
         self.financing_activities_outflow = []
 
-    def group_transactions(self):
+    def group_transactions(self) -> dict:
         for transaction in self.transactions:
             if (
                 transaction.category.parent.group_name
@@ -147,7 +147,7 @@ class GenerateCFReport:
         }
 
     @classmethod
-    def reduce_data(cls, transactions):
+    def reduce_data(cls, transactions: list = ...) -> list:
         grouped_transactions = {}
 
         for transaction in transactions:
@@ -176,7 +176,7 @@ class GenerateCFReport:
         return result
 
     @classmethod
-    def create_records(cls, statement_uid, data):
+    def create_records(cls, statement_uid: str = ..., data: list = ...) -> None:
         for item in data:
             category = item["category"]
             subcategory = item["subcategory"]

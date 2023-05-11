@@ -20,9 +20,9 @@ def resolve_generateReport(_, info, account_id, begin_date, end_date):
 
     account = Account.objects.get(id=account_id)
 
-    begin_date_object = datetime.strptime(begin_date, "%Y-%m-%dT%H:%M")
+    begin_date_object = datetime.strptime(begin_date, "%Y-%m-%d").date()
 
-    end_date_object = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")
+    end_date_object = datetime.strptime(end_date, "%Y-%m-%d").date()
 
     new_report = CashFlowStatement.objects.create(
         account=account,

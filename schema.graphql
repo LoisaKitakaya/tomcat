@@ -58,6 +58,31 @@ type Type {
   type_description: String!
 }
 
+type CashFlowStatement {
+  account: Account!
+  statement_uid: String!
+  begin_date: Datetime!
+  end_date: Datetime!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CashFlowItem {
+  name: String!
+  is_income: Boolean!
+  activity: Activity!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CashFlowRecord {
+  statement_uid: String!
+  amount: Float!
+  item: CashFlowItem!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
 type TransactionCategory {
   id: ID!
   parent: Group!
@@ -260,6 +285,9 @@ type Query {
 
   getAllDebts(account_id: ID!): [Debt!]!
   getDebt(id: ID!): Debt!
+
+  getAllReports(account_id: ID!): [CashFlowStatement!]!
+  getReport(statement_uid: String!): [CashFlowRecord!]!
 }
 
 type Mutation {
@@ -424,4 +452,11 @@ type Mutation {
     is_paid: Boolean!
   ): Debt!
   deleteDebt(id: ID!): Boolean!
+
+  generateReport(
+    account_id: ID!
+    begin_date: String!
+    end_date: String!
+  ): [CashFlowRecord!]!
+  deleteReport(statement_uid: String!): Boolean!
 }
