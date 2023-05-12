@@ -63,7 +63,7 @@ class CashFlowItem(models.Model):
 
 
 class CashFlowRecord(models.Model):
-    statement_uuid = models.CharField(max_length=50, blank=False)
+    statement_uid = models.CharField(max_length=50, blank=False)
     amount = models.FloatField(default=0.0, blank=False)
     item = models.ForeignKey(CashFlowItem, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

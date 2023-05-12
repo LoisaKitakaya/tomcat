@@ -2,6 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 from django.db.models import Q
 from users.models import Profile
+from django.utils import timezone
 from accounts.models import Account
 from transactions.models import Transaction
 from teams.models import Workspace, TeamLogs
@@ -20,9 +21,15 @@ def resolve_generateReport(_, info, account_id, begin_date, end_date):
 
     account = Account.objects.get(id=account_id)
 
-    begin_date_object = datetime.strptime(begin_date, "%Y-%m-%d").date()
+    begin_date_object = datetime.strptime(begin_date, "%Y-%m-%dT%H:%M")
+    begin_date_object = timezone.make_aware(
+        begin_date_object, timezone.get_default_timezone()
+    )
 
-    end_date_object = datetime.strptime(end_date, "%Y-%m-%d").date()
+    end_date_object = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")
+    end_date_object = timezone.make_aware(
+        end_date_object, timezone.get_default_timezone()
+    )
 
     new_report = CashFlowStatement.objects.create(
         account=account,
@@ -31,7 +38,9 @@ def resolve_generateReport(_, info, account_id, begin_date, end_date):
         end_date=end_date_object,
     )
 
-    query = Q(date_field__gte=begin_date_object) & Q(date_field__lte=end_date_object)
+    query = Q(transaction_date__gte=begin_date_object) & Q(
+        transaction_date__lte=end_date_object
+    )
 
     try:
         transactions = Transaction.objects.filter(query).all()
@@ -101,7 +110,6 @@ def resolve_deleteReport(_, info, statement_uid):
         report_name = statement_uid
 
         for report in reports:
-
             report.delete()
 
     except Exception as e:
