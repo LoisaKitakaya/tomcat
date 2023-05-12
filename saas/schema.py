@@ -25,10 +25,12 @@ from debts.queries import *
 from debts.mutations import *
 from teams.mutations import *
 from budgets.queries import *
+from reports.queries import *
 from users.mutations import *
 from targets.queries import *
 from controls.queries import *
 from accounts.queries import *
+from reports.mutations import *
 from billing.mutations import *
 from budgets.mutations import *
 from targets.mutations import *
@@ -128,6 +130,9 @@ query.set_field("getCustomer", resolve_getCustomer)
 query.set_field("getAllDebts", resolve_getAllDebts)
 query.set_field("getDebt", resolve_getDebt)
 
+query.set_field("getAllReports", resolve_getAllReports)
+query.set_field("getReport", resolve_getReport)
+
 # # mutation resolvers
 
 mutation.set_field("createUser", resolve_createUser)
@@ -175,6 +180,9 @@ mutation.set_field("deleteCustomer", resolve_deleteCustomer)
 mutation.set_field("recordDebt", resolve_recordDebt)
 mutation.set_field("updateDebt", resolve_updateDebt)
 mutation.set_field("deleteDebt", resolve_deleteDebt)
+
+mutation.set_field("generateReport", resolve_generateReport)
+mutation.set_field("deleteReport", resolve_deleteReport)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],

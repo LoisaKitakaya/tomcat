@@ -689,3 +689,35 @@ get_debt = gql(
     }
     """
 )
+
+get_all_reports = gql(
+    """
+    query getAllReports($account_id: ID!) {
+        getAllReports(account_id: $account_id) {
+            id
+            account {
+                account_name
+            }
+            statement_uid
+            begin_date
+            end_date
+        }
+    }
+    """
+)
+
+get_report = gql(
+    """
+    query getReport($statement_uid: String!) {
+        getReport(statement_uid: $statement_uid) {
+            id
+            statement_uid
+            amount
+            item {
+                name
+                is_income
+            }
+        }
+    }
+    """
+)

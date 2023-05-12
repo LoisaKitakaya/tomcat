@@ -1,9 +1,18 @@
 from django.db import models
 from accounts.models import Account
+from reports.models import BusinessActivity
 
 
 class TransactionType(models.Model):
-    type_name = models.CharField(max_length=100, blank=False, unique=True)
+    RECEIVABLE = "receivable"
+    PAYABLE = "payable"
+
+    TYPE_CHOICES = (
+        (RECEIVABLE, "Receivable"),
+        (PAYABLE, "Payable"),
+    )
+
+    type_name = models.CharField(max_length=100, blank=False, choices=TYPE_CHOICES)
     type_description = models.TextField(blank=False)
 
     class Meta:
@@ -15,7 +24,21 @@ class TransactionType(models.Model):
         return self.type_name
 
 
+class TransactionGroup(models.Model):
+    activity = models.ForeignKey(BusinessActivity, on_delete=models.CASCADE)
+    group_name = models.CharField(max_length=100, blank=False, unique=True)
+
+    class Meta:
+        verbose_name = "transaction group"
+        verbose_name_plural = "transaction groups"
+        db_table = "TransactionGroups"
+
+    def __str__(self) -> str:
+        return self.group_name
+
+
 class TransactionCategory(models.Model):
+    parent = models.ForeignKey(TransactionGroup, on_delete=models.CASCADE)
     category_name = models.CharField(max_length=100, blank=False, unique=True)
     category_description = models.TextField(blank=False)
 

@@ -886,6 +886,7 @@ update_debt = gql(
             account {
                 id
                 account_name
+                account_balance
             }
             customer {
                 id
@@ -903,6 +904,38 @@ delete_debt = gql(
     """
     mutation deleteDebt($id: ID!) {
         deleteDebt(id: $id)
+    }
+    """
+)
+
+generate_report = gql(
+    """
+    mutation generateReport(
+        $account_id: ID!
+        $begin_date: String!
+        $end_date: String!
+    ) {
+        generateReport(
+            account_id: $account_id
+            begin_date: $begin_date
+            end_date: $end_date
+        ) {
+            id
+            statement_uid
+            amount
+            item {
+                name
+                is_income
+            }
+        }
+    }
+    """
+)
+
+delete_report = gql(
+    """
+    mutation deleteReport($statement_uid: String!) {
+        deleteReport(statement_uid: $statement_uid)
     }
     """
 )

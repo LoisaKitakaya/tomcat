@@ -40,12 +40,12 @@ def resolve_createTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
-    new_date_object = timezone.make_aware(date_object)
+    date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
 
     new_transaction = Transaction.objects.create(
         transaction_type=type,
         transaction_amount=transaction_amount,
-        transaction_date=new_date_object,
+        transaction_date=date_object,
         currency_code=account.currency_code,
         description=description,
         category=transaction_category,
@@ -105,7 +105,7 @@ def resolve_updateTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
-    new_date_object = timezone.make_aware(date_object)
+    date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
 
     if (
         transaction_type == "payable"
@@ -149,7 +149,7 @@ def resolve_updateTransaction(
 
     transaction.transaction_type = type
     transaction.transaction_amount = transaction_amount
-    transaction.transaction_date = new_date_object
+    transaction.transaction_date = date_object
     transaction.description = description
     transaction.category = transaction_category
     transaction.sub_category = transaction_sub_category

@@ -1,6 +1,5 @@
 from datetime import datetime
 from users.models import Profile
-from django.utils import timezone
 from accounts.models import Account
 from debts.models import Customer, Debt
 from teams.models import Workspace, TeamLogs
@@ -101,15 +100,14 @@ def resolve_recordDebt(_, info, account_id, customer_id, amount, due_date):
 
     customer = Customer.objects.get(id=customer_id)
 
-    date_object = datetime.strptime(due_date, "%Y-%m-%d")
-    new_date_object = timezone.make_aware(date_object)
+    date_object = datetime.strptime(due_date, "%Y-%m-%d").date()
 
     debt_record = Debt.objects.create(
         workspace=workspace,
         account=account,
         customer=customer,
         amount=amount,
-        due_date=new_date_object,
+        due_date=date_object,
     )
 
     if profile.is_employee:
@@ -121,6 +119,7 @@ def resolve_recordDebt(_, info, account_id, customer_id, amount, due_date):
 
     return debt_record
 
+
 @login_required
 def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
     request = info.context["request"]
@@ -129,16 +128,22 @@ def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
 
     workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
+    account = Account.objects.get(owner__id=profile.pk)
+
     debt = Debt.objects.get(id=id)
 
-    date_object = datetime.strptime(due_date, "%Y-%m-%d")
-    new_date_object = timezone.make_aware(date_object)
+    date_object = datetime.strptime(due_date, "%Y-%m-%d").date()
 
     debt.amount = amount or debt.amount
-    debt.due_date = new_date_object if due_date else debt.due_date
+    debt.due_date = date_object if due_date else debt.due_date
     debt.is_paid = is_paid or debt.is_paid
 
     debt.save()
+
+    if is_paid:
+        account.account_balance = account.account_balance + amount
+
+        account.save()
 
     if profile.is_employee:
         TeamLogs.objects.create(
@@ -148,6 +153,7 @@ def resolve_updateDebt(_, info, id, amount, due_date, is_paid):
         )
 
     return debt
+
 
 @login_required
 def resolve_deleteDebt(_, info, id):
