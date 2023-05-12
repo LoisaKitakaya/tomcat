@@ -44,10 +44,12 @@ type Profile {
 }
 
 type Activity {
+  id: ID!
   name: String!
 }
 
 type Group {
+  id: ID!
   activity: Activity!
   group_name: String!
 }
@@ -59,6 +61,7 @@ type Type {
 }
 
 type CashFlowStatement {
+  id: ID!
   account: Account!
   statement_uid: String!
   begin_date: Datetime!
@@ -68,6 +71,7 @@ type CashFlowStatement {
 }
 
 type CashFlowItem {
+  id: ID!
   name: String!
   is_income: Boolean!
   activity: Activity!
@@ -76,6 +80,7 @@ type CashFlowItem {
 }
 
 type CashFlowRecord {
+  id: ID!
   statement_uid: String!
   amount: Float!
   item: CashFlowItem!

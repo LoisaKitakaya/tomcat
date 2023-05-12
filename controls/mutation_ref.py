@@ -907,3 +907,35 @@ delete_debt = gql(
     }
     """
 )
+
+generate_report = gql(
+    """
+    mutation generateReport(
+        $account_id: ID!
+        $begin_date: String!
+        $end_date: String!
+    ) {
+        generateReport(
+            account_id: $account_id
+            begin_date: $begin_date
+            end_date: $end_date
+        ) {
+            id
+            statement_uid
+            amount
+            item {
+                name
+                is_income
+            }
+        }
+    }
+    """
+)
+
+delete_report = gql(
+    """
+    mutation deleteReport($statement_uid: String!) {
+        deleteReport(statement_uid: $statement_uid)
+    }
+    """
+)
