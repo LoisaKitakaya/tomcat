@@ -162,7 +162,6 @@ get_profile = gql(
                 name
             }
             phone_number
-            workspace_uid
             payment_method
             is_paid_user
             is_employee

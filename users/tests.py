@@ -18,7 +18,6 @@ class Test2FA(TestCase):
             "email": "testuser@example.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Testing Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -184,7 +183,6 @@ class TestAppMutations(TestCase):
             "email": "testuser@example.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Testing Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -215,6 +213,7 @@ class TestAppMutations(TestCase):
             "email": "user_test@example.com",
             "first_name": "test",
             "last_name": "user",
+            "phone_number": "",
         }
 
         response = self.client.post(
@@ -252,7 +251,6 @@ class TestAppQueries(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -335,7 +333,6 @@ class TestAppQueries(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertIsNotNone(data["data"]["getProfile"]["workspace_uid"])
         self.assertEqual(data["data"]["getProfile"]["plan"]["name"], "Free")
         self.assertEqual(data["data"]["getProfile"]["phone_number"], "")
         self.assertEqual(data["data"]["getProfile"]["payment_method"], "None")

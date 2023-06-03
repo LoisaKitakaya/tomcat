@@ -11,7 +11,6 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    workspace_uid = models.CharField(max_length=50, blank=False)
     phone_number = models.CharField(max_length=50, blank=True)
     payment_method = models.CharField(max_length=50, blank=False, default="None")
     is_paid_user = models.BooleanField(default=False, blank=False)

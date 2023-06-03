@@ -302,11 +302,15 @@ type Mutation {
     email: String!
     first_name: String!
     last_name: String
-    workspace_name: String!
     password: String!
     password2: String!
   ): User!
-  updateUser(email: String!, first_name: String!, last_name: String): User!
+  updateUser(
+    email: String!
+    first_name: String!
+    last_name: String!
+    phone_number: String!
+  ): User!
 
   verifyToken(token: String!): VerifyToken!
   refreshToken(token: String!): RefreshToken!

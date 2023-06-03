@@ -49,7 +49,6 @@ create_user = gql(
         $email: String!
         $first_name: String!
         $last_name: String!
-        $workspace_name: String!
         $password: String!
         $password2: String!
     ) {
@@ -57,7 +56,6 @@ create_user = gql(
             email: $email
             first_name: $first_name
             last_name: $last_name
-            workspace_name: $workspace_name
             password: $password
             password2: $password2
         ) {
@@ -79,11 +77,13 @@ update_user = gql(
         $email: String!
         $first_name: String!
         $last_name: String!
+        $phone_number: String!
     ) {
         updateUser(
             email: $email
             first_name: $first_name
             last_name: $last_name
+            phone_number: $phone_number
         ) {
             id
             first_name
