@@ -1,6 +1,5 @@
 from django.db import models
 from users.models import Profile
-from teams.models import Workspace
 from accounts.models import Account
 from transactions.models import TransactionCategory, TransactionSubCategory
 

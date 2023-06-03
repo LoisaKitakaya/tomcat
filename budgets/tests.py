@@ -118,6 +118,10 @@ class TestAppMutations(TestCase):
         self.token = None
 
         self.account_id = None
+
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
         
         self.transaction_category.delete()
 
@@ -371,6 +375,10 @@ class TestAppQueries(TestCase):
 
         self.budget_id = None
 
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+        
         self.transaction_category.delete()
 
         self.transaction_subcategory.delete()
