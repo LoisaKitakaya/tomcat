@@ -53,7 +53,7 @@ class TransactionCategory(models.Model):
 
 class TransactionSubCategory(models.Model):
     parent = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
-    category_name = models.CharField(max_length=100, blank=False, unique=True)
+    category_name = models.CharField(max_length=100, blank=False, unique=True)  # type: ignore
     category_description = models.TextField(blank=False)
 
     class Meta:

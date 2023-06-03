@@ -368,7 +368,7 @@ type Mutation {
   createTransaction(
     account_id: ID!
     transaction_type: String!
-    transaction_amount: Float!
+    transaction_amount: String!
     transaction_date: String!
     description: String!
     category: String!
@@ -378,7 +378,7 @@ type Mutation {
     id: ID!
     account_id: ID!
     transaction_type: String!
-    transaction_amount: Float!
+    transaction_amount: String!
     transaction_date: String!
     description: String!
     category: String!

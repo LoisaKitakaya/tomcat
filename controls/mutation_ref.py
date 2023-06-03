@@ -418,7 +418,7 @@ create_transaction = gql(
     mutation createTransaction(
         $account_id: ID!
         $transaction_type: String!
-        $transaction_amount: Float!
+        $transaction_amount: String!
         $transaction_date: String!
         $description: String!
         $category: String!
@@ -466,7 +466,7 @@ update_transaction = gql(
         $id: ID!
         $account_id: ID!
         $transaction_type: String!
-        $transaction_amount: Float!
+        $transaction_amount: String!
         $transaction_date: String!
         $description: String!
         $category: String!

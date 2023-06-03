@@ -12,7 +12,7 @@ def resolve_getTransactionType(*_):
         types = TransactionType.objects.all()
 
     except Exception as e:
-        raise Exception(str(e))
+        raise Exception(str(e))  # type: ignore
 
     return types
 
