@@ -309,10 +309,6 @@ get_all_targets = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-            }
             account {
                 id
                 account_name
@@ -348,10 +344,6 @@ get_target = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
             }
             account {
                 id

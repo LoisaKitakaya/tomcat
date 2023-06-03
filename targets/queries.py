@@ -10,9 +10,7 @@ def resolve_getAllTargets(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
-    targets = Target.objects.filter(workspace__id=workspace.pk).all()
+    targets = Target.objects.filter(owner__id=profile.pk).all()
 
     return targets
 

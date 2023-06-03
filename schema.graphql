@@ -155,7 +155,6 @@ type Target {
   target_is_active: Boolean!
   target_amount: Float!
   owner: Profile!
-  workspace: Workspace!
   account: Account!
   category: TransactionCategory!
   sub_category: TransactionSubCategory!
@@ -351,7 +350,7 @@ type Mutation {
     account_id: ID!
     target_name: String!
     target_description: String!
-    target_amount: Float!
+    target_amount: String!
     category: String!
     sub_category: String!
   ): Target!
@@ -359,7 +358,7 @@ type Mutation {
     id: ID!
     target_name: String!
     target_description: String!
-    target_amount: Float!
+    target_amount: String!
     category: String!
     sub_category: String!
   ): Target!

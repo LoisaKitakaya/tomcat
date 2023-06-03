@@ -11,17 +11,15 @@ def resolve_createTarget(
     _,
     info,
     account_id,
-    target_name,
-    target_description,
-    target_amount,
-    category,
-    sub_category,
+    target_name: str,
+    target_description: str,
+    target_amount: str,
+    category: str,
+    sub_category: str,
 ):
     request = info.context["request"]
 
     profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
 
     account = Account.objects.get(id=account_id)
 
@@ -31,111 +29,74 @@ def resolve_createTarget(
     new_target = Target.objects.create(
         target_name=target_name,
         target_description=target_description,
-        target_amount=target_amount,
+        target_amount=float(target_amount),
         category=target_category,
         sub_category=target_sub_category,
         owner=profile,
         account=account,
-        workspace=workspace,
     )
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Created target: {new_target.target_name}",
-        )
 
     return new_target
 
 
 @login_required
 def resolve_updateTarget(
-    _,
-    info,
+    *_,
     id,
-    target_name,
-    target_description,
-    target_amount,
-    category,
-    sub_category,
+    target_name: str,
+    target_description: str,
+    target_amount: str,
+    category: str,
+    sub_category: str,
 ):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
     target = Target.objects.get(id=id)
 
-    target_category = TransactionCategory.objects.get(category_name=category)
-    target_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
+    target_category = (
+        TransactionCategory.objects.get(category_name=category)
+        if category
+        else target.category
+    )
 
-    target.target_name = target_name
-    target.target_description = target_description
-    target.target_amount = target_amount
+    target_sub_category = (
+        TransactionSubCategory.objects.get(category_name=sub_category)
+        if sub_category
+        else target.sub_category
+    )
+
+    target.target_name = target_name if target_name else target.target_name
+    target.target_description = (
+        target_description if target_description else target.target_description
+    )
+    target.target_amount = (
+        float(target_amount) if target_amount else target.target_amount
+    )
     target.category = target_category
     target.sub_category = target_sub_category
 
     target.save()
 
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Updated target: {target.target_name}",
-        )
-
     return target
 
 
 @login_required
-def resolve_targetStatus(_, info, id, status):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_targetStatus(*_, id, status: bool):
     target = Target.objects.get(id=id)
 
     target.target_is_active = status
 
     target.save()
 
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Updated target status to: {status}",
-        )
-
     return True
 
 
 @login_required
-def resolve_deleteTarget(_, info, id):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_deleteTarget(*_, id):
     try:
         target = Target.objects.get(id=id)
-
-        target_name = target.target_name
 
         target.delete()
 
     except Exception as e:
         raise Exception(str(e))
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Deleted target: {target_name}",
-        )
 
     return True

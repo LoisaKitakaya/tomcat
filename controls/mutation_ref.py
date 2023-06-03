@@ -303,7 +303,7 @@ create_target = gql(
         $account_id: ID!
         $target_name: String!
         $target_description: String!
-        $target_amount: Float!
+        $target_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -330,11 +330,6 @@ create_target = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             account {
                 id
                 account_name
@@ -358,7 +353,7 @@ update_target = gql(
         $id: ID!
         $target_name: String!
         $target_description: String!
-        $target_amount: Float!
+        $target_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -384,11 +379,6 @@ update_target = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
-                workspace_uid
             }
             account {
                 id
