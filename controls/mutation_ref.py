@@ -102,7 +102,7 @@ create_account = gql(
     mutation createAccount(
         $account_name: String!
         $account_type: String!
-        $account_balance: Float!
+        $account_balance: String!
         $currency_code: String!
     ) {
         createAccount(
@@ -127,11 +127,6 @@ create_account = gql(
                 is_employee
                 is_paid_user
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             currency_code
             account_balance
         }
@@ -145,7 +140,7 @@ update_account = gql(
         $id: ID!
         $account_name: String!
         $account_type: String!
-        $account_balance: Float!
+        $account_balance: String!
         $currency_code: String!
     ) {
         updateAccount(
@@ -170,11 +165,6 @@ update_account = gql(
                 phone_number
                 is_employee
                 is_paid_user
-            }
-            workspace {
-                id
-                name
-                workspace_uid
             }
             currency_code
             account_balance

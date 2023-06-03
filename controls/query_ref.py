@@ -187,10 +187,6 @@ get_all_accounts = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-            }
             currency_code
             account_balance
         }
@@ -214,10 +210,6 @@ get_account = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
             }
             currency_code
             account_balance

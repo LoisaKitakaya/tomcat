@@ -35,7 +35,6 @@ type Profile {
   user: User!
   plan: Plan!
   phone_number: String!
-  workspace_uid: String!
   payment_method: String!
   is_paid_user: Boolean!
   is_employee: Boolean!
@@ -129,7 +128,6 @@ type Account {
   account_name: String!
   account_type: String!
   owner: Profile!
-  workspace: Workspace!
   currency_code: String!
   account_balance: Float!
   created_at: Datetime!
@@ -319,14 +317,14 @@ type Mutation {
   createAccount(
     account_name: String!
     account_type: String!
-    account_balance: Float!
+    account_balance: String!
     currency_code: String!
   ): Account!
   updateAccount(
     id: ID!
     account_name: String!
     account_type: String!
-    account_balance: Float!
+    account_balance: String!
     currency_code: String!
   ): Account!
   deleteAccount(id: ID!): Boolean!

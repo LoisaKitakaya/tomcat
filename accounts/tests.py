@@ -23,7 +23,6 @@ class TestAppMutations(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -67,7 +66,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -97,7 +96,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -113,8 +112,8 @@ class TestAppMutations(TestCase):
         variables = {
             "id": data["data"]["createAccount"]["id"],
             "account_name": "Equity test account",
-            "account_type": "Checking",
-            "account_balance": 25000.00,
+            "account_type": "",
+            "account_balance": "25000.00",
             "currency_code": "KES",
         }
 
@@ -133,7 +132,7 @@ class TestAppMutations(TestCase):
             f"Something went wrong, {explain_status_code(response.status_code)}",
         )
 
-        self.assertEqual(data["data"]["updateAccount"]["account_type"], "Checking")
+        self.assertEqual(data["data"]["updateAccount"]["account_type"], "Savings")
         self.assertEqual(data["data"]["updateAccount"]["account_balance"], 25000.00)
         self.assertEqual(data["data"]["updateAccount"]["currency_code"], "KES")
         self.assertEqual(
@@ -144,7 +143,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -187,7 +186,6 @@ class TestAppQueries(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -221,7 +219,7 @@ class TestAppQueries(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
