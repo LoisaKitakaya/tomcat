@@ -141,7 +141,6 @@ type Budget {
   budget_is_active: Boolean!
   budget_amount: Float!
   owner: Profile!
-  workspace: Workspace!
   account: Account!
   category: TransactionCategory!
   sub_category: TransactionSubCategory!
@@ -333,7 +332,7 @@ type Mutation {
     account_id: ID!
     budget_name: String!
     budget_description: String!
-    budget_amount: Float!
+    budget_amount: String!
     category: String!
     sub_category: String!
   ): Budget!
@@ -341,7 +340,7 @@ type Mutation {
     id: ID!
     budget_name: String!
     budget_description: String!
-    budget_amount: Float!
+    budget_amount: String!
     category: String!
     sub_category: String!
   ): Budget!

@@ -11,17 +11,15 @@ def resolve_createBudget(
     _,
     info,
     account_id,
-    budget_name,
-    budget_description,
-    budget_amount,
-    category,
-    sub_category,
+    budget_name: str,
+    budget_description: str,
+    budget_amount: str,
+    category: str,
+    sub_category: str,
 ):
     request = info.context["request"]
 
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
+    profile = Profile.objects.get(user__id=request.user.id)  # type: ignore
 
     account = Account.objects.get(id=account_id)
 
@@ -31,111 +29,74 @@ def resolve_createBudget(
     new_budget = Budget.objects.create(
         budget_name=budget_name,
         budget_description=budget_description,
-        budget_amount=budget_amount,
+        budget_amount=float(budget_amount),
         category=budget_category,
         sub_category=budget_sub_category,
         owner=profile,
         account=account,
-        workspace=workspace,
     )
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Created budget: {new_budget.budget_name}",
-        )
 
     return new_budget
 
 
 @login_required
 def resolve_updateBudget(
-    _,
-    info,
+    *_,
     id,
-    budget_name,
-    budget_description,
-    budget_amount,
-    category,
-    sub_category,
+    budget_name: str,
+    budget_description: str,
+    budget_amount: str,
+    category: str,
+    sub_category: str,
 ):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
     budget = Budget.objects.get(id=id)
 
-    budget_category = TransactionCategory.objects.get(category_name=category)
-    budget_sub_category = TransactionSubCategory.objects.get(category_name=sub_category)
+    budget_category = (
+        TransactionCategory.objects.get(category_name=category)
+        if category
+        else budget.category
+    )
 
-    budget.budget_name = budget_name
-    budget.budget_description = budget_description
-    budget.budget_amount = budget_amount
+    budget_sub_category = (
+        TransactionSubCategory.objects.get(category_name=sub_category)
+        if sub_category
+        else budget.sub_category
+    )
+
+    budget.budget_name = budget_name if budget_name else budget.budget_name
+    budget.budget_description = (
+        budget_description if budget_description else budget.budget_description
+    )
+    budget.budget_amount = (
+        float(budget_amount) if budget_amount else budget.budget_amount
+    )
     budget.category = budget_category
     budget.sub_category = budget_sub_category
 
     budget.save()
 
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Updated budget: {budget.budget_name}",
-        )
-
     return budget
 
 
 @login_required
-def resolve_budgetStatus(_, info, id, status):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_budgetStatus(*_, id, status: bool):
     budget = Budget.objects.get(id=id)
 
     budget.budget_is_active = status
 
     budget.save()
 
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Updated budget status to: {status}",
-        )
-
     return True
 
 
 @login_required
-def resolve_deleteBudget(_, info, id):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_deleteBudget(*_, id):
     try:
         budget = Budget.objects.get(id=id)
-
-        budget_name = budget.budget_name
 
         budget.delete()
 
     except Exception as e:
         raise Exception(str(e))
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Deleted budget: {budget_name}",
-        )
 
     return True

@@ -237,10 +237,6 @@ get_all_budgets = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-            }
             account {
                 id
                 account_name
@@ -276,10 +272,6 @@ get_budget = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
             }
             account {
                 id

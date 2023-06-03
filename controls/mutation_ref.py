@@ -187,7 +187,7 @@ create_budget = gql(
         $account_id: ID!
         $budget_name: String!
         $budget_description: String!
-        $budget_amount: Float!
+        $budget_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -214,11 +214,6 @@ create_budget = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             account {
                 id
                 account_name
@@ -242,7 +237,7 @@ update_budget = gql(
         $id: ID!
         $budget_name: String!
         $budget_description: String!
-        $budget_amount: Float!
+        $budget_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -268,11 +263,6 @@ update_budget = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
-                workspace_uid
             }
             account {
                 id
