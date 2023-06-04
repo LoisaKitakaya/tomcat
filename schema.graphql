@@ -184,7 +184,6 @@ type PlanBilling {
 type Product {
   id: ID!
   account: Account!
-  workspace: Workspace!
   name: String!
   description: String!
   category: ProductCategory!
