@@ -51,9 +51,9 @@ def resolve_subscribeToPlan(_, info, plan):
         last_name=request.user.last_name,
     )
 
-    order_tracking_id = subscription_payment["order_tracking_id"]
-    merchant_ref = subscription_payment["merchant_reference"]
-    redirect_url = subscription_payment["redirect_url"]
+    order_tracking_id = subscription_payment["order_tracking_id"]  # type: ignore
+    merchant_ref = subscription_payment["merchant_reference"]  # type: ignore
+    redirect_url = subscription_payment["redirect_url"]  # type: ignore
 
     new_billing = PlanBilling.objects.create(
         customer=request.user,
