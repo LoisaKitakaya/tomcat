@@ -1,6 +1,5 @@
 from users.models import Profile
 from targets.models import Target
-from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 
 
