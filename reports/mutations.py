@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.utils import timezone
 from accounts.models import Account
 from transactions.models import Transaction
-from reports.cash_flow import GenerateCFReport
+from controls.cash_flow import GenerateCFReport
 from ariadne_jwt.decorators import login_required
 from reports.models import CashFlowStatement, CashFlowRecord
 
