@@ -20,10 +20,6 @@ from ariadne_jwt import (
 )
 
 from users.queries import *
-from teams.queries import *
-from debts.queries import *
-from debts.mutations import *
-from teams.mutations import *
 from budgets.queries import *
 from reports.queries import *
 from users.mutations import *
@@ -100,7 +96,6 @@ query.set_field("getProductSubCategory", resolve_getProductSubCategory)
 
 query.set_field("testStandardDecorator", resolve_testStandardDecorator)
 query.set_field("testProDecorator", resolve_testProDecorator)
-query.set_field("testIfIsEmployee", resolve_testIfIsEmployee)
 
 query.set_field("getUser", resolve_getUser)
 query.set_field("getProfile", resolve_getProfile)
@@ -117,18 +112,8 @@ query.set_field("getTarget", resolve_getTarget)
 query.set_field("getAllTransactions", resolve_getAllTransactions)
 query.set_field("getTransaction", resolve_getTransaction)
 
-query.set_field("getWorkspace", resolve_getWorkspace)
-query.set_field("getTeamLogs", resolve_getTeamLogs)
-query.set_field("getTeamMembers", resolve_getTeamMembers)
-
 query.set_field("getAllProducts", resolve_getAllProducts)
 query.set_field("getProduct", resolve_getProduct)
-
-query.set_field("getAllCustomers", resolve_getAllCustomers)
-query.set_field("getCustomer", resolve_getCustomer)
-
-query.set_field("getAllDebts", resolve_getAllDebts)
-query.set_field("getDebt", resolve_getDebt)
 
 query.set_field("getAllReports", resolve_getAllReports)
 query.set_field("getReport", resolve_getReport)
@@ -162,24 +147,11 @@ mutation.set_field("createTransaction", resolve_createTransaction)
 mutation.set_field("updateTransaction", resolve_updateTransaction)
 mutation.set_field("deleteTransaction", resolve_deleteTransaction)
 
-mutation.set_field("updateWorkspace", resolve_updateWorkspace)
-
-mutation.set_field("createTeamMember", resolve_createTeamMember)
-mutation.set_field("deleteTeamMember", resolve_deleteTeamMember)
-
 mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
 
 mutation.set_field("createProduct", resolve_createProduct)
 mutation.set_field("updateProduct", resolve_updateProduct)
 mutation.set_field("deleteProduct", resolve_deleteProduct)
-
-mutation.set_field("createCustomer", resolve_createCustomer)
-mutation.set_field("updateCustomer", resolve_updateCustomer)
-mutation.set_field("deleteCustomer", resolve_deleteCustomer)
-
-mutation.set_field("recordDebt", resolve_recordDebt)
-mutation.set_field("updateDebt", resolve_updateDebt)
-mutation.set_field("deleteDebt", resolve_deleteDebt)
 
 mutation.set_field("generateReport", resolve_generateReport)
 mutation.set_field("deleteReport", resolve_deleteReport)
