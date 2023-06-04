@@ -1,24 +1,16 @@
 from uuid import uuid4
 from datetime import datetime
 from django.db.models import Q
-from users.models import Profile
 from django.utils import timezone
 from accounts.models import Account
 from transactions.models import Transaction
-from teams.models import Workspace, TeamLogs
 from reports.cash_flow import GenerateCFReport
 from ariadne_jwt.decorators import login_required
 from reports.models import CashFlowStatement, CashFlowRecord
 
 
 @login_required
-def resolve_generateReport(_, info, account_id, begin_date, end_date):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_generateReport(*_, account_id, begin_date, end_date):
     account = Account.objects.get(id=account_id)
 
     begin_date_object = datetime.strptime(begin_date, "%Y-%m-%dT%H:%M")
@@ -86,40 +78,18 @@ def resolve_generateReport(_, info, account_id, begin_date, end_date):
         statement_uid=new_report.statement_uid
     ).all()
 
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"created report: {new_report.statement_uid}",
-        )
-
     return generated_report
 
 
 @login_required
-def resolve_deleteReport(_, info, statement_uid):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_deleteReport(*_, statement_uid):
     try:
         reports = CashFlowRecord.objects.filter(statement_uid=statement_uid).all()
-
-        report_name = statement_uid
 
         for report in reports:
             report.delete()
 
     except Exception as e:
         raise Exception(str(e))
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Deleted report: {report_name}",
-        )
 
     return True
