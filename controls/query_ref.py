@@ -92,9 +92,8 @@ test_standard_decorator = gql(
             no_of_budgets
             targets
             no_of_targets
-            inventory
-            teams
-            no_of_teams
+            invoices
+            no_of_invoices
             pdf_reports
             ai_assistant
         }
@@ -114,9 +113,8 @@ test_pro_decorator = gql(
             no_of_budgets
             targets
             no_of_targets
-            inventory
-            teams
-            no_of_teams
+            invoices
+            no_of_invoices
             pdf_reports
             ai_assistant
         }

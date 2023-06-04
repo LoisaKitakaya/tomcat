@@ -25,12 +25,9 @@ class TestCustomDecorators(TestCase):
         self.test_user_one.set_password("#testpassword")
         self.test_user_one.save()
 
-        self.user_one_workspace_uid = str(uuid4().hex)
-
         self.test_user_one_profile = Profile.objects.create(
             user=self.test_user_one,
             plan=self.standard_plan,
-            workspace_uid=self.user_one_workspace_uid,
         )
 
         self.test_user_two = User.objects.create(
@@ -39,12 +36,9 @@ class TestCustomDecorators(TestCase):
         self.test_user_two.set_password("#testpassword")
         self.test_user_two.save()
 
-        self.user_two_workspace_uid = str(uuid4().hex)
-
         self.test_user_two_profile = Profile.objects.create(
             user=self.test_user_two,
             plan=self.pro_plan,
-            workspace_uid=self.user_two_workspace_uid,
         )
 
         user_one_token_auth_variables = {
@@ -91,9 +85,6 @@ class TestCustomDecorators(TestCase):
 
         self.test_user_one.delete()
         self.test_user_two.delete()
-
-        self.user_one_workspace_uid = None
-        self.user_two_workspace_uid = None
 
         self.test_user_one_profile.delete()
         self.test_user_two_profile.delete()

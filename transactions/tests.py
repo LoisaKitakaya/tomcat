@@ -158,7 +158,7 @@ class TestAppMutations(TestCase):
             data["data"]["createTransaction"]["transaction_amount"], 2500.00
         )
         self.assertEqual(
-            data["data"]["createTransaction"]["transaction_date"], "1682159400.0"
+            data["data"]["createTransaction"]["transaction_date"], "1682170200.0"
         )
         self.assertEqual(
             data["data"]["createTransaction"]["account"]["account_balance"], 22500.00
@@ -220,7 +220,7 @@ class TestAppMutations(TestCase):
             data["data"]["updateTransaction"]["transaction_amount"], 3500.00
         )
         self.assertEqual(
-            data["data"]["updateTransaction"]["transaction_date"], "1679315400.0"
+            data["data"]["updateTransaction"]["transaction_date"], "1679326200.0"
         )
         self.assertEqual(
             data["data"]["updateTransaction"]["account"]["account_balance"], 16500.00
@@ -427,7 +427,7 @@ class TestAppQueries(TestCase):
             data["data"]["getAllTransactions"][0]["transaction_amount"], 2500.00
         )
         self.assertEqual(
-            data["data"]["getAllTransactions"][0]["transaction_date"], "1682148600.0"
+            data["data"]["getAllTransactions"][0]["transaction_date"], "1682170200.0"
         )
         self.assertEqual(
             data["data"]["getAllTransactions"][0]["account"]["account_balance"],
@@ -458,7 +458,7 @@ class TestAppQueries(TestCase):
         )
         self.assertEqual(data["data"]["getTransaction"]["transaction_amount"], 2500.00)
         self.assertEqual(
-            data["data"]["getTransaction"]["transaction_date"], "1682148600.0"
+            data["data"]["getTransaction"]["transaction_date"], "1682170200.0"
         )
         self.assertEqual(
             data["data"]["getTransaction"]["account"]["account_balance"],

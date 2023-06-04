@@ -32,7 +32,6 @@ class TestAppMutations(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -94,7 +93,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -116,7 +115,7 @@ class TestAppMutations(TestCase):
                 variables = {
                     "account_id": self.account_id,
                     "transaction_type": self.transaction_type_receivable.type_name,
-                    "transaction_amount": 2500.00,
+                    "transaction_amount": "2500.00",
                     "transaction_date": "2023-04-22T13:30",
                     "description": "Test transaction receivable",
                     "category": self.transaction_category.category_name,
@@ -127,7 +126,7 @@ class TestAppMutations(TestCase):
                 variables = {
                     "account_id": self.account_id,
                     "transaction_type": self.transaction_type_payable.type_name,
-                    "transaction_amount": 1500.00,
+                    "transaction_amount": "1500.00",
                     "transaction_date": "2023-04-20T15:30",
                     "description": "Test transaction payable",
                     "category": self.transaction_category.category_name,
@@ -151,6 +150,18 @@ class TestAppMutations(TestCase):
         self.token = None
 
         self.account_id = None
+
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+
+        self.transaction_category.delete()
+
+        self.transaction_subcategory.delete()
+
+        self.transaction_type_payable.delete()
+
+        self.transaction_type_receivable.delete()
 
     def test_generate_report(self):
         variables = {
@@ -238,7 +249,6 @@ class TestAppQueries(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -300,7 +310,7 @@ class TestAppQueries(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -322,7 +332,7 @@ class TestAppQueries(TestCase):
                 variables = {
                     "account_id": self.account_id,
                     "transaction_type": self.transaction_type_receivable.type_name,
-                    "transaction_amount": 2500.00,
+                    "transaction_amount": "2500.00",
                     "transaction_date": "2023-04-22T13:30",
                     "description": "Test transaction receivable",
                     "category": self.transaction_category.category_name,
@@ -333,7 +343,7 @@ class TestAppQueries(TestCase):
                 variables = {
                     "account_id": self.account_id,
                     "transaction_type": self.transaction_type_payable.type_name,
-                    "transaction_amount": 1500.00,
+                    "transaction_amount": "1500.00",
                     "transaction_date": "2023-04-20T15:30",
                     "description": "Test transaction payable",
                     "category": self.transaction_category.category_name,
@@ -357,6 +367,18 @@ class TestAppQueries(TestCase):
         self.token = None
 
         self.account_id = None
+
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+
+        self.transaction_category.delete()
+
+        self.transaction_subcategory.delete()
+
+        self.transaction_type_payable.delete()
+
+        self.transaction_type_receivable.delete()
 
     def test_get_all_records(self):
         variables = {
@@ -391,8 +413,8 @@ class TestAppQueries(TestCase):
 
         self.assertEqual(type(data["data"]["getAllReports"]), type([]))
         self.assertIsNotNone(data["data"]["getAllReports"][0]["statement_uid"])
-        self.assertEqual(data["data"]["getAllReports"][0]["begin_date"], "1681506000.0")
-        self.assertEqual(data["data"]["getAllReports"][0]["end_date"], "1682802000.0")
+        self.assertEqual(data["data"]["getAllReports"][0]["begin_date"], "1681516800.0")
+        self.assertEqual(data["data"]["getAllReports"][0]["end_date"], "1682812800.0")
 
     def test_get_record(self):
         variables = {
