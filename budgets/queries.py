@@ -1,6 +1,5 @@
 from users.models import Profile
 from budgets.models import Budget
-from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 
 
