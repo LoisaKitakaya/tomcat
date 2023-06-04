@@ -597,11 +597,10 @@ create_product = gql(
         $description: String!
         $category: String!
         $sub_category: String!
-        $buying_price: Float!
-        $selling_price: Float!
-        $current_stock_level: Int!
-        $units_sold: Int!
-        $reorder_level: Int!
+        $buying_price: String!
+        $selling_price: String!
+        $current_stock_level: String!
+        $units_sold: String!
         $supplier_name: String!
         $supplier_phone_number: String!
         $supplier_email: String!
@@ -616,7 +615,6 @@ create_product = gql(
             selling_price: $selling_price
             current_stock_level: $current_stock_level
             units_sold: $units_sold
-            reorder_level: $reorder_level
             supplier_name: $supplier_name
             supplier_phone_number: $supplier_phone_number
             supplier_email: $supplier_email
@@ -625,10 +623,6 @@ create_product = gql(
             account {
                 id
                 account_name
-            }
-            workspace {
-                id
-                name
             }
             name
             description
@@ -644,8 +638,6 @@ create_product = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email
@@ -663,11 +655,10 @@ update_product = gql(
         $description: String!
         $category: String!
         $sub_category: String!
-        $buying_price: Float!
-        $selling_price: Float!
-        $current_stock_level: Int!
-        $units_sold: Int!
-        $reorder_level: Int!
+        $buying_price: String!
+        $selling_price: String!
+        $current_stock_level: String!
+        $units_sold: String!
         $supplier_name: String!
         $supplier_phone_number: String!
         $supplier_email: String!
@@ -682,7 +673,6 @@ update_product = gql(
             selling_price: $selling_price
             current_stock_level: $current_stock_level
             units_sold: $units_sold
-            reorder_level: $reorder_level
             supplier_name: $supplier_name
             supplier_phone_number: $supplier_phone_number
             supplier_email: $supplier_email
@@ -691,10 +681,6 @@ update_product = gql(
             account {
                 id
                 account_name
-            }
-            workspace {
-                id
-                name
             }
             name
             description
@@ -710,8 +696,6 @@ update_product = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email

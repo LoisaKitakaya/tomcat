@@ -25,7 +25,6 @@ class TestAppMutations(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -69,7 +68,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -106,11 +105,10 @@ class TestAppMutations(TestCase):
             "description": "This is a test product",
             "category": self.product_category.category_name,
             "sub_category": self.product_subcategory.category_name,
-            "buying_price": 300.00,
-            "selling_price": 500.00,
-            "current_stock_level": 100,
-            "units_sold": 0,
-            "reorder_level": 20,
+            "buying_price": "300.00",
+            "selling_price": "500.00",
+            "current_stock_level": "100",
+            "units_sold": "0",
             "supplier_name": "Supplier",
             "supplier_phone_number": "+254787654321",
             "supplier_email": "supplier@example.com",
@@ -144,8 +142,6 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["createProduct"]["selling_price"], 500.00)
         self.assertEqual(data["data"]["createProduct"]["current_stock_level"], 100)
         self.assertEqual(data["data"]["createProduct"]["units_sold"], 0)
-        self.assertEqual(data["data"]["createProduct"]["reorder_level"], 20)
-        self.assertEqual(data["data"]["createProduct"]["reorder_quantity"], 0)
         self.assertEqual(data["data"]["createProduct"]["profit_generated"], 0)
         self.assertEqual(data["data"]["createProduct"]["supplier_name"], "Supplier")
         self.assertEqual(
@@ -162,11 +158,10 @@ class TestAppMutations(TestCase):
             "description": "This is a test product",
             "category": self.product_category.category_name,
             "sub_category": self.product_subcategory.category_name,
-            "buying_price": 300.00,
-            "selling_price": 500.00,
-            "current_stock_level": 100,
-            "units_sold": 0,
-            "reorder_level": 20,
+            "buying_price": "300.00",
+            "selling_price": "500.00",
+            "current_stock_level": "100",
+            "units_sold": "0",
             "supplier_name": "Supplier",
             "supplier_phone_number": "+254787654321",
             "supplier_email": "supplier@example.com",
@@ -187,11 +182,10 @@ class TestAppMutations(TestCase):
             "description": "",
             "category": self.product_category.category_name,
             "sub_category": self.product_subcategory.category_name,
-            "buying_price": 350.00,
-            "selling_price": 450.00,
-            "current_stock_level": 100,
-            "units_sold": 5,
-            "reorder_level": 20,
+            "buying_price": "350.00",
+            "selling_price": "450.00",
+            "current_stock_level": "",
+            "units_sold": "5",
             "supplier_name": "",
             "supplier_phone_number": "",
             "supplier_email": "supplierupdate@example.com",
@@ -223,10 +217,8 @@ class TestAppMutations(TestCase):
         )
         self.assertEqual(data["data"]["updateProduct"]["buying_price"], 350.00)
         self.assertEqual(data["data"]["updateProduct"]["selling_price"], 450.00)
-        self.assertEqual(data["data"]["updateProduct"]["current_stock_level"], 100)
+        self.assertEqual(data["data"]["updateProduct"]["current_stock_level"], 95)
         self.assertEqual(data["data"]["updateProduct"]["units_sold"], 5)
-        self.assertEqual(data["data"]["updateProduct"]["reorder_level"], 20)
-        self.assertEqual(data["data"]["updateProduct"]["reorder_quantity"], 5)
         self.assertEqual(data["data"]["updateProduct"]["profit_generated"], 500)
         self.assertEqual(data["data"]["updateProduct"]["supplier_name"], "Supplier")
         self.assertEqual(
@@ -244,11 +236,10 @@ class TestAppMutations(TestCase):
             "description": "This is a test product",
             "category": self.product_category.category_name,
             "sub_category": self.product_subcategory.category_name,
-            "buying_price": 300.00,
-            "selling_price": 500.00,
-            "current_stock_level": 100,
-            "units_sold": 0,
-            "reorder_level": 20,
+            "buying_price": "300.00",
+            "selling_price": "500.00",
+            "current_stock_level": "100",
+            "units_sold": "0",
             "supplier_name": "Supplier",
             "supplier_phone_number": "+254787654321",
             "supplier_email": "supplier@example.com",
@@ -293,7 +284,6 @@ class TestAppQueries(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -337,7 +327,7 @@ class TestAppQueries(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -358,11 +348,10 @@ class TestAppQueries(TestCase):
             "description": "This is a test product",
             "category": self.product_category.category_name,
             "sub_category": self.product_subcategory.category_name,
-            "buying_price": 300.00,
-            "selling_price": 500.00,
-            "current_stock_level": 100,
-            "units_sold": 0,
-            "reorder_level": 20,
+            "buying_price": "300.00",
+            "selling_price": "500.00",
+            "current_stock_level": "100",
+            "units_sold": "0",
             "supplier_name": "Supplier",
             "supplier_phone_number": "+254787654321",
             "supplier_email": "supplier@example.com",
@@ -427,8 +416,6 @@ class TestAppQueries(TestCase):
         self.assertEqual(data["data"]["getAllProducts"][0]["selling_price"], 500.00)
         self.assertEqual(data["data"]["getAllProducts"][0]["current_stock_level"], 100)
         self.assertEqual(data["data"]["getAllProducts"][0]["units_sold"], 0)
-        self.assertEqual(data["data"]["getAllProducts"][0]["reorder_level"], 20)
-        self.assertEqual(data["data"]["getAllProducts"][0]["reorder_quantity"], 0)
         self.assertEqual(data["data"]["getAllProducts"][0]["profit_generated"], 0)
         self.assertEqual(data["data"]["getAllProducts"][0]["supplier_name"], "Supplier")
         self.assertEqual(
@@ -469,8 +456,6 @@ class TestAppQueries(TestCase):
         self.assertEqual(data["data"]["getProduct"]["selling_price"], 500.00)
         self.assertEqual(data["data"]["getProduct"]["current_stock_level"], 100)
         self.assertEqual(data["data"]["getProduct"]["units_sold"], 0)
-        self.assertEqual(data["data"]["getProduct"]["reorder_level"], 20)
-        self.assertEqual(data["data"]["getProduct"]["reorder_quantity"], 0)
         self.assertEqual(data["data"]["getProduct"]["profit_generated"], 0)
         self.assertEqual(data["data"]["getProduct"]["supplier_name"], "Supplier")
         self.assertEqual(

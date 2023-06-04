@@ -404,11 +404,10 @@ type Mutation {
     description: String!
     category: String!
     sub_category: String!
-    buying_price: Float!
-    selling_price: Float!
-    current_stock_level: Int!
-    units_sold: Int!
-    reorder_level: Int!
+    buying_price: String!
+    selling_price: String!
+    current_stock_level: String!
+    units_sold: String!
     supplier_name: String!
     supplier_phone_number: String!
     supplier_email: String!
@@ -419,11 +418,10 @@ type Mutation {
     description: String!
     category: String!
     sub_category: String!
-    buying_price: Float!
-    selling_price: Float!
-    current_stock_level: Int!
-    units_sold: Int!
-    reorder_level: Int!
+    buying_price: String!
+    selling_price: String!
+    current_stock_level: String!
+    units_sold: String!
     supplier_name: String!
     supplier_phone_number: String!
     supplier_email: String!

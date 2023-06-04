@@ -1,5 +1,4 @@
 from django.db import models
-from teams.models import Workspace
 from accounts.models import Account
 
 
@@ -32,7 +31,6 @@ class ProductSubCategory(models.Model):
 
 class Product(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=False)
     description = models.TextField(blank=False)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
@@ -41,12 +39,10 @@ class Product(models.Model):
     selling_price = models.FloatField(default=0.0, blank=False)
     current_stock_level = models.IntegerField(default=0, blank=False)
     units_sold = models.IntegerField(default=0, blank=False)
-    reorder_level = models.IntegerField(default=0, blank=True)
-    reorder_quantity = models.IntegerField(default=0, blank=True)
+    profit_generated = models.FloatField(default=0.0, blank=True)
     supplier_name = models.CharField(max_length=255, blank=False)
     supplier_phone_number = models.CharField(max_length=20, blank=False)
     supplier_email = models.CharField(max_length=150, blank=True)
-    profit_generated = models.FloatField(default=0.0, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

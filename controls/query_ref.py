@@ -506,10 +506,6 @@ get_all_products = gql(
                 id
                 account_name
             }
-            workspace {
-                id
-                name
-            }
             name
             description
             category {
@@ -524,8 +520,6 @@ get_all_products = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email
@@ -544,10 +538,6 @@ get_product = gql(
                 id
                 account_name
             }
-            workspace {
-                id
-                name
-            }
             name
             description
             category {
@@ -562,8 +552,6 @@ get_product = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email
