@@ -1,6 +1,6 @@
-scalar Datetime
-scalar Qrcode
 scalar Otp
+scalar Qrcode
+scalar Datetime
 
 type User {
   id: ID!
@@ -16,14 +16,13 @@ type Plan {
   id: ID!
   name: String!
   accounts: Boolean!
-  inventory: Boolean!
   no_of_accounts: Int!
   budgets: Boolean!
   no_of_budgets: Int!
   targets: Boolean!
   no_of_targets: Int!
-  teams: Boolean!
-  no_of_teams: Int!
+  invoices: Boolean!
+  no_of_invoices: Int!
   pdf_reports: Boolean!
   ai_assistant: Boolean!
   created_at: Datetime!
@@ -114,15 +113,6 @@ type ProductSubCategory {
   category_description: String!
 }
 
-type Workspace {
-  id: ID!
-  name: String!
-  workspace_uid: String!
-  owner: User!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type Account {
   id: ID!
   account_name: String!
@@ -176,15 +166,6 @@ type Transaction {
   updated_at: Datetime!
 }
 
-type TeamLogs {
-  id: ID!
-  workspace: Workspace!
-  user: User!
-  action: String!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type PlanBilling {
   id: ID!
   customer: User!
@@ -222,25 +203,6 @@ type Product {
   updated_at: Datetime!
 }
 
-type Customer {
-  id: ID!
-  workspace: Workspace!
-  account: Account!
-  name: String!
-  email: String!
-  phone: String!
-}
-
-type Debt {
-  id: ID!
-  workspace: Workspace!
-  account: Account!
-  customer: Customer!
-  amount: Float!
-  due_date: Datetime!
-  is_paid: Boolean!
-}
-
 type Query {
   generateOTP(environment: String): Otp!
 
@@ -249,6 +211,7 @@ type Query {
   getTransactionType: [Type!]!
   getTransactionCategory: [TransactionCategory!]!
   getTransactionSubCategory(parent: String!): [TransactionSubCategory!]!
+
   getProductCategory: [ProductCategory!]!
   getProductSubCategory(parent: String!): [ProductSubCategory!]!
 
@@ -271,21 +234,11 @@ type Query {
   getAllTransactions(account_id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
 
-  getWorkspace: Workspace!
-  getTeamLogs(workspace_id: ID!): [TeamLogs!]!
-  getTeamMembers: [Profile!]!
-
   requestBilling: Boolean!
   cancelPlan: Boolean!
 
   getAllProducts(account_id: ID!): [Product!]!
   getProduct(id: ID!): Product!
-
-  getAllCustomers(account_id: ID!): [Customer!]!
-  getCustomer(id: ID!): Customer!
-
-  getAllDebts(account_id: ID!): [Debt!]!
-  getDebt(id: ID!): Debt!
 
   getAllReports(account_id: ID!): [CashFlowStatement!]!
   getReport(statement_uid: String!): [CashFlowRecord!]!
@@ -386,16 +339,6 @@ type Mutation {
   ): Transaction!
   deleteTransaction(id: ID!, account_id: ID!): Boolean!
 
-  updateWorkspace(name: String!): Workspace!
-
-  createTeamMember(
-    email: String!
-    first_name: String!
-    last_name: String
-    password: String!
-  ): User!
-  deleteTeamMember(member_id: ID!): Boolean!
-
   subscribeToPlan(plan: String!): PlanBilling!
 
   createProduct(
@@ -427,34 +370,6 @@ type Mutation {
     supplier_email: String!
   ): Product!
   deleteProduct(id: ID!): Boolean!
-
-  createCustomer(
-    account_id: ID!
-    name: String!
-    email: String!
-    phone: String!
-  ): Customer!
-  updateCustomer(
-    id: ID!
-    name: String!
-    email: String!
-    phone: String!
-  ): Customer!
-  deleteCustomer(id: ID!): Boolean!
-
-  recordDebt(
-    account_id: ID!
-    customer_id: ID!
-    amount: Float!
-    due_date: String!
-  ): Debt!
-  updateDebt(
-    id: ID!
-    amount: Float!
-    due_date: String!
-    is_paid: Boolean!
-  ): Debt!
-  deleteDebt(id: ID!): Boolean!
 
   generateReport(
     account_id: ID!
