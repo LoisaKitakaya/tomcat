@@ -1,6 +1,4 @@
-from users.models import Profile
 from accounts.models import Account
-from teams.models import Workspace, TeamLogs
 from ariadne_jwt.decorators import login_required
 from inventory.models import Product, ProductCategory, ProductSubCategory
 
