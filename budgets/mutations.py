@@ -1,7 +1,6 @@
 from users.models import Profile
 from budgets.models import Budget
 from accounts.models import Account
-from teams.models import Workspace, TeamLogs
 from ariadne_jwt.decorators import login_required
 from transactions.models import TransactionCategory, TransactionSubCategory
 
