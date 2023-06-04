@@ -22,7 +22,7 @@ def resolve_getUser(_, info):
 
 
 @login_required
-def resolve_generateOTP(_, info, environment=None):
+def resolve_generateOTP(_, info, environment: str = ""):
     request = info.context["request"]
 
     user = User.objects.get(id=request.user.id)

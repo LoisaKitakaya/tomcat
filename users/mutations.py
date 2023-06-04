@@ -1,13 +1,11 @@
 import pyotp
-from uuid import uuid4
 from plans.models import Plan
-from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 from users.models import User, Profile, OTPDevice
 
 
 def resolve_createUser(
-    *_, email, first_name, last_name, workspace_name, password, password2
+    *_, email: str, first_name: str, last_name: str, password: str, password2: str
 ):
     if not User.objects.filter(email=email).exists():
         if len(password) > 8 and len(password2) > 8:
@@ -28,18 +26,11 @@ def resolve_createUser(
 
             new_user.save()
 
-            workspace = Workspace.objects.create(name=workspace_name, owner=new_user)
-
-            workspace.workspace_uid = str(uuid4().hex)
-
-            workspace.save()
-
             starter_plan = Plan.objects.get(name="Free")
 
             Profile.objects.create(
                 user=new_user,
                 plan=starter_plan,
-                workspace_uid=workspace.workspace_uid,
             )
 
             name = f"2FA Device For: {new_user.username}"
@@ -60,7 +51,7 @@ def resolve_createUser(
 
 
 @login_required
-def resolve_verifyOTP(_, info, otp):
+def resolve_verifyOTP(_, info, otp: str):
     request = info.context["request"]
 
     user = User.objects.get(id=request.user.id)
@@ -79,31 +70,27 @@ def resolve_verifyOTP(_, info, otp):
 
 
 @login_required
-def resolve_updateUser(_, info, email, first_name, last_name, phone_number=None):
+def resolve_updateUser(
+    _, info, email: str, first_name: str, last_name: str, phone_number: str = ""
+):
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():
-        if not User.objects.filter(username=email).exists():
-            user = User.objects.get(id=request.user.id)
+        user = User.objects.get(id=request.user.id)
 
-            user.email = email
-            user.username = email
-            user.first_name = first_name
-            user.last_name = last_name
+        user.email = email if email else user.email
+        user.username = email if email else user.username
+        user.first_name = first_name if first_name else user.first_name
+        user.last_name = last_name if last_name else user.last_name
 
-            user.save()
+        user.save()
 
-            if phone_number:
-                profile = Profile.objects.get(user__id=user.pk)
+        if phone_number:
+            profile = Profile.objects.get(user__id=user.pk)
 
-                profile.phone_number = phone_number
+            profile.phone_number = phone_number
 
-                profile.save()
-
-        else:
-            raise Exception(
-                "username already exists. Make sure your Phone number is unique!"
-            )
+            profile.save()
 
     else:
         raise Exception("Email already exists. Make sure your email is unique!")

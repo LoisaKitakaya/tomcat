@@ -1,6 +1,6 @@
-scalar Datetime
-scalar Qrcode
 scalar Otp
+scalar Qrcode
+scalar Datetime
 
 type User {
   id: ID!
@@ -16,14 +16,13 @@ type Plan {
   id: ID!
   name: String!
   accounts: Boolean!
-  inventory: Boolean!
   no_of_accounts: Int!
   budgets: Boolean!
   no_of_budgets: Int!
   targets: Boolean!
   no_of_targets: Int!
-  teams: Boolean!
-  no_of_teams: Int!
+  invoices: Boolean!
+  no_of_invoices: Int!
   pdf_reports: Boolean!
   ai_assistant: Boolean!
   created_at: Datetime!
@@ -35,7 +34,6 @@ type Profile {
   user: User!
   plan: Plan!
   phone_number: String!
-  workspace_uid: String!
   payment_method: String!
   is_paid_user: Boolean!
   is_employee: Boolean!
@@ -115,21 +113,11 @@ type ProductSubCategory {
   category_description: String!
 }
 
-type Workspace {
-  id: ID!
-  name: String!
-  workspace_uid: String!
-  owner: User!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type Account {
   id: ID!
   account_name: String!
   account_type: String!
   owner: Profile!
-  workspace: Workspace!
   currency_code: String!
   account_balance: Float!
   created_at: Datetime!
@@ -143,7 +131,6 @@ type Budget {
   budget_is_active: Boolean!
   budget_amount: Float!
   owner: Profile!
-  workspace: Workspace!
   account: Account!
   category: TransactionCategory!
   sub_category: TransactionSubCategory!
@@ -158,7 +145,6 @@ type Target {
   target_is_active: Boolean!
   target_amount: Float!
   owner: Profile!
-  workspace: Workspace!
   account: Account!
   category: TransactionCategory!
   sub_category: TransactionSubCategory!
@@ -176,15 +162,6 @@ type Transaction {
   account: Account!
   category: TransactionCategory!
   sub_category: TransactionSubCategory!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type TeamLogs {
-  id: ID!
-  workspace: Workspace!
-  user: User!
-  action: String!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -207,7 +184,6 @@ type PlanBilling {
 type Product {
   id: ID!
   account: Account!
-  workspace: Workspace!
   name: String!
   description: String!
   category: ProductCategory!
@@ -226,25 +202,6 @@ type Product {
   updated_at: Datetime!
 }
 
-type Customer {
-  id: ID!
-  workspace: Workspace!
-  account: Account!
-  name: String!
-  email: String!
-  phone: String!
-}
-
-type Debt {
-  id: ID!
-  workspace: Workspace!
-  account: Account!
-  customer: Customer!
-  amount: Float!
-  due_date: Datetime!
-  is_paid: Boolean!
-}
-
 type Query {
   generateOTP(environment: String): Otp!
 
@@ -253,6 +210,7 @@ type Query {
   getTransactionType: [Type!]!
   getTransactionCategory: [TransactionCategory!]!
   getTransactionSubCategory(parent: String!): [TransactionSubCategory!]!
+
   getProductCategory: [ProductCategory!]!
   getProductSubCategory(parent: String!): [ProductSubCategory!]!
 
@@ -275,21 +233,11 @@ type Query {
   getAllTransactions(account_id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
 
-  getWorkspace: Workspace!
-  getTeamLogs(workspace_id: ID!): [TeamLogs!]!
-  getTeamMembers: [Profile!]!
-
   requestBilling: Boolean!
   cancelPlan: Boolean!
 
   getAllProducts(account_id: ID!): [Product!]!
   getProduct(id: ID!): Product!
-
-  getAllCustomers(account_id: ID!): [Customer!]!
-  getCustomer(id: ID!): Customer!
-
-  getAllDebts(account_id: ID!): [Debt!]!
-  getDebt(id: ID!): Debt!
 
   getAllReports(account_id: ID!): [CashFlowStatement!]!
   getReport(statement_uid: String!): [CashFlowRecord!]!
@@ -302,11 +250,15 @@ type Mutation {
     email: String!
     first_name: String!
     last_name: String
-    workspace_name: String!
     password: String!
     password2: String!
   ): User!
-  updateUser(email: String!, first_name: String!, last_name: String): User!
+  updateUser(
+    email: String!
+    first_name: String!
+    last_name: String!
+    phone_number: String!
+  ): User!
 
   verifyToken(token: String!): VerifyToken!
   refreshToken(token: String!): RefreshToken!
@@ -315,14 +267,14 @@ type Mutation {
   createAccount(
     account_name: String!
     account_type: String!
-    account_balance: Float!
+    account_balance: String!
     currency_code: String!
   ): Account!
   updateAccount(
     id: ID!
     account_name: String!
     account_type: String!
-    account_balance: Float!
+    account_balance: String!
     currency_code: String!
   ): Account!
   deleteAccount(id: ID!): Boolean!
@@ -331,7 +283,7 @@ type Mutation {
     account_id: ID!
     budget_name: String!
     budget_description: String!
-    budget_amount: Float!
+    budget_amount: String!
     category: String!
     sub_category: String!
   ): Budget!
@@ -339,7 +291,7 @@ type Mutation {
     id: ID!
     budget_name: String!
     budget_description: String!
-    budget_amount: Float!
+    budget_amount: String!
     category: String!
     sub_category: String!
   ): Budget!
@@ -350,7 +302,7 @@ type Mutation {
     account_id: ID!
     target_name: String!
     target_description: String!
-    target_amount: Float!
+    target_amount: String!
     category: String!
     sub_category: String!
   ): Target!
@@ -358,7 +310,7 @@ type Mutation {
     id: ID!
     target_name: String!
     target_description: String!
-    target_amount: Float!
+    target_amount: String!
     category: String!
     sub_category: String!
   ): Target!
@@ -368,7 +320,7 @@ type Mutation {
   createTransaction(
     account_id: ID!
     transaction_type: String!
-    transaction_amount: Float!
+    transaction_amount: String!
     transaction_date: String!
     description: String!
     category: String!
@@ -378,23 +330,13 @@ type Mutation {
     id: ID!
     account_id: ID!
     transaction_type: String!
-    transaction_amount: Float!
+    transaction_amount: String!
     transaction_date: String!
     description: String!
     category: String!
     sub_category: String!
   ): Transaction!
   deleteTransaction(id: ID!, account_id: ID!): Boolean!
-
-  updateWorkspace(name: String!): Workspace!
-
-  createTeamMember(
-    email: String!
-    first_name: String!
-    last_name: String
-    password: String!
-  ): User!
-  deleteTeamMember(member_id: ID!): Boolean!
 
   subscribeToPlan(plan: String!): PlanBilling!
 
@@ -404,11 +346,10 @@ type Mutation {
     description: String!
     category: String!
     sub_category: String!
-    buying_price: Float!
-    selling_price: Float!
-    current_stock_level: Int!
-    units_sold: Int!
-    reorder_level: Int!
+    buying_price: String!
+    selling_price: String!
+    current_stock_level: String!
+    units_sold: String!
     supplier_name: String!
     supplier_phone_number: String!
     supplier_email: String!
@@ -419,44 +360,15 @@ type Mutation {
     description: String!
     category: String!
     sub_category: String!
-    buying_price: Float!
-    selling_price: Float!
-    current_stock_level: Int!
-    units_sold: Int!
-    reorder_level: Int!
+    buying_price: String!
+    selling_price: String!
+    current_stock_level: String!
+    units_sold: String!
     supplier_name: String!
     supplier_phone_number: String!
     supplier_email: String!
   ): Product!
   deleteProduct(id: ID!): Boolean!
-
-  createCustomer(
-    account_id: ID!
-    name: String!
-    email: String!
-    phone: String!
-  ): Customer!
-  updateCustomer(
-    id: ID!
-    name: String!
-    email: String!
-    phone: String!
-  ): Customer!
-  deleteCustomer(id: ID!): Boolean!
-
-  recordDebt(
-    account_id: ID!
-    customer_id: ID!
-    amount: Float!
-    due_date: String!
-  ): Debt!
-  updateDebt(
-    id: ID!
-    amount: Float!
-    due_date: String!
-    is_paid: Boolean!
-  ): Debt!
-  deleteDebt(id: ID!): Boolean!
 
   generateReport(
     account_id: ID!

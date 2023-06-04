@@ -1,7 +1,7 @@
 from plans.models import Plan
 from users.models import Profile
 from ariadne_jwt.decorators import login_required
-from controls.decorators import check_plan_standard, check_plan_pro, check_is_employee
+from controls.decorators import check_plan_standard, check_plan_pro
 
 
 @login_required
@@ -26,15 +26,3 @@ def resolve_testProDecorator(_, info):
     plan = Plan.objects.get(name=profile.plan.name)
 
     return plan
-
-
-@login_required
-@check_is_employee
-def resolve_testIfIsEmployee(_, info):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user__id=request.user.id)
-
-    assert profile.user.pk == request.user.id
-
-    return True

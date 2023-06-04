@@ -32,7 +32,6 @@ class TestAppMutations(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -94,7 +93,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -120,12 +119,24 @@ class TestAppMutations(TestCase):
 
         self.account_id = None
 
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+        
+        self.transaction_category.delete()
+
+        self.transaction_subcategory.delete()
+
+        self.transaction_type_payable.delete()
+
+        self.transaction_type_receivable.delete()
+
     def test_create_budget(self):
         variables = {
             "account_id": self.account_id,
             "budget_name": "Test budget",
             "budget_description": "Test budget description",
-            "budget_amount": 5000.00,
+            "budget_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -161,7 +172,7 @@ class TestAppMutations(TestCase):
             "account_id": self.account_id,
             "budget_name": "Test budget",
             "budget_description": "Test budget description",
-            "budget_amount": 5000.00,
+            "budget_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -178,8 +189,8 @@ class TestAppMutations(TestCase):
         variables = {
             "id": data["data"]["createBudget"]["id"],
             "budget_name": "New budget",
-            "budget_description": "New budget description",
-            "budget_amount": 2500.00,
+            "budget_description": "",
+            "budget_amount": "2500.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -202,7 +213,7 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["updateBudget"]["budget_name"], "New budget")
         self.assertEqual(
             data["data"]["updateBudget"]["budget_description"],
-            "New budget description",
+            "Test budget description",
         )
         self.assertEqual(data["data"]["updateBudget"]["budget_amount"], 2500.00)
 
@@ -211,7 +222,7 @@ class TestAppMutations(TestCase):
             "account_id": self.account_id,
             "budget_name": "Test budget",
             "budget_description": "Test budget description",
-            "budget_amount": 5000.00,
+            "budget_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -255,7 +266,6 @@ class TestAppQueries(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -317,7 +327,7 @@ class TestAppQueries(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -336,7 +346,7 @@ class TestAppQueries(TestCase):
             "account_id": self.account_id,
             "budget_name": "Test budget",
             "budget_description": "Test budget description",
-            "budget_amount": 5000.00,
+            "budget_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -365,6 +375,10 @@ class TestAppQueries(TestCase):
 
         self.budget_id = None
 
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+        
         self.transaction_category.delete()
 
         self.transaction_subcategory.delete()

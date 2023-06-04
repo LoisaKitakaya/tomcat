@@ -92,9 +92,8 @@ test_standard_decorator = gql(
             no_of_budgets
             targets
             no_of_targets
-            inventory
-            teams
-            no_of_teams
+            invoices
+            no_of_invoices
             pdf_reports
             ai_assistant
         }
@@ -114,9 +113,8 @@ test_pro_decorator = gql(
             no_of_budgets
             targets
             no_of_targets
-            inventory
-            teams
-            no_of_teams
+            invoices
+            no_of_invoices
             pdf_reports
             ai_assistant
         }
@@ -162,7 +160,6 @@ get_profile = gql(
                 name
             }
             phone_number
-            workspace_uid
             payment_method
             is_paid_user
             is_employee
@@ -188,10 +185,6 @@ get_all_accounts = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-            }
             currency_code
             account_balance
         }
@@ -215,10 +208,6 @@ get_account = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
             }
             currency_code
             account_balance
@@ -245,10 +234,6 @@ get_all_budgets = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
             }
             account {
                 id
@@ -286,10 +271,6 @@ get_budget = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-            }
             account {
                 id
                 account_name
@@ -326,10 +307,6 @@ get_all_targets = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-            }
             account {
                 id
                 account_name
@@ -365,10 +342,6 @@ get_target = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
             }
             account {
                 id
@@ -449,63 +422,6 @@ get_transaction = gql(
     """
 )
 
-get_workspace = gql(
-    """
-    query getWorkspace {
-        getWorkspace {
-            id
-            name
-            workspace_uid
-            owner {
-                id
-                username
-            }
-        }
-    }
-    """
-)
-
-get_team_logs = gql(
-    """
-    query getTeamLogs($workspace_id: ID!) {
-        getTeamLogs(workspace_id: $workspace_id) {
-            id
-            workspace {
-                id
-                name
-            }
-            user {
-                id
-                username
-            }
-            action
-        }
-    }
-    """
-)
-
-get_team_members = gql(
-    """
-    query getTeamMembers {
-        getTeamMembers {
-            id
-            user {
-                id
-                username
-            }
-            plan {
-                id
-                name
-            }
-            phone_number
-            workspace_uid
-            is_paid_user
-            is_employee
-        }
-    }
-    """
-)
-
 request_billing_history = gql(
     """
     query requestBilling {
@@ -531,10 +447,6 @@ get_all_products = gql(
                 id
                 account_name
             }
-            workspace {
-                id
-                name
-            }
             name
             description
             category {
@@ -549,8 +461,6 @@ get_all_products = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email
@@ -569,10 +479,6 @@ get_product = gql(
                 id
                 account_name
             }
-            workspace {
-                id
-                name
-            }
             name
             description
             category {
@@ -587,8 +493,6 @@ get_product = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email

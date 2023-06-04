@@ -1,6 +1,5 @@
 from users.models import Profile
 from accounts.models import Account
-from teams.models import Workspace, TeamLogs
 from ariadne_jwt.decorators import login_required
 
 
@@ -8,94 +7,57 @@ from ariadne_jwt.decorators import login_required
 def resolve_createAccount(
     _,
     info,
-    account_name,
-    account_type,
-    account_balance,
-    currency_code,
+    account_name: str,
+    account_type: str,
+    account_balance: str,
+    currency_code: str,
 ):
     request = info.context["request"]
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
     new_account = Account.objects.create(
         account_name=account_name,
         account_type=account_type,
-        account_balance=account_balance,
+        account_balance=float(account_balance),
         currency_code=currency_code,
         owner=profile,
-        workspace=workspace,
     )
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Created account: {new_account.account_name}",
-        )
 
     return new_account
 
 
 @login_required
 def resolve_updateAccount(
-    _,
-    info,
+    *_,
     id,
-    account_name,
-    account_type,
-    account_balance,
-    currency_code,
+    account_name: str,
+    account_type: str,
+    account_balance: str,
+    currency_code: str,
 ):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user=request.user)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
     account = Account.objects.get(id=id)
 
-    account.account_name = account_name
-    account.account_type = account_type
-    account.account_balance = account_balance
-    account.currency_code = currency_code
+    account.account_name = account_name if account_name else account.account_name
+    account.account_type = account_type if account_type else account.account_type
+    account.account_balance = (
+        float(account_balance) if account_balance else account.account_balance
+    )
+    account.currency_code = currency_code if currency_code else account.currency_code
 
     account.save()
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Updated account: {account.account_name}",
-        )
 
     return account
 
 
 @login_required
-def resolve_deleteAccount(_, info, id):
-    request = info.context["request"]
-
-    profile = Profile.objects.get(user=request.user)
-
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
+def resolve_deleteAccount(*_, id):
     try:
         account = Account.objects.get(id=id)
-
-        account_name = account.account_name
 
         account.delete()
 
     except Exception as e:
         raise Exception(str(e))
-
-    if profile.is_employee:
-        TeamLogs.objects.create(
-            workspace=workspace,
-            user=request.user,
-            action=f"Deleted account: {account_name}",
-        )
 
     return True

@@ -35,9 +35,7 @@ INSTALLED_APPS = [
     "ariadne_django",
     "corsheaders",
     # my apps
-    "debts",
     "users",
-    "teams",
     "plans",
     "billing",
     "budgets",
@@ -123,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Africa/Nairobi"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 

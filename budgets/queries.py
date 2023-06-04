@@ -1,6 +1,5 @@
 from users.models import Profile
 from budgets.models import Budget
-from teams.models import Workspace
 from ariadne_jwt.decorators import login_required
 
 
@@ -8,11 +7,9 @@ from ariadne_jwt.decorators import login_required
 def resolve_getAllBudgets(_, info):
     request = info.context["request"]
 
-    profile = Profile.objects.get(user__id=request.user.id)
+    profile = Profile.objects.get(user__id=request.user.id)  # type: ignore
 
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
-    budgets = Budget.objects.filter(workspace__id=workspace.pk).all()
+    budgets = Budget.objects.filter(owner__id=profile.pk).all()
 
     return budgets
 

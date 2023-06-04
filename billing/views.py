@@ -59,13 +59,13 @@ def pesapal_ipn_callback(request):
 
         print(transaction_status)
 
-        account_ref = transaction_status["subscription_transaction_info"][
+        account_ref = transaction_status["subscription_transaction_info"][  # type: ignore
             "account_reference"
         ]
 
         if (
-            transaction_status["status_code"] == 1
-            and transaction_status["status"] == "200"
+            transaction_status["status_code"] == 1  # type: ignore
+            and transaction_status["status"] == "200"  # type: ignore
         ):
             user_billing = PlanBilling.objects.get(order_tracking_id=order_tracking_id)
 
@@ -80,14 +80,14 @@ def pesapal_ipn_callback(request):
 
             user_profile.plan = plan
             user_profile.is_paid_user = True
-            user_profile.payment_method = transaction_status["payment_method"]
+            user_profile.payment_method = transaction_status["payment_method"]  # type: ignore
 
             user_profile.save()
 
-            payment_status = transaction_status["payment_status"]
-            amount = transaction_status["amount"]
-            currency = transaction_status["currency"]
-            created_date = transaction_status["created_date"]
+            payment_status = transaction_status["payment_status"]  # type: ignore
+            amount = transaction_status["amount"]  # type: ignore
+            currency = transaction_status["currency"]  # type: ignore
+            created_date = transaction_status["created_date"]  # type: ignore
 
             subject = f"Transaction Status"
             body = f"Order tracking ID: {order_tracking_id}\n\

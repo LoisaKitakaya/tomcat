@@ -32,7 +32,6 @@ class TestAppMutations(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -94,7 +93,7 @@ class TestAppMutations(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -120,6 +119,10 @@ class TestAppMutations(TestCase):
 
         self.account_id = None
 
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+
         self.transaction_category.delete()
 
         self.transaction_subcategory.delete()
@@ -133,7 +136,7 @@ class TestAppMutations(TestCase):
             "account_id": self.account_id,
             "target_name": "Test target",
             "target_description": "Test target description",
-            "target_amount": 5000.00,
+            "target_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -173,7 +176,7 @@ class TestAppMutations(TestCase):
             "account_id": self.account_id,
             "target_name": "Test target",
             "target_description": "Test target description",
-            "target_amount": 5000.00,
+            "target_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -190,8 +193,8 @@ class TestAppMutations(TestCase):
         variables = {
             "id": data["data"]["createTarget"]["id"],
             "target_name": "New target",
-            "target_description": "New target description",
-            "target_amount": 2500.00,
+            "target_description": "",
+            "target_amount": "2500.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -214,7 +217,7 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["updateTarget"]["target_name"], "New target")
         self.assertEqual(
             data["data"]["updateTarget"]["target_description"],
-            "New target description",
+            "Test target description",
         )
         self.assertEqual(data["data"]["updateTarget"]["target_amount"], 2500.00)
 
@@ -223,7 +226,7 @@ class TestAppMutations(TestCase):
             "account_id": self.account_id,
             "target_name": "Test target",
             "target_description": "Test target description",
-            "target_amount": 5000.00,
+            "target_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -267,7 +270,6 @@ class TestAppQueries(TestCase):
             "email": "example@gmail.com",
             "first_name": "Test",
             "last_name": "User",
-            "workspace_name": "Important Workspace",
             "password": "#TestUser15",
             "password2": "#TestUser15",
         }
@@ -306,7 +308,7 @@ class TestAppQueries(TestCase):
             activity=self.business_activity, group_name="Revenue Transactions"
         )
 
-        self.transaction_category = TransactionCategory.objects.create(
+        self.transaction_category = TransactionCategory.objects.create(  # type: ignore
             parent=self.transaction_group,
             category_name="Sales",
             category_description="Sales category",
@@ -329,7 +331,7 @@ class TestAppQueries(TestCase):
         variables = {
             "account_name": "KCB test account",
             "account_type": "Savings",
-            "account_balance": 20000.00,
+            "account_balance": "20000.00",
             "currency_code": "USD",
         }
 
@@ -348,7 +350,7 @@ class TestAppQueries(TestCase):
             "account_id": self.account_id,
             "target_name": "Test target",
             "target_description": "Test target description",
-            "target_amount": 5000.00,
+            "target_amount": "5000.00",
             "category": self.transaction_category.category_name,
             "sub_category": self.transaction_subcategory.category_name,
         }
@@ -376,6 +378,18 @@ class TestAppQueries(TestCase):
         self.account_id = None
 
         self.target_id = None
+
+        self.business_activity.delete()
+
+        self.transaction_group.delete()
+
+        self.transaction_category.delete()
+
+        self.transaction_subcategory.delete()
+
+        self.transaction_type_payable.delete()
+
+        self.transaction_type_receivable.delete()
 
     def test_get_all_targets(self):
         variables = {}

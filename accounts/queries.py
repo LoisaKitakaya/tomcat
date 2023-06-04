@@ -1,5 +1,4 @@
 from users.models import Profile
-from teams.models import Workspace
 from accounts.models import Account
 from ariadne_jwt.decorators import login_required
 
@@ -10,9 +9,7 @@ def resolve_getAllAccounts(_, info):
 
     profile = Profile.objects.get(user__id=request.user.id)
 
-    workspace = Workspace.objects.get(workspace_uid=profile.workspace_uid)
-
-    accounts = Account.objects.filter(workspace__id=workspace.pk).all()
+    accounts = Account.objects.filter(owner__id=profile.pk).all()
 
     return accounts
 

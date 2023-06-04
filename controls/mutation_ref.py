@@ -49,7 +49,6 @@ create_user = gql(
         $email: String!
         $first_name: String!
         $last_name: String!
-        $workspace_name: String!
         $password: String!
         $password2: String!
     ) {
@@ -57,7 +56,6 @@ create_user = gql(
             email: $email
             first_name: $first_name
             last_name: $last_name
-            workspace_name: $workspace_name
             password: $password
             password2: $password2
         ) {
@@ -79,11 +77,13 @@ update_user = gql(
         $email: String!
         $first_name: String!
         $last_name: String!
+        $phone_number: String!
     ) {
         updateUser(
             email: $email
             first_name: $first_name
             last_name: $last_name
+            phone_number: $phone_number
         ) {
             id
             first_name
@@ -102,7 +102,7 @@ create_account = gql(
     mutation createAccount(
         $account_name: String!
         $account_type: String!
-        $account_balance: Float!
+        $account_balance: String!
         $currency_code: String!
     ) {
         createAccount(
@@ -127,11 +127,6 @@ create_account = gql(
                 is_employee
                 is_paid_user
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             currency_code
             account_balance
         }
@@ -145,7 +140,7 @@ update_account = gql(
         $id: ID!
         $account_name: String!
         $account_type: String!
-        $account_balance: Float!
+        $account_balance: String!
         $currency_code: String!
     ) {
         updateAccount(
@@ -171,11 +166,6 @@ update_account = gql(
                 is_employee
                 is_paid_user
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             currency_code
             account_balance
         }
@@ -197,7 +187,7 @@ create_budget = gql(
         $account_id: ID!
         $budget_name: String!
         $budget_description: String!
-        $budget_amount: Float!
+        $budget_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -224,11 +214,6 @@ create_budget = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             account {
                 id
                 account_name
@@ -252,7 +237,7 @@ update_budget = gql(
         $id: ID!
         $budget_name: String!
         $budget_description: String!
-        $budget_amount: Float!
+        $budget_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -278,11 +263,6 @@ update_budget = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
-                workspace_uid
             }
             account {
                 id
@@ -323,7 +303,7 @@ create_target = gql(
         $account_id: ID!
         $target_name: String!
         $target_description: String!
-        $target_amount: Float!
+        $target_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -350,11 +330,6 @@ create_target = gql(
                     name
                 }
             }
-            workspace {
-                id
-                name
-                workspace_uid
-            }
             account {
                 id
                 account_name
@@ -378,7 +353,7 @@ update_target = gql(
         $id: ID!
         $target_name: String!
         $target_description: String!
-        $target_amount: Float!
+        $target_amount: String!
         $category: String!
         $sub_category: String!
     ) {
@@ -404,11 +379,6 @@ update_target = gql(
                     id
                     name
                 }
-            }
-            workspace {
-                id
-                name
-                workspace_uid
             }
             account {
                 id
@@ -448,7 +418,7 @@ create_transaction = gql(
     mutation createTransaction(
         $account_id: ID!
         $transaction_type: String!
-        $transaction_amount: Float!
+        $transaction_amount: String!
         $transaction_date: String!
         $description: String!
         $category: String!
@@ -496,7 +466,7 @@ update_transaction = gql(
         $id: ID!
         $account_id: ID!
         $transaction_type: String!
-        $transaction_amount: Float!
+        $transaction_amount: String!
         $transaction_date: String!
         $description: String!
         $category: String!
@@ -547,56 +517,6 @@ delete_transaction = gql(
     """
 )
 
-update_workspace = gql(
-    """
-    mutation updateWorkspace($name: String!) {
-        updateWorkspace(name: $name) {
-            id
-            name
-            workspace_uid
-            owner {
-                id
-                username
-            }
-        }
-    }
-    """
-)
-
-create_team_member = gql(
-    """
-    mutation createTeamMember(
-        $email: String!
-        $first_name: String!
-        $last_name: String
-        $password: String!
-    ) {
-        createTeamMember(
-            email: $email
-            first_name: $first_name
-            last_name: $last_name
-            password: $password
-        ) {
-            id
-            first_name
-            last_name
-            email
-            username
-            is_staff
-            is_active
-        }
-    }
-    """
-)
-
-delete_team_member = gql(
-    """
-    mutation deleteTeamMember($member_id: ID!) {
-        deleteTeamMember(member_id: $member_id)
-    }
-    """
-)
-
 subscribe_to_plan = gql(
     """
     mutation subscribeToPlan($plan: String!) {
@@ -627,11 +547,10 @@ create_product = gql(
         $description: String!
         $category: String!
         $sub_category: String!
-        $buying_price: Float!
-        $selling_price: Float!
-        $current_stock_level: Int!
-        $units_sold: Int!
-        $reorder_level: Int!
+        $buying_price: String!
+        $selling_price: String!
+        $current_stock_level: String!
+        $units_sold: String!
         $supplier_name: String!
         $supplier_phone_number: String!
         $supplier_email: String!
@@ -646,7 +565,6 @@ create_product = gql(
             selling_price: $selling_price
             current_stock_level: $current_stock_level
             units_sold: $units_sold
-            reorder_level: $reorder_level
             supplier_name: $supplier_name
             supplier_phone_number: $supplier_phone_number
             supplier_email: $supplier_email
@@ -655,10 +573,6 @@ create_product = gql(
             account {
                 id
                 account_name
-            }
-            workspace {
-                id
-                name
             }
             name
             description
@@ -674,8 +588,6 @@ create_product = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email
@@ -693,11 +605,10 @@ update_product = gql(
         $description: String!
         $category: String!
         $sub_category: String!
-        $buying_price: Float!
-        $selling_price: Float!
-        $current_stock_level: Int!
-        $units_sold: Int!
-        $reorder_level: Int!
+        $buying_price: String!
+        $selling_price: String!
+        $current_stock_level: String!
+        $units_sold: String!
         $supplier_name: String!
         $supplier_phone_number: String!
         $supplier_email: String!
@@ -712,7 +623,6 @@ update_product = gql(
             selling_price: $selling_price
             current_stock_level: $current_stock_level
             units_sold: $units_sold
-            reorder_level: $reorder_level
             supplier_name: $supplier_name
             supplier_phone_number: $supplier_phone_number
             supplier_email: $supplier_email
@@ -721,10 +631,6 @@ update_product = gql(
             account {
                 id
                 account_name
-            }
-            workspace {
-                id
-                name
             }
             name
             description
@@ -740,8 +646,6 @@ update_product = gql(
             selling_price
             current_stock_level
             units_sold
-            reorder_level
-            reorder_quantity
             supplier_name
             supplier_phone_number
             supplier_email
