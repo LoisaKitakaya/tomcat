@@ -424,63 +424,6 @@ get_transaction = gql(
     """
 )
 
-get_workspace = gql(
-    """
-    query getWorkspace {
-        getWorkspace {
-            id
-            name
-            workspace_uid
-            owner {
-                id
-                username
-            }
-        }
-    }
-    """
-)
-
-get_team_logs = gql(
-    """
-    query getTeamLogs($workspace_id: ID!) {
-        getTeamLogs(workspace_id: $workspace_id) {
-            id
-            workspace {
-                id
-                name
-            }
-            user {
-                id
-                username
-            }
-            action
-        }
-    }
-    """
-)
-
-get_team_members = gql(
-    """
-    query getTeamMembers {
-        getTeamMembers {
-            id
-            user {
-                id
-                username
-            }
-            plan {
-                id
-                name
-            }
-            phone_number
-            workspace_uid
-            is_paid_user
-            is_employee
-        }
-    }
-    """
-)
-
 request_billing_history = gql(
     """
     query requestBilling {

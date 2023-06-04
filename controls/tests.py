@@ -9,7 +9,6 @@ from controls.mutation_ref import token_auth
 from controls.query_ref import (
     test_standard_decorator,
     test_pro_decorator,
-    test_if_is_employee,
 )
 
 
@@ -141,23 +140,3 @@ class TestCustomDecorators(TestCase):
         )
 
         self.assertEqual(data["data"]["testProDecorator"]["name"], "Pro")
-
-    def test_check_if_employee(self):
-        variables = {}
-
-        response = self.client.post(
-            "/graphql/",
-            json.dumps({"query": test_if_is_employee, "variables": variables}),
-            content_type="application/json",
-            HTTP_AUTHORIZATION=f"JWT {self.test_user_one_token}",
-        )
-
-        data = response.json()
-
-        self.assertEqual(
-            response.status_code,
-            200,
-            f"Something went wrong, {explain_status_code(response.status_code)}",
-        )
-
-        self.assertEqual(data["data"]["testIfIsEmployee"], True)

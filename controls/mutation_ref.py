@@ -517,56 +517,6 @@ delete_transaction = gql(
     """
 )
 
-update_workspace = gql(
-    """
-    mutation updateWorkspace($name: String!) {
-        updateWorkspace(name: $name) {
-            id
-            name
-            workspace_uid
-            owner {
-                id
-                username
-            }
-        }
-    }
-    """
-)
-
-create_team_member = gql(
-    """
-    mutation createTeamMember(
-        $email: String!
-        $first_name: String!
-        $last_name: String
-        $password: String!
-    ) {
-        createTeamMember(
-            email: $email
-            first_name: $first_name
-            last_name: $last_name
-            password: $password
-        ) {
-            id
-            first_name
-            last_name
-            email
-            username
-            is_staff
-            is_active
-        }
-    }
-    """
-)
-
-delete_team_member = gql(
-    """
-    mutation deleteTeamMember($member_id: ID!) {
-        deleteTeamMember(member_id: $member_id)
-    }
-    """
-)
-
 subscribe_to_plan = gql(
     """
     mutation subscribeToPlan($plan: String!) {
