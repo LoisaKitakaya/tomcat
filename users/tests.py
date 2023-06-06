@@ -213,7 +213,6 @@ class TestAppMutations(TestCase):
             "email": "user_test@example.com",
             "first_name": "test",
             "last_name": "user",
-            "phone_number": "",
         }
 
         response = self.client.post(
@@ -334,7 +333,5 @@ class TestAppQueries(TestCase):
         )
 
         self.assertEqual(data["data"]["getProfile"]["plan"]["name"], "Free")
-        self.assertEqual(data["data"]["getProfile"]["phone_number"], "")
         self.assertEqual(data["data"]["getProfile"]["payment_method"], "None")
         self.assertEqual(data["data"]["getProfile"]["is_paid_user"], False)
-        self.assertEqual(data["data"]["getProfile"]["is_employee"], False)

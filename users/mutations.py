@@ -44,10 +44,12 @@ def resolve_createUser(
         else:
             raise Exception("Password is too short. Must have minimum of 8 characters")
 
-    else:
-        raise Exception("Email already exists. Make sure your email is unique!")
+        return new_user
 
-    return new_user
+    else:
+        existing_user = User.objects.filter(email=email).first()
+
+    return existing_user
 
 
 @login_required
@@ -70,9 +72,7 @@ def resolve_verifyOTP(_, info, otp: str):
 
 
 @login_required
-def resolve_updateUser(
-    _, info, email: str, first_name: str, last_name: str, phone_number: str = ""
-):
+def resolve_updateUser(_, info, email: str, first_name: str, last_name: str):
     request = info.context["request"]
 
     if not User.objects.filter(email=email).exists():
@@ -84,13 +84,6 @@ def resolve_updateUser(
         user.last_name = last_name if last_name else user.last_name
 
         user.save()
-
-        if phone_number:
-            profile = Profile.objects.get(user__id=user.pk)
-
-            profile.phone_number = phone_number
-
-            profile.save()
 
     else:
         raise Exception("Email already exists. Make sure your email is unique!")
