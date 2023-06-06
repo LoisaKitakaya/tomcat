@@ -110,8 +110,6 @@ class TestAppMutations(TestCase):
             "current_stock_level": "100",
             "units_sold": "0",
             "supplier_name": "Supplier",
-            "supplier_phone_number": "+254787654321",
-            "supplier_email": "supplier@example.com",
         }
 
         response = self.client.post(
@@ -144,12 +142,6 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["createProduct"]["units_sold"], 0)
         self.assertEqual(data["data"]["createProduct"]["profit_generated"], 0)
         self.assertEqual(data["data"]["createProduct"]["supplier_name"], "Supplier")
-        self.assertEqual(
-            data["data"]["createProduct"]["supplier_phone_number"], "+254787654321"
-        )
-        self.assertEqual(
-            data["data"]["createProduct"]["supplier_email"], "supplier@example.com"
-        )
 
     def test_update_product(self):
         variables = {
@@ -163,8 +155,6 @@ class TestAppMutations(TestCase):
             "current_stock_level": "100",
             "units_sold": "0",
             "supplier_name": "Supplier",
-            "supplier_phone_number": "+254787654321",
-            "supplier_email": "supplier@example.com",
         }
 
         response = self.client.post(
@@ -187,8 +177,6 @@ class TestAppMutations(TestCase):
             "current_stock_level": "",
             "units_sold": "5",
             "supplier_name": "",
-            "supplier_phone_number": "",
-            "supplier_email": "supplierupdate@example.com",
         }
 
         response = self.client.post(
@@ -221,13 +209,6 @@ class TestAppMutations(TestCase):
         self.assertEqual(data["data"]["updateProduct"]["units_sold"], 5)
         self.assertEqual(data["data"]["updateProduct"]["profit_generated"], 500)
         self.assertEqual(data["data"]["updateProduct"]["supplier_name"], "Supplier")
-        self.assertEqual(
-            data["data"]["updateProduct"]["supplier_phone_number"], "+254787654321"
-        )
-        self.assertEqual(
-            data["data"]["updateProduct"]["supplier_email"],
-            "supplierupdate@example.com",
-        )
 
     def test_delete_product(self):
         variables = {
@@ -241,8 +222,6 @@ class TestAppMutations(TestCase):
             "current_stock_level": "100",
             "units_sold": "0",
             "supplier_name": "Supplier",
-            "supplier_phone_number": "+254787654321",
-            "supplier_email": "supplier@example.com",
         }
 
         response = self.client.post(
@@ -353,8 +332,6 @@ class TestAppQueries(TestCase):
             "current_stock_level": "100",
             "units_sold": "0",
             "supplier_name": "Supplier",
-            "supplier_phone_number": "+254787654321",
-            "supplier_email": "supplier@example.com",
         }
 
         response = self.client.post(
@@ -418,12 +395,6 @@ class TestAppQueries(TestCase):
         self.assertEqual(data["data"]["getAllProducts"][0]["units_sold"], 0)
         self.assertEqual(data["data"]["getAllProducts"][0]["profit_generated"], 0)
         self.assertEqual(data["data"]["getAllProducts"][0]["supplier_name"], "Supplier")
-        self.assertEqual(
-            data["data"]["getAllProducts"][0]["supplier_phone_number"], "+254787654321"
-        )
-        self.assertEqual(
-            data["data"]["getAllProducts"][0]["supplier_email"], "supplier@example.com"
-        )
 
     def test_get_product(self):
         variables = {"id": self.product_id}
@@ -458,9 +429,3 @@ class TestAppQueries(TestCase):
         self.assertEqual(data["data"]["getProduct"]["units_sold"], 0)
         self.assertEqual(data["data"]["getProduct"]["profit_generated"], 0)
         self.assertEqual(data["data"]["getProduct"]["supplier_name"], "Supplier")
-        self.assertEqual(
-            data["data"]["getProduct"]["supplier_phone_number"], "+254787654321"
-        )
-        self.assertEqual(
-            data["data"]["getProduct"]["supplier_email"], "supplier@example.com"
-        )

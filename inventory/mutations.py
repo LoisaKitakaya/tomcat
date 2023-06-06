@@ -16,8 +16,6 @@ def resolve_createProduct(
     current_stock_level: str,
     units_sold: str,
     supplier_name: str,
-    supplier_phone_number: str,
-    supplier_email: str,
 ):
     account = Account.objects.get(id=account_id)
 
@@ -38,8 +36,6 @@ def resolve_createProduct(
         units_sold=int(units_sold),
         profit_generated=profit,
         supplier_name=supplier_name,
-        supplier_phone_number=supplier_phone_number,
-        supplier_email=supplier_email,
     )
 
     return product
@@ -58,8 +54,6 @@ def resolve_updateProduct(
     current_stock_level: str,
     units_sold: str,
     supplier_name: str,
-    supplier_phone_number: str,
-    supplier_email: str,
 ):
     product = Product.objects.get(id=id)
 
@@ -111,14 +105,6 @@ def resolve_updateProduct(
     product.units_sold = int(units_sold) if units_sold else product.units_sold
     product.profit_generated = profit
     product.supplier_name = supplier_name if supplier_name else product.supplier_name
-    product.supplier_phone_number = (
-        supplier_phone_number
-        if supplier_phone_number
-        else product.supplier_phone_number
-    )
-    product.supplier_email = (
-        supplier_email if supplier_email else product.supplier_email
-    )
 
     product.save()
 

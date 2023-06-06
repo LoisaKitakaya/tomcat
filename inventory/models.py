@@ -41,8 +41,6 @@ class Product(models.Model):
     units_sold = models.IntegerField(default=0, blank=False)
     profit_generated = models.FloatField(default=0.0, blank=True)
     supplier_name = models.CharField(max_length=255, blank=False)
-    supplier_phone_number = models.CharField(max_length=20, blank=False)
-    supplier_email = models.CharField(max_length=150, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

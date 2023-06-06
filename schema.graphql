@@ -195,8 +195,6 @@ type Product {
   reorder_level: Int
   reorder_quantity: Int
   supplier_name: String!
-  supplier_phone_number: String!
-  supplier_email: String
   profit_generated: Float
   created_at: Datetime!
   updated_at: Datetime!
@@ -351,8 +349,6 @@ type Mutation {
     current_stock_level: String!
     units_sold: String!
     supplier_name: String!
-    supplier_phone_number: String!
-    supplier_email: String!
   ): Product!
   updateProduct(
     id: ID!
@@ -365,8 +361,6 @@ type Mutation {
     current_stock_level: String!
     units_sold: String!
     supplier_name: String!
-    supplier_phone_number: String!
-    supplier_email: String!
   ): Product!
   deleteProduct(id: ID!): Boolean!
 
