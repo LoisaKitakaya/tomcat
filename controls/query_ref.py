@@ -159,10 +159,8 @@ get_profile = gql(
                 id
                 name
             }
-            phone_number
             payment_method
             is_paid_user
-            is_employee
         }
     }
     """
@@ -462,8 +460,6 @@ get_all_products = gql(
             current_stock_level
             units_sold
             supplier_name
-            supplier_phone_number
-            supplier_email
             profit_generated
         }
     }
@@ -494,74 +490,140 @@ get_product = gql(
             current_stock_level
             units_sold
             supplier_name
-            supplier_phone_number
-            supplier_email
             profit_generated
         }
     }
     """
 )
 
-get_all_customers = gql(
+get_all_payment_accounts = gql(
     """
-    query getAllCustomers($account_id: ID!) {
-        getAllCustomers(account_id: $account_id) {
+    query {
+        getAllPaymentAccounts {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
-                id
-                account_name
-            }
-            name
-            email
-            phone
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
         }
     }
     """
 )
 
-get_customer = gql(
+get_payment_account = gql(
     """
-    query getCustomer($id: ID!) {
-        getCustomer(id: $id) {
+    query($id: ID!) {
+        getPaymentAccount(id: $id) {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
-                id
-                account_name
-            }
-            name
-            email
-            phone
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
         }
     }
     """
 )
 
-get_all_debts = gql(
+get_all_client_information = gql(
     """
-    query getAllDebts($account_id: ID!) {
-        getAllDebts(account_id: $account_id) {
+    query {
+        getAllClientInformation {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+get_client_information = gql(
+    """
+    query($id: ID!) {
+        getClientInformation(id: $id) {
+            id
+            owner {
                 id
-                account_name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            customer {
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+get_all_invoices = gql(
+    """
+    query {
+        getAllInvoices {
+            id
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
+            business {
+                id
+                business_name
+            }
+            client {
+                id
+                client_name
+            }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
             amount
+            total
+            additional_notes
             due_date
             is_paid
         }
@@ -569,24 +631,40 @@ get_all_debts = gql(
     """
 )
 
-get_debt = gql(
+get_invoice = gql(
     """
-    query getDebt($id: ID!) {
-        getDebt(id: $id) {
+    query($id: ID!) {
+        getInvoice(id: $id) {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
+            business {
                 id
-                account_name
+                business_name
             }
-            customer {
+            client {
                 id
-                name
+                client_name
             }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
             amount
+            total
+            additional_notes
             due_date
             is_paid
         }

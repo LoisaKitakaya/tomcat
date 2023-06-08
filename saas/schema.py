@@ -8,7 +8,6 @@ from ariadne import (
     MutationType,
     make_executable_schema,
     load_schema_from_path,
-    gql,
 )
 
 from ariadne_jwt import (
@@ -20,12 +19,14 @@ from ariadne_jwt import (
 )
 
 from users.queries import *
+from invoice.queries import *
 from budgets.queries import *
 from reports.queries import *
 from users.mutations import *
 from targets.queries import *
 from controls.queries import *
 from accounts.queries import *
+from invoice.mutations import *
 from reports.mutations import *
 from billing.mutations import *
 from budgets.mutations import *
@@ -39,7 +40,7 @@ from transactions.mutations import *
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 schema_path = os.path.join(BASE_DIR, "schema.graphql")
 
-type_defs = gql(load_schema_from_path(schema_path))
+type_defs = load_schema_from_path(schema_path)
 
 # scaler types
 
@@ -88,14 +89,14 @@ mutation = MutationType()
 query.set_field("generateOTP", resolve_generateOTP)
 query.set_field("generateQRCode", resolve_generateQRCode)
 
+query.set_field("getProductCategory", resolve_getProductCategory)
+query.set_field("getProductSubCategory", resolve_getProductSubCategory)
 query.set_field("getTransactionType", resolve_getTransactionType)
 query.set_field("getTransactionCategory", resolve_getTransactionCategory)
 query.set_field("getTransactionSubCategory", resolve_getTransactionSubCategory)
-query.set_field("getProductCategory", resolve_getProductCategory)
-query.set_field("getProductSubCategory", resolve_getProductSubCategory)
 
-query.set_field("testStandardDecorator", resolve_testStandardDecorator)
 query.set_field("testProDecorator", resolve_testProDecorator)
+query.set_field("testStandardDecorator", resolve_testStandardDecorator)
 
 query.set_field("getUser", resolve_getUser)
 query.set_field("getProfile", resolve_getProfile)
@@ -114,6 +115,15 @@ query.set_field("getTransaction", resolve_getTransaction)
 
 query.set_field("getAllProducts", resolve_getAllProducts)
 query.set_field("getProduct", resolve_getProduct)
+
+query.set_field("getAllPaymentAccounts", resolve_getAllPaymentAccounts)
+query.set_field("getPaymentAccount", resolve_getPaymentAccount)
+
+query.set_field("getAllClientInformation", resolve_getAllClientInformation)
+query.set_field("getClientInformation", resolve_getClientInformation)
+
+query.set_field("getAllInvoices", resolve_getAllInvoices)
+query.set_field("getInvoice", resolve_getInvoice)
 
 query.set_field("getAllReports", resolve_getAllReports)
 query.set_field("getReport", resolve_getReport)
@@ -152,6 +162,18 @@ mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
 mutation.set_field("createProduct", resolve_createProduct)
 mutation.set_field("updateProduct", resolve_updateProduct)
 mutation.set_field("deleteProduct", resolve_deleteProduct)
+
+mutation.set_field("createPaymentAccount", resolve_createPaymentAccount)
+mutation.set_field("updatePaymentAccount", resolve_updatePaymentAccount)
+mutation.set_field("deletePaymentAccount", resolve_deletePaymentAccount)
+
+mutation.set_field("createClientInformation", resolve_createClientInformation)
+mutation.set_field("updateClientInformation", resolve_updateClientInformation)
+mutation.set_field("deleteClientInformation", resolve_deleteClientInformation)
+
+mutation.set_field("createInvoice", resolve_createInvoice)
+mutation.set_field("updateInvoice", resolve_updateInvoice)
+mutation.set_field("deleteInvoice", resolve_deleteInvoice)
 
 mutation.set_field("generateReport", resolve_generateReport)
 mutation.set_field("deleteReport", resolve_deleteReport)

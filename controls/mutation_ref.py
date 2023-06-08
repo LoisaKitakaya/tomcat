@@ -77,13 +77,11 @@ update_user = gql(
         $email: String!
         $first_name: String!
         $last_name: String!
-        $phone_number: String!
     ) {
         updateUser(
             email: $email
             first_name: $first_name
             last_name: $last_name
-            phone_number: $phone_number
         ) {
             id
             first_name
@@ -123,8 +121,6 @@ create_account = gql(
                     id
                     name
                 }
-                phone_number
-                is_employee
                 is_paid_user
             }
             currency_code
@@ -162,8 +158,6 @@ update_account = gql(
                     id
                     name
                 }
-                phone_number
-                is_employee
                 is_paid_user
             }
             currency_code
@@ -552,8 +546,6 @@ create_product = gql(
         $current_stock_level: String!
         $units_sold: String!
         $supplier_name: String!
-        $supplier_phone_number: String!
-        $supplier_email: String!
     ) {
         createProduct(
             account_id: $account_id
@@ -566,8 +558,6 @@ create_product = gql(
             current_stock_level: $current_stock_level
             units_sold: $units_sold
             supplier_name: $supplier_name
-            supplier_phone_number: $supplier_phone_number
-            supplier_email: $supplier_email
         ) {
             id
             account {
@@ -589,8 +579,6 @@ create_product = gql(
             current_stock_level
             units_sold
             supplier_name
-            supplier_phone_number
-            supplier_email
             profit_generated
         }
     }
@@ -610,8 +598,6 @@ update_product = gql(
         $current_stock_level: String!
         $units_sold: String!
         $supplier_name: String!
-        $supplier_phone_number: String!
-        $supplier_email: String!
     ) {
         updateProduct(
             id: $id
@@ -624,8 +610,6 @@ update_product = gql(
             current_stock_level: $current_stock_level
             units_sold: $units_sold
             supplier_name: $supplier_name
-            supplier_phone_number: $supplier_phone_number
-            supplier_email: $supplier_email
         ) {
             id
             account {
@@ -647,8 +631,6 @@ update_product = gql(
             current_stock_level
             units_sold
             supplier_name
-            supplier_phone_number
-            supplier_email
             profit_generated
         }
     }
@@ -663,104 +645,226 @@ delete_product = gql(
     """
 )
 
-create_customer = gql(
+create_payment_account = gql(
     """
-    mutation createCustomer(
-        $account_id: ID!
-        $name: String!
-        $email: String!
-        $phone: String!
+    mutation(
+        $business_name: String!
+        $business_email: String!
+        $business_phone_number: String!
+        $bank_name: String!
+        $bank_account: String!
+        $mobile_payment_name: String!
+        $mobile_account: String!
     ) {
-        createCustomer(
-            account_id: $account_id
-            name: $name
-            email: $email
-            phone: $phone
+        createPaymentAccount(
+            business_name: $business_name
+            business_email: $business_email
+            business_phone_number: $business_phone_number
+            bank_name: $bank_name
+            bank_account: $bank_account
+            mobile_payment_name: $mobile_payment_name
+            mobile_account: $mobile_account
         ) {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
-                id
-                account_name
-            }
-            name
-            email
-            phone
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
         }
     }
     """
 )
 
-update_customer = gql(
+update_payment_account = gql(
     """
-    mutation updateCustomer(
+    mutation(
         $id: ID!
-        $name: String!
-        $email: String!
-        $phone: String!
+        $business_name: String!
+        $business_email: String!
+        $business_phone_number: String!
+        $bank_name: String!
+        $bank_account: String!
+        $mobile_payment_name: String!
+        $mobile_account: String!
     ) {
-        updateCustomer(
+        updatePaymentAccount(
             id: $id
-            name: $name
-            email: $email
-            phone: $phone
+            business_name: $business_name
+            business_email: $business_email
+            business_phone_number: $business_phone_number
+            bank_name: $bank_name
+            bank_account: $bank_account
+            mobile_payment_name: $mobile_payment_name
+            mobile_account: $mobile_account
         ) {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
-                id
-                account_name
-            }
-            name
-            email
-            phone
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
         }
     }
     """
 )
 
-delete_customer = gql(
+delete_payment_account = gql(
     """
-    mutation deleteCustomer($id: ID!) {
-        deleteCustomer(id: $id)
+    mutation($id: ID!) {
+        deletePaymentAccount(id: $id)
     }
     """
 )
 
-record_debt = gql(
+create_client_information = gql(
     """
-    mutation recordDebt(
-        $account_id: ID!
-        $customer_id: ID!
-        $amount: Float!
+    mutation(
+        $client_name: String!
+        $client_email: String!
+        $client_phone_number: String!
+        $client_address: String!
+    ) {
+        createClientInformation(
+            client_name: $client_name
+            client_email: $client_email
+            client_phone_number: $client_phone_number
+            client_address: $client_address
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+update_client_information = gql(
+    """
+    mutation(
+        $id: ID!
+        $client_name: String!
+        $client_email: String!
+        $client_phone_number: String!
+        $client_address: String!
+    ) {
+        updateClientInformation(
+            id: $id
+            client_name: $client_name
+            client_email: $client_email
+            client_phone_number: $client_phone_number
+            client_address: $client_address
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+delete_client_information = gql(
+    """
+    mutation($id: ID!) {
+        deleteClientInformation(id: $id)
+    }
+    """
+)
+
+create_invoice = gql(
+    """
+    mutation(
+        $business: String!
+        $client: String!
+        $category: String!
+        $sub_category: String!
+        $item: String!
+        $quantity: String!
+        $amount: String!
+        $additional_notes: String!
         $due_date: String!
     ) {
-        recordDebt(
-            account_id: $account_id
-            customer_id: $customer_id
+        createInvoice(
+            business: $business
+            client: $client
+            category: $category
+            sub_category: $sub_category
+            item: $item
+            quantity: $quantity
             amount: $amount
+            additional_notes: $additional_notes
             due_date: $due_date
         ) {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
+            business {
                 id
-                account_name
+                business_name
             }
-            customer {
+            client {
                 id
-                name
+                client_name
             }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
             amount
+            total
+            additional_notes
             due_date
             is_paid
         }
@@ -768,35 +872,62 @@ record_debt = gql(
     """
 )
 
-update_debt = gql(
+update_invoice = gql(
     """
-    mutation updateDebt(
+    mutation(
         $id: ID!
-        $amount: Float!
+        $business: String!
+        $client: String!
+        $category: String!
+        $sub_category: String!
+        $item: String!
+        $quantity: String!
+        $amount: String!
+        $additional_notes: String!
         $due_date: String!
-        $is_paid: Boolean!
     ) {
-        updateDebt(
+        updateInvoice(
             id: $id
+            business: $business
+            client: $client
+            category: $category
+            sub_category: $sub_category
+            item: $item
+            quantity: $quantity
             amount: $amount
+            additional_notes: $additional_notes
             due_date: $due_date
-            is_paid: $is_paid
         ) {
             id
-            workspace {
+            owner {
                 id
-                name
+                user {
+                    id
+                    username
+                }
+                is_paid_user
             }
-            account {
+            business {
                 id
-                account_name
-                account_balance
+                business_name
             }
-            customer {
+            client {
                 id
-                name
+                client_name
             }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
             amount
+            total
+            additional_notes
             due_date
             is_paid
         }
@@ -804,10 +935,10 @@ update_debt = gql(
     """
 )
 
-delete_debt = gql(
+delete_invoice = gql(
     """
-    mutation deleteDebt($id: ID!) {
-        deleteDebt(id: $id)
+    mutation($id: ID!) {
+        deleteInvoice(id: $id)
     }
     """
 )

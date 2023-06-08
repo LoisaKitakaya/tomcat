@@ -129,15 +129,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# vscode
-.vscode
-
-# dump
-dump.json
-
-# schema
-schema.js
-token.json
-
-.misc

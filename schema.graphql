@@ -2,14 +2,48 @@ scalar Otp
 scalar Qrcode
 scalar Datetime
 
-type User {
+type Activity {
   id: ID!
-  first_name: String!
-  last_name: String!
-  email: String!
-  username: String!
-  is_staff: Boolean!
-  is_active: Boolean!
+  name: String!
+}
+
+type Group {
+  id: ID!
+  activity: Activity!
+  group_name: String!
+}
+
+type Type {
+  id: ID!
+  type_name: String!
+  type_description: String!
+}
+
+type TransactionCategory {
+  id: ID!
+  parent: Group!
+  category_name: String!
+  category_description: String!
+}
+
+type TransactionSubCategory {
+  id: ID!
+  parent: TransactionCategory!
+  category_name: String!
+  category_description: String!
+}
+
+type ProductCategory {
+  id: ID!
+  category_name: String!
+  category_description: String!
+}
+
+type ProductSubCategory {
+  id: ID!
+  parent: ProductCategory!
+  category_name: String!
+  category_description: String!
 }
 
 type Plan {
@@ -29,88 +63,39 @@ type Plan {
   updated_at: Datetime!
 }
 
+type PlanBilling {
+  id: ID!
+  customer: User!
+  order_tracking_id: String!
+  merchant_ref: String!
+  account_ref: String!
+  redirect_url: String!
+  plan: String!
+  currency: String!
+  amount: Float!
+  payment_confirmed: Boolean!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type User {
+  id: ID!
+  first_name: String!
+  last_name: String!
+  email: String!
+  username: String!
+  is_staff: Boolean!
+  is_active: Boolean!
+}
+
 type Profile {
   id: ID!
   user: User!
   plan: Plan!
-  phone_number: String!
   payment_method: String!
   is_paid_user: Boolean!
-  is_employee: Boolean!
   created_at: Datetime!
   updated_at: Datetime!
-}
-
-type Activity {
-  id: ID!
-  name: String!
-}
-
-type Group {
-  id: ID!
-  activity: Activity!
-  group_name: String!
-}
-
-type Type {
-  id: ID!
-  type_name: String!
-  type_description: String!
-}
-
-type CashFlowStatement {
-  id: ID!
-  account: Account!
-  statement_uid: String!
-  begin_date: Datetime!
-  end_date: Datetime!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type CashFlowItem {
-  id: ID!
-  name: String!
-  is_income: Boolean!
-  activity: Activity!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type CashFlowRecord {
-  id: ID!
-  statement_uid: String!
-  amount: Float!
-  item: CashFlowItem!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type TransactionCategory {
-  id: ID!
-  parent: Group!
-  category_name: String!
-  category_description: String!
-}
-
-type ProductCategory {
-  id: ID!
-  category_name: String!
-  category_description: String!
-}
-
-type TransactionSubCategory {
-  id: ID!
-  parent: TransactionCategory!
-  category_name: String!
-  category_description: String!
-}
-
-type ProductSubCategory {
-  id: ID!
-  parent: ProductCategory!
-  category_name: String!
-  category_description: String!
 }
 
 type Account {
@@ -166,21 +151,6 @@ type Transaction {
   updated_at: Datetime!
 }
 
-type PlanBilling {
-  id: ID!
-  customer: User!
-  order_tracking_id: String!
-  merchant_ref: String!
-  account_ref: String!
-  redirect_url: String!
-  plan: String!
-  currency: String!
-  amount: Float!
-  payment_confirmed: Boolean!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type Product {
   id: ID!
   account: Account!
@@ -195,9 +165,72 @@ type Product {
   reorder_level: Int
   reorder_quantity: Int
   supplier_name: String!
-  supplier_phone_number: String!
-  supplier_email: String
   profit_generated: Float
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type PaymentAccount {
+  id: ID!
+  owner: Profile!
+  business_name: String!
+  business_email: String!
+  business_phone_number: String!
+  bank_name: String!
+  bank_account: String!
+  mobile_payment_name: String!
+  mobile_account: String!
+}
+
+type ClientInformation {
+  id: ID!
+  owner: Profile!
+  client_name: String!
+  client_email: String!
+  client_phone_number: String!
+  client_address: String!
+}
+
+type Invoice {
+  id: ID!
+  owner: Profile!
+  business: PaymentAccount!
+  client: ClientInformation!
+  category: TransactionCategory!
+  sub_category: TransactionSubCategory!
+  item: String!
+  quantity: Int!
+  amount: Float!
+  total: Float!
+  additional_notes: String!
+  due_date: Datetime!
+  is_paid: Boolean!
+}
+
+type CashFlowStatement {
+  id: ID!
+  account: Account!
+  statement_uid: String!
+  begin_date: Datetime!
+  end_date: Datetime!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CashFlowItem {
+  id: ID!
+  name: String!
+  is_income: Boolean!
+  activity: Activity!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CashFlowRecord {
+  id: ID!
+  statement_uid: String!
+  amount: Float!
+  item: CashFlowItem!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -206,6 +239,9 @@ type Query {
   generateOTP(environment: String): Otp!
 
   generateQRCode: Qrcode!
+
+  requestBilling: Boolean!
+  cancelPlan: Boolean!
 
   getTransactionType: [Type!]!
   getTransactionCategory: [TransactionCategory!]!
@@ -233,11 +269,17 @@ type Query {
   getAllTransactions(account_id: ID!): [Transaction!]!
   getTransaction(id: ID!): Transaction!
 
-  requestBilling: Boolean!
-  cancelPlan: Boolean!
-
   getAllProducts(account_id: ID!): [Product!]!
   getProduct(id: ID!): Product!
+
+  getAllPaymentAccounts: [PaymentAccount!]!
+  getPaymentAccount(id: ID!): PaymentAccount!
+
+  getAllClientInformation: [ClientInformation!]!
+  getClientInformation(id: ID!): ClientInformation!
+
+  getAllInvoices: [Invoice!]!
+  getInvoice(id: ID!): Invoice!
 
   getAllReports(account_id: ID!): [CashFlowStatement!]!
   getReport(statement_uid: String!): [CashFlowRecord!]!
@@ -246,6 +288,12 @@ type Query {
 type Mutation {
   verifyOTP(otp: String!): String!
 
+  subscribeToPlan(plan: String!): PlanBilling!
+
+  verifyToken(token: String!): VerifyToken!
+  refreshToken(token: String!): RefreshToken!
+  tokenAuth(username: String!, password: String!): TokenAuth!
+
   createUser(
     email: String!
     first_name: String!
@@ -253,16 +301,7 @@ type Mutation {
     password: String!
     password2: String!
   ): User!
-  updateUser(
-    email: String!
-    first_name: String!
-    last_name: String!
-    phone_number: String!
-  ): User!
-
-  verifyToken(token: String!): VerifyToken!
-  refreshToken(token: String!): RefreshToken!
-  tokenAuth(username: String!, password: String!): TokenAuth!
+  updateUser(email: String!, first_name: String!, last_name: String!): User!
 
   createAccount(
     account_name: String!
@@ -338,8 +377,6 @@ type Mutation {
   ): Transaction!
   deleteTransaction(id: ID!, account_id: ID!): Boolean!
 
-  subscribeToPlan(plan: String!): PlanBilling!
-
   createProduct(
     account_id: ID!
     name: String!
@@ -351,8 +388,6 @@ type Mutation {
     current_stock_level: String!
     units_sold: String!
     supplier_name: String!
-    supplier_phone_number: String!
-    supplier_email: String!
   ): Product!
   updateProduct(
     id: ID!
@@ -365,10 +400,69 @@ type Mutation {
     current_stock_level: String!
     units_sold: String!
     supplier_name: String!
-    supplier_phone_number: String!
-    supplier_email: String!
   ): Product!
   deleteProduct(id: ID!): Boolean!
+
+  createPaymentAccount(
+    business_name: String!
+    business_email: String!
+    business_phone_number: String!
+    bank_name: String!
+    bank_account: String!
+    mobile_payment_name: String!
+    mobile_account: String!
+  ): PaymentAccount!
+  updatePaymentAccount(
+    id: ID!
+    business_name: String!
+    business_email: String!
+    business_phone_number: String!
+    bank_name: String!
+    bank_account: String!
+    mobile_payment_name: String!
+    mobile_account: String!
+  ): PaymentAccount!
+  deletePaymentAccount(id: ID!): Boolean!
+
+  createClientInformation(
+    client_name: String!
+    client_email: String!
+    client_phone_number: String!
+    client_address: String!
+  ): ClientInformation!
+  updateClientInformation(
+    id: ID!
+    client_name: String!
+    client_email: String!
+    client_phone_number: String!
+    client_address: String!
+  ): ClientInformation!
+  deleteClientInformation(id: ID!): Boolean!
+
+  createInvoice(
+    business: String!
+    client: String!
+    category: String!
+    sub_category: String!
+    item: String!
+    quantity: String!
+    amount: String!
+    additional_notes: String!
+    due_date: String!
+  ): Invoice!
+  updateInvoice(
+    id: ID!
+    business: String!
+    client: String!
+    category: String!
+    sub_category: String!
+    item: String!
+    quantity: String!
+    amount: String!
+    additional_notes: String!
+    due_date: String!
+  ): Invoice!
+  deleteInvoice(id: ID!): Boolean!
 
   generateReport(
     account_id: ID!

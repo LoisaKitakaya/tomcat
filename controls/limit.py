@@ -1,14 +1,13 @@
 from plans.models import Plan
-from targets.models import Target
+from users.models import Profile
 from budgets.models import Budget
+from targets.models import Target
+from invoice.models import Invoice
 from accounts.models import Account
-from users.models import User, Profile
 
 
-def check_create_account_limit(user_id):
-    user = User.objects.get(id=user_id)
-
-    profile = Profile.objects.get(user__id=user.pk)
+def check_create_account_limit(profile_id):
+    profile = Profile.objects.get(id=profile_id)
 
     all_accounts = Account.objects.filter(owner=profile).all()
 
@@ -51,10 +50,8 @@ def check_create_account_limit(user_id):
             )
 
 
-def check_create_budget_limit(user_id):
-    user = User.objects.get(id=user_id)
-
-    profile = Profile.objects.get(user__id=user.pk)
+def check_create_budget_limit(profile_id):
+    profile = Profile.objects.get(user__id=profile_id)
 
     user_account = Account.objects.get(owner=profile)
 
@@ -96,10 +93,8 @@ def check_create_budget_limit(user_id):
             raise Exception("you cannot create more budgets based on you current plan")
 
 
-def check_create_target_limit(user_id):
-    user = User.objects.get(id=user_id)
-
-    profile = Profile.objects.get(user__id=user.pk)
+def check_create_target_limit(profile_id):
+    profile = Profile.objects.get(user__id=profile_id)
 
     user_account = Account.objects.get(owner=profile)
 
@@ -139,3 +134,44 @@ def check_create_target_limit(user_id):
 
         else:
             raise Exception("You cannot create more targets based on your current plan")
+
+
+def check_create_invoice_limit(profile_id):
+    profile = Profile.objects.get(user__id=profile_id)
+
+    all_invoices = Invoice.objects.filter(owner__id=profile.pk).all()
+
+    plan = profile.plan.name
+
+    if plan == "Free":
+        plan = Plan.objects.get(name="Free")
+
+        invoice_limit = plan.no_of_invoices
+
+        if len(all_invoices) != invoice_limit:
+            return
+
+        else:
+            raise Exception("You cannot create more invoices based on your current plan")
+
+    elif plan == "Standard":
+        plan = Plan.objects.get(name="Standard")
+
+        invoice_limit = plan.no_of_invoices
+
+        if len(all_invoices) != invoice_limit:
+            return
+
+        else:
+            raise Exception("You cannot create more invoices based on your current plan")
+
+    elif plan == "Pro":
+        plan = Plan.objects.get(name="Pro")
+
+        invoice_limit = plan.no_of_invoices
+
+        if len(all_invoices) != invoice_limit:
+            return
+
+        else:
+            raise Exception("You cannot create more invoices based on your current plan")
