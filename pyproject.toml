@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "saas"
+version = "0.1.0"
+description = "GraphQL API built using ariadne-django"
+authors = ["Freedom Loisa <kitakayaloisa@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+whitenoise = "^6.4.0"
+django = "^4.2.2"
+ariadne-django = "^0.3.0"
+python-dotenv = "^1.0.0"
+requests = "^2.31.0"
+qrcode = "^7.4.2"
+pyotp = "^2.8.0"
+pillow = "^9.5.0"
+psycopg2-binary = "^2.9.6"
+django-cors-headers = "^4.0.0"
+ariadne-jwt = "^0.1.7"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,24 @@
+{
+  "cSpell.words": [
+    "corsheaders",
+    "Datetime",
+    "dotenv",
+    "Kitloisa",
+    "lksdlfsjdlf",
+    "mktime",
+    "Mpesa",
+    "Pesa",
+    "Pesapal",
+    "pyotp",
+    "qrcode",
+    "testuserone",
+    "testusertwo",
+    "thead",
+    "thisistestpassword",
+    "tobytes",
+    "totp",
+    "transactiondate"
+  ],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.formatting.provider": "black"
+}
