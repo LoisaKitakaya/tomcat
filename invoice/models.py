@@ -1,10 +1,12 @@
 from django.db import models
+from users.models import Profile
 from transactions.models import TransactionCategory, TransactionSubCategory
 
 
 class PaymentAccount(models.Model):
-    business_name = models.CharField(max_length=50, blank=False)
-    business_email = models.EmailField(blank=False)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    business_name = models.CharField(max_length=50, blank=False, unique=True)
+    business_email = models.EmailField(blank=False, unique=True)
     business_phone_number = models.CharField(max_length=20, blank=False)
     bank_name = models.CharField(max_length=50, blank=False)
     bank_account = models.CharField(max_length=100, blank=False)
@@ -24,8 +26,9 @@ class PaymentAccount(models.Model):
 
 
 class ClientInformation(models.Model):
-    client_name = models.CharField(max_length=50, blank=False)
-    client_email = models.EmailField(blank=False)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    client_name = models.CharField(max_length=50, blank=False, unique=True)
+    client_email = models.EmailField(blank=False, unique=True)
     client_phone_number = models.CharField(max_length=20, blank=False)
     client_address = models.CharField(max_length=120, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,13 +38,14 @@ class ClientInformation(models.Model):
         ordering = ["-created_at"]
         verbose_name = "client information"
         verbose_name_plural = "clients information"
-        db_table = "ClientsInformation"
+        db_table = "ClientInformation"
 
     def __str__(self) -> str:
         return self.client_name
 
 
 class Invoice(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     business = models.ForeignKey(PaymentAccount, on_delete=models.CASCADE)
     client = models.ForeignKey(ClientInformation, on_delete=models.CASCADE)
     category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)

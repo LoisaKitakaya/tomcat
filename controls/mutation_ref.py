@@ -77,13 +77,11 @@ update_user = gql(
         $email: String!
         $first_name: String!
         $last_name: String!
-        $phone_number: String!
     ) {
         updateUser(
             email: $email
             first_name: $first_name
             last_name: $last_name
-            phone_number: $phone_number
         ) {
             id
             first_name
@@ -123,8 +121,6 @@ create_account = gql(
                     id
                     name
                 }
-                phone_number
-                is_employee
                 is_paid_user
             }
             currency_code
@@ -162,8 +158,6 @@ update_account = gql(
                     id
                     name
                 }
-                phone_number
-                is_employee
                 is_paid_user
             }
             currency_code
@@ -647,6 +641,304 @@ delete_product = gql(
     """
     mutation deleteProduct($id: ID!) {
         deleteProduct(id: $id)
+    }
+    """
+)
+
+create_payment_account = gql(
+    """
+    mutation(
+        $business_name: String!
+        $business_email: String!
+        $business_phone_number: String!
+        $bank_name: String!
+        $bank_account: String!
+        $mobile_payment_name: String!
+        $mobile_account: String!
+    ) {
+        createPaymentAccount(
+            business_name: $business_name
+            business_email: $business_email
+            business_phone_number: $business_phone_number
+            bank_name: $bank_name
+            bank_account: $bank_account
+            mobile_payment_name: $mobile_payment_name
+            mobile_account: $mobile_account
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
+        }
+    }
+    """
+)
+
+update_payment_account = gql(
+    """
+    mutation(
+        $id: ID!
+        $business_name: String!
+        $business_email: String!
+        $business_phone_number: String!
+        $bank_name: String!
+        $bank_account: String!
+        $mobile_payment_name: String!
+        $mobile_account: String!
+    ) {
+        updatePaymentAccount(
+            id: $id
+            business_name: $business_name
+            business_email: $business_email
+            business_phone_number: $business_phone_number
+            bank_name: $bank_name
+            bank_account: $bank_account
+            mobile_payment_name: $mobile_payment_name
+            mobile_account: $mobile_account
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
+        }
+    }
+    """
+)
+
+delete_payment_account = gql(
+    """
+    mutation($id: ID!) {
+        deletePaymentAccount(id: $id)
+    }
+    """
+)
+
+create_client_information = gql(
+    """
+    mutation(
+        $client_name: String!
+        $client_email: String!
+        $client_phone_number: String!
+        $client_address: String!
+    ) {
+        createClientInformation(
+            client_name: $client_name
+            client_email: $client_email
+            client_phone_number: $client_phone_number
+            client_address: $client_address
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+update_client_information = gql(
+    """
+    mutation(
+        $id: ID!
+        $client_name: String!
+        $client_email: String!
+        $client_phone_number: String!
+        $client_address: String!
+    ) {
+        updateClientInformation(
+            id: $id
+            client_name: $client_name
+            client_email: $client_email
+            client_phone_number: $client_phone_number
+            client_address: $client_address
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+delete_client_information = gql(
+    """
+    mutation($id: ID!) {
+        deleteClientInformation(id: $id)
+    }
+    """
+)
+
+create_invoice = gql(
+    """
+    mutation(
+        $business: String!
+        $client: String!
+        $category: String!
+        $sub_category: String!
+        $item: String!
+        $quantity: String!
+        $amount: String!
+        $additional_notes: String!
+        $due_date: String!
+    ) {
+        createInvoice(
+            business: $business
+            client: $client
+            category: $category
+            sub_category: $sub_category
+            item: $item
+            quantity: $quantity
+            amount: $amount
+            additional_notes: $additional_notes
+            due_date: $due_date
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business {
+                id
+                business_name
+            }
+            client {
+                id
+                client_name
+            }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
+            amount
+            total
+            additional_notes
+            due_date
+            is_paid
+        }
+    }
+    """
+)
+
+update_invoice = gql(
+    """
+    mutation(
+        $id: ID!
+        $business: String!
+        $client: String!
+        $category: String!
+        $sub_category: String!
+        $item: String!
+        $quantity: String!
+        $amount: String!
+        $additional_notes: String!
+        $due_date: String!
+    ) {
+        updateInvoice(
+            id: $id
+            business: $business
+            client: $client
+            category: $category
+            sub_category: $sub_category
+            item: $item
+            quantity: $quantity
+            amount: $amount
+            additional_notes: $additional_notes
+            due_date: $due_date
+        ) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business {
+                id
+                business_name
+            }
+            client {
+                id
+                client_name
+            }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
+            amount
+            total
+            additional_notes
+            due_date
+            is_paid
+        }
+    }
+    """
+)
+
+delete_invoice = gql(
+    """
+    mutation($id: ID!) {
+        deleteInvoice(id: $id)
     }
     """
 )

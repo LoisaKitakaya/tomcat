@@ -159,10 +159,8 @@ get_profile = gql(
                 id
                 name
             }
-            phone_number
             payment_method
             is_paid_user
-            is_employee
         }
     }
     """
@@ -493,6 +491,182 @@ get_product = gql(
             units_sold
             supplier_name
             profit_generated
+        }
+    }
+    """
+)
+
+get_all_payment_accounts = gql(
+    """
+    query {
+        getAllPaymentAccounts {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
+        }
+    }
+    """
+)
+
+get_payment_account = gql(
+    """
+    query($id: ID!) {
+        getPaymentAccount(id: $id) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business_name
+            business_email
+            business_phone_number
+            bank_name
+            bank_account
+            mobile_payment_name
+            mobile_account
+        }
+    }
+    """
+)
+
+get_all_client_information = gql(
+    """
+    query {
+        getAllClientInformation {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+get_client_information = gql(
+    """
+    query($id: ID!) {
+        getClientInformation(id: $id) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            client_name
+            client_email
+            client_phone_number
+            client_address
+        }
+    }
+    """
+)
+
+get_all_invoices = gql(
+    """
+    query {
+        getAllInvoices {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business {
+                id
+                business_name
+            }
+            client {
+                id
+                client_name
+            }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
+            amount
+            total
+            additional_notes
+            due_date
+            is_paid
+        }
+    }
+    """
+)
+
+get_invoice = gql(
+    """
+    query($id: ID!) {
+        getInvoice(id: $id) {
+            id
+            owner {
+                id
+                user {
+                    id
+                    username
+                }
+                is_paid_user
+            }
+            business {
+                id
+                business_name
+            }
+            client {
+                id
+                client_name
+            }
+            category {
+                id
+                category_name
+            }
+            sub_category {
+                id
+                category_name
+            }
+            item
+            quantity
+            amount
+            total
+            additional_notes
+            due_date
+            is_paid
         }
     }
     """

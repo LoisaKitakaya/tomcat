@@ -1,5 +1,4 @@
 import json
-from uuid import uuid4
 from plans.models import Plan
 from users.models import User, Profile
 from django.test import TestCase, Client
