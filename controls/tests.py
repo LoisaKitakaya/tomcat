@@ -6,8 +6,8 @@ from controls.test_ref import explain_status_code
 
 from controls.mutation_ref import token_auth
 from controls.query_ref import (
-    test_standard_decorator,
     test_pro_decorator,
+    test_standard_decorator,
 )
 
 

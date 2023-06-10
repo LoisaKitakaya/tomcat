@@ -93,7 +93,6 @@ test_standard_decorator = gql(
             targets
             no_of_targets
             invoices
-            no_of_invoices
             pdf_reports
             ai_assistant
         }
@@ -114,7 +113,6 @@ test_pro_decorator = gql(
             targets
             no_of_targets
             invoices
-            no_of_invoices
             pdf_reports
             ai_assistant
         }
@@ -672,33 +670,120 @@ get_invoice = gql(
     """
 )
 
-get_all_reports = gql(
+get_all_cash_flow_statements = gql(
     """
-    query getAllReports($account_id: ID!) {
-        getAllReports(account_id: $account_id) {
+    query($account_id: ID!) {
+        getAllCashFlowStatements(account_id: $account_id) {
             id
+            uid
             account {
+                id
                 account_name
             }
-            statement_uid
-            begin_date
-            end_date
+            period_start_date
+            period_end_date
         }
     }
     """
 )
 
-get_report = gql(
+get_cash_flow_statement = gql(
     """
-    query getReport($statement_uid: String!) {
-        getReport(statement_uid: $statement_uid) {
+    query($uid: String!) {
+        getCashFlowStatement(uid: $uid) {
             id
-            statement_uid
-            amount
-            item {
-                name
+            uid
+            account {
+                id
+                account_name
+            }
+            record {
+                id
+                uid
+                category
+                item
+                activity
+                amount
                 is_income
             }
+        }
+    }
+    """
+)
+
+get_all_income_statements = gql(
+    """
+    query($account_id: ID!) {
+        getAllIncomeStatements(account_id: $account_id) {
+            id
+            uid
+            account {
+                id
+                account_name
+            }
+            revenue
+            gross_profit
+            operating_expenses
+            net_income
+            period_start_date
+            period_end_date
+        }
+    }
+    """
+)
+
+get_income_statement = gql(
+    """
+    query($uid: String!) {
+        getIncomeStatement(uid: $uid) {
+            id
+            uid
+            account {
+                id
+                account_name
+            }
+            revenue
+            gross_profit
+            operating_expenses
+            net_income
+            period_start_date
+            period_end_date
+        }
+    }
+    """
+)
+
+get_all_balance_sheet_statements = gql(
+    """
+    query($account_id: ID!) {
+        getAllBalanceSheetStatements(account_id: $account_id) {
+            id
+            uid
+            account {
+                id
+                account_name
+            }
+            assets
+            liabilities
+            equity
+        }
+    }
+    """
+)
+
+get_balance_sheet_statement = gql(
+    """
+    query($uid: String!) {
+        getBalanceSheetStatement(uid: $uid) {
+            id
+            uid
+            account {
+                id
+                account_name
+            }
+            assets
+            liabilities
+            equity
         }
     }
     """

@@ -1,11 +1,12 @@
-from reports.models import (
-    CashFlowItem,
-    CashFlowRecord,
-    BusinessActivity,
-)
+from reports.models import CashFlowRecord
+from transactions.models import BusinessActivity
 
 
-def choose_activity(activity: str = ...):
+def choose_activity(activity: str):
+    """
+    Choose a business activity.
+    """
+
     try:
         OPERATING_ACTIVITY = BusinessActivity.objects.get(name="Operating Activity")
         INVESTING_ACTIVITY = BusinessActivity.objects.get(name="Investing Activity")
@@ -27,8 +28,16 @@ def choose_activity(activity: str = ...):
 
 
 class GenerateCFReport:
-    def __init__(self, transactions) -> None:
+    """
+    Generates a Cash Flow report (CFS).
+
+    NOTE: This class is strictly meant to be used to generate only Cash Flow reports.
+    """
+
+    def __init__(self, transactions: list) -> None:
         self.transactions = transactions
+
+        self.record_uid = ""
 
         self.ACTIVITIES = (
             {
@@ -60,7 +69,29 @@ class GenerateCFReport:
         self.financing_activities_inflow = []
         self.financing_activities_outflow = []
 
-    def group_transactions(self) -> dict:
+    @property
+    def cashflow_uid(self):
+        """
+        Returns the uid (unique identifier).
+
+        NOTE: This uid will be used to identify the cashflow records.
+        """
+
+        return self.record_uid
+
+    @cashflow_uid.setter
+    def cashflow_uid(self, uid: str):
+        """
+        Setter method to change the uid (unique identifier).
+        """
+
+        self.record_uid = uid
+
+    def group_transactions(self) -> list:
+        """
+        Group a list of transactions in order to generate a cashflow statement.
+        """
+
         for transaction in self.transactions:
             if (
                 transaction.category.parent.group_name
@@ -143,17 +174,22 @@ class GenerateCFReport:
                         }
                     )
 
-        return {
-            "Operating Inflow": self.operating_activities_inflow,
-            "Operating Outflow": self.operating_activities_outflow,
-            "Investing Inflow": self.investing_activities_inflow,
-            "Investing Outflow": self.investing_activities_outflow,
-            "Financing Inflow": self.financing_activities_inflow,
-            "Financing Outflow": self.financing_activities_outflow,
-        }
+        return [
+            self.operating_activities_inflow,
+            self.operating_activities_outflow,
+            self.investing_activities_inflow,
+            self.investing_activities_outflow,
+            self.financing_activities_inflow,
+            self.financing_activities_outflow,
+        ]
 
-    @classmethod
-    def reduce_data(cls, transactions: list = ...) -> list:
+    def reduce_data(self, transactions: list) -> list:
+        """
+        Reduce a list of records such that each record is unique.
+
+        NOTE: The list provided to this method should preferably be a grouping of transactions | consider method: group_transactions().
+        """
+
         grouped_transactions = {}
 
         for transaction in transactions:
@@ -181,22 +217,26 @@ class GenerateCFReport:
 
         return result
 
-    @classmethod
-    def create_records(cls, statement_uid: str = ..., data: list = ...) -> None:
+    def create_records(self, data: list) -> None:
+        """
+        Save a list of records to the database.
+
+        Implementing model CashFlowRecord().
+
+        NOTE: The list provided to this method should preferably be reduced first | consider method: reduce_data().
+        """
+
         for item in data:
             category = item["category"]
             subcategory = item["subcategory"]
 
-            report_item = CashFlowItem.objects.create(
-                name=f"{category}-{subcategory}",
-                is_income=True if item["type"] == "receivable" else False,
-                activity=choose_activity(item["activity"]),
-            )
-
             CashFlowRecord.objects.create(
-                statement_uid=statement_uid,
+                uid=self.record_uid,
+                category=category,
+                item=subcategory,
+                activity=choose_activity(item["activity"]),
                 amount=item["amount"],
-                item=report_item,
+                is_income=True if item["type"] == "receivable" else False,
             )
 
         return

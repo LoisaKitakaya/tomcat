@@ -2,6 +2,20 @@ scalar Otp
 scalar Qrcode
 scalar Datetime
 
+input assets {
+  item: String!
+  net_worth: String!
+}
+input liabilities {
+  item: String!
+  net_worth: String!
+}
+
+input equity {
+  item: String!
+  net_worth: String!
+}
+
 type Activity {
   id: ID!
   name: String!
@@ -207,30 +221,58 @@ type Invoice {
   is_paid: Boolean!
 }
 
-type CashFlowStatement {
-  id: ID!
-  account: Account!
-  statement_uid: String!
-  begin_date: Datetime!
-  end_date: Datetime!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
-type CashFlowItem {
-  id: ID!
-  name: String!
-  is_income: Boolean!
-  activity: Activity!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type CashFlowRecord {
   id: ID!
-  statement_uid: String!
+  uid: String!
+  category: String!
+  item: String!
+  activity: String!
   amount: Float!
-  item: CashFlowItem!
+  is_income: Boolean!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CashFlowStatement {
+  id: ID!
+  uid: String!
+  account: Account!
+  record: CashFlowRecord!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type CashFlowStatementIdentifier {
+  id: ID!
+  uid: String!
+  account: Account!
+  period_start_date: Datetime!
+  period_end_date: Datetime!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type IncomeStatement {
+  id: ID!
+  uid: String!
+  account: Account!
+  period_start_date: Datetime!
+  period_end_date: Datetime!
+  revenue: Float!
+  gross_profit: Float!
+  operating_expenses: Float!
+  net_income: Float!
+  created_at: Datetime!
+  updated_at: Datetime!
+}
+
+type BalanceSheetStatement {
+  id: ID!
+  uid: String!
+  account: Account!
+  assets: Float!
+  liabilities: Float!
+  equity: Float!
   created_at: Datetime!
   updated_at: Datetime!
 }
@@ -281,8 +323,14 @@ type Query {
   getAllInvoices: [Invoice!]!
   getInvoice(id: ID!): Invoice!
 
-  getAllReports(account_id: ID!): [CashFlowStatement!]!
-  getReport(statement_uid: String!): [CashFlowRecord!]!
+  getAllCashFlowStatements(account_id: ID!): [CashFlowStatementIdentifier!]!
+  getCashFlowStatement(uid: String!): [CashFlowStatement!]!
+
+  getAllIncomeStatements(account_id: ID!): [IncomeStatement!]!
+  getIncomeStatement(uid: String!): IncomeStatement!
+
+  getAllBalanceSheetStatements(account_id: ID!): [BalanceSheetStatement!]!
+  getBalanceSheetStatement(uid: String!): BalanceSheetStatement!
 }
 
 type Mutation {
@@ -464,10 +512,25 @@ type Mutation {
   ): Invoice!
   deleteInvoice(id: ID!): Boolean!
 
-  generateReport(
+  generateCashFlowReport(
     account_id: ID!
     begin_date: String!
     end_date: String!
-  ): [CashFlowRecord!]!
-  deleteReport(statement_uid: String!): Boolean!
+  ): CashFlowStatementIdentifier!
+  deleteCashFlowReport(uid: String!): Boolean!
+
+  generateIncomeReport(
+    account_id: ID!
+    begin_date: String!
+    end_date: String!
+  ): IncomeStatement!
+  deleteIncomeReport(uid: String!): Boolean!
+
+  generateBalanceSheetReport(
+    account_id: ID!
+    assets: [assets!]!
+    liabilities: [liabilities!]!
+    equity: [equity!]!
+  ): BalanceSheetStatement!
+  deleteBalanceSheetReport(uid: String!): Boolean!
 }

@@ -125,8 +125,14 @@ query.set_field("getClientInformation", resolve_getClientInformation)
 query.set_field("getAllInvoices", resolve_getAllInvoices)
 query.set_field("getInvoice", resolve_getInvoice)
 
-query.set_field("getAllReports", resolve_getAllReports)
-query.set_field("getReport", resolve_getReport)
+query.set_field("getAllCashFlowStatements", resolve_getAllCashFlowStatements)
+query.set_field("getCashFlowStatement", resolve_getCashFlowStatement)
+
+query.set_field("getAllIncomeStatements", resolve_getAllIncomeStatements)
+query.set_field("getIncomeStatement", resolve_getIncomeStatement)
+
+query.set_field("getAllBalanceSheetStatements", resolve_getAllBalanceSheetStatements)
+query.set_field("getBalanceSheetStatement", resolve_getBalanceSheetStatement)
 
 # # mutation resolvers
 
@@ -175,8 +181,14 @@ mutation.set_field("createInvoice", resolve_createInvoice)
 mutation.set_field("updateInvoice", resolve_updateInvoice)
 mutation.set_field("deleteInvoice", resolve_deleteInvoice)
 
-mutation.set_field("generateReport", resolve_generateReport)
-mutation.set_field("deleteReport", resolve_deleteReport)
+mutation.set_field("generateCashFlowReport", resolve_generateCashFlowReport)
+mutation.set_field("deleteCashFlowReport", resolve_deleteCashFlowReport)
+
+mutation.set_field("generateIncomeReport", resolve_generateIncomeReport)
+mutation.set_field("deleteIncomeReport", resolve_deleteIncomeReport)
+
+mutation.set_field("generateBalanceSheetReport", resolve_generateBalanceSheetReport)
+mutation.set_field("deleteBalanceSheetReport", resolve_deleteBalanceSheetReport)
 
 schema = make_executable_schema(
     [type_defs, jwt_schema],

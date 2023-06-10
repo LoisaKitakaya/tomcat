@@ -1,10 +1,10 @@
 import json
 from plans.models import Plan
 from django.test import TestCase, Client
-from reports.models import BusinessActivity
 from controls.test_ref import explain_status_code
 from transactions.models import (
     TransactionType,
+    BusinessActivity,
     TransactionGroup,
     TransactionCategory,
     TransactionSubCategory,

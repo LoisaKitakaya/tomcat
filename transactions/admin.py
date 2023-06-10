@@ -2,11 +2,15 @@ from django.contrib import admin
 from transactions.models import (
     Transaction,
     TransactionType,
+    BusinessActivity,
     TransactionGroup,
     TransactionCategory,
     TransactionSubCategory,
 )
 
+@admin.register(BusinessActivity)
+class BusinessActivityAdminView(admin.ModelAdmin):
+    model = BusinessActivity
 
 @admin.register(TransactionType)
 class TransactionTypeAdminView(admin.ModelAdmin):

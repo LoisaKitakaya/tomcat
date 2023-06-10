@@ -1,5 +1,5 @@
 import functools
-from users.models import Profile, Plan
+from users.models import Profile
 
 
 def check_plan_standard(func):

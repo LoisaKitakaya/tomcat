@@ -29,7 +29,7 @@ class Profile(models.Model):
 class OTPDevice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=False)
-    key = models.CharField(max_length=100, blank=False, default=pyotp.random_base32())
+    key = models.CharField(max_length=100, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
