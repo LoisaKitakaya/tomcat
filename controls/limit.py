@@ -2,7 +2,6 @@ from plans.models import Plan
 from users.models import Profile
 from budgets.models import Budget
 from targets.models import Target
-from invoice.models import Invoice
 from accounts.models import Account
 
 
@@ -134,44 +133,3 @@ def check_create_target_limit(profile_id):
 
         else:
             raise Exception("You cannot create more targets based on your current plan")
-
-
-def check_create_invoice_limit(profile_id):
-    profile = Profile.objects.get(user__id=profile_id)
-
-    all_invoices = Invoice.objects.filter(owner__id=profile.pk).all()
-
-    plan = profile.plan.name
-
-    if plan == "Free":
-        plan = Plan.objects.get(name="Free")
-
-        invoice_limit = plan.no_of_invoices
-
-        if len(all_invoices) != invoice_limit:
-            return
-
-        else:
-            raise Exception("You cannot create more invoices based on your current plan")
-
-    elif plan == "Standard":
-        plan = Plan.objects.get(name="Standard")
-
-        invoice_limit = plan.no_of_invoices
-
-        if len(all_invoices) != invoice_limit:
-            return
-
-        else:
-            raise Exception("You cannot create more invoices based on your current plan")
-
-    elif plan == "Pro":
-        plan = Plan.objects.get(name="Pro")
-
-        invoice_limit = plan.no_of_invoices
-
-        if len(all_invoices) != invoice_limit:
-            return
-
-        else:
-            raise Exception("You cannot create more invoices based on your current plan")
