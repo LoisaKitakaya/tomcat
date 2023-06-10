@@ -943,34 +943,100 @@ delete_invoice = gql(
     """
 )
 
-generate_report = gql(
+generate_cash_flow_report = gql(
     """
-    mutation generateReport(
-        $account_id: ID!
-        $begin_date: String!
-        $end_date: String!
-    ) {
-        generateReport(
+    mutation($account_id: ID!, $begin_date: String!, $end_date: String!) {
+        generateCashFlowReport(
             account_id: $account_id
             begin_date: $begin_date
             end_date: $end_date
         ) {
             id
-            statement_uid
-            amount
-            item {
-                name
-                is_income
+            uid
+            account {
+                id
+                account_name
             }
+            period_start_date
+            period_end_date
         }
     }
     """
 )
 
-delete_report = gql(
+delete_cash_flow_report = gql(
     """
-    mutation deleteReport($statement_uid: String!) {
-        deleteReport(statement_uid: $statement_uid)
+    mutation($uid: String!) {
+        deleteCashFlowReport(uid: $uid)
+    }
+    """
+)
+
+generate_income_report = gql(
+    """
+    mutation($account_id: ID!, $begin_date: String!, $end_date: String!) {
+        generateIncomeReport(
+            account_id: $account_id
+            begin_date: $begin_date
+            end_date: $end_date
+        ) {
+            id
+            uid
+            account {
+                id
+                account_name
+            }
+            period_start_date
+            period_end_date
+            revenue
+            gross_profit
+            operating_expenses
+            net_income
+        }
+    }
+    """
+)
+
+delete_income_report = gql(
+    """
+    mutation($uid: String!) {
+        deleteIncomeReport(uid: $uid)
+    }
+    """
+)
+
+generate_balance_sheet_report = gql(
+    """
+    mutation(
+        $account_id: ID!
+        $assets: [assets!]!
+        $liabilities: [liabilities!]!
+        $equity: [equity!]!
+    ) {
+        generateBalanceSheetReport(
+            account_id: $account_id
+            assets: $assets
+            liabilities: $liabilities
+            equity: $equity
+        ) {
+            id
+            uid
+            account {
+                id
+                account_name
+            }
+            assets
+            liabilities
+            equity
+        }
+    }
+    """
+)
+
+delete_balance_sheet_report = gql(
+    """
+    mutation($uid: String!) {
+        deleteBalanceSheetReport(uid: $uid)
     }
     """
 )
