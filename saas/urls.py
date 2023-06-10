@@ -1,11 +1,10 @@
-from django.contrib import admin
-from django.urls import path, include
-from ariadne_django.views import GraphQLView
 from .schema import schema
+from django.urls import path
+from django.contrib import admin
+from ariadne_django.views import GraphQLView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("billing/", include("billing.urls")),
     path("graphql/", GraphQLView.as_view(schema=schema), name="graphql"),
 ]
 
