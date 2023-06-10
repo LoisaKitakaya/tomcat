@@ -35,11 +35,9 @@ def resolve_createUser(
 
             name = f"2FA Device For: {new_user.username}"
 
-            new_device = OTPDevice.objects.create(user=new_user, name=name)
-
-            new_device.key = str(pyotp.random_base32())
-
-            new_device.save()
+            OTPDevice.objects.create(
+                user=new_user, name=name, key=str(pyotp.random_base32())
+            )
 
         else:
             raise Exception("Password is too short. Must have minimum of 8 characters")
