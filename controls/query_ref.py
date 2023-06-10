@@ -93,7 +93,6 @@ test_standard_decorator = gql(
             targets
             no_of_targets
             invoices
-            no_of_invoices
             pdf_reports
             ai_assistant
         }
@@ -114,7 +113,6 @@ test_pro_decorator = gql(
             targets
             no_of_targets
             invoices
-            no_of_invoices
             pdf_reports
             ai_assistant
         }

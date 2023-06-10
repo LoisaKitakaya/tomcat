@@ -1,6 +1,5 @@
 from django.db import models
 from accounts.models import Account
-from reports.models import BusinessActivity
 
 
 class TransactionType(models.Model):
@@ -22,6 +21,28 @@ class TransactionType(models.Model):
 
     def __str__(self) -> str:
         return self.type_name
+
+
+class BusinessActivity(models.Model):
+    OPERATING_ACTIVITY = "Operating Activity"
+    INVESTING_ACTIVITY = "Investing Activity"
+    FINANCING_ACTIVITY = "Financing Activity"
+
+    ACTIVITY_CHOICES = (
+        (OPERATING_ACTIVITY, "Operating"),
+        (INVESTING_ACTIVITY, "Investing"),
+        (FINANCING_ACTIVITY, "Financing"),
+    )
+
+    name = models.CharField(max_length=50, blank=False, choices=ACTIVITY_CHOICES)
+
+    class Meta:
+        verbose_name = "business activity"
+        verbose_name_plural = "Business activities"
+        db_table = "BusinessActivities"
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class TransactionGroup(models.Model):
@@ -53,7 +74,7 @@ class TransactionCategory(models.Model):
 
 class TransactionSubCategory(models.Model):
     parent = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
-    category_name = models.CharField(max_length=100, blank=False, unique=True)  # type: ignore
+    category_name = models.CharField(max_length=100, blank=False, unique=True)
     category_description = models.TextField(blank=False)
 
     class Meta:
@@ -69,7 +90,7 @@ class Transaction(models.Model):
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     transaction_amount = models.FloatField(default=0.0, blank=False)
     currency_code = models.CharField(max_length=3, blank=False)
-    description = models.TextField(blank=False)  # type: ignore
+    description = models.TextField(blank=False)
     transaction_date = models.DateTimeField(blank=False)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE)
