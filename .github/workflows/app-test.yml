@@ -43,6 +43,7 @@ jobs:
       TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
       TWILIO_NUMBER: ${{ secrets.TWILIO_NUMBER }}
       TWILIO_ACCOUNT: ${{ secrets.TWILIO_ACCOUNT }}
+      TOMCAT_DEV: ${{ secrets.TOMCAT_DEV }}
 
     steps:
       - uses: actions/checkout@v3
