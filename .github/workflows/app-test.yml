@@ -31,6 +31,9 @@ jobs:
         python-version: ["3.9", "3.10"]
 
     env:
+      KITTY: ${{ secrets.KITTY }}
+      FELINE: ${{ secrets.FELINE }}
+      TOMCAT: ${{ secrets.TOMCAT }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
@@ -43,7 +46,6 @@ jobs:
       TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
       TWILIO_NUMBER: ${{ secrets.TWILIO_NUMBER }}
       TWILIO_ACCOUNT: ${{ secrets.TWILIO_ACCOUNT }}
-      TOMCAT_DEV: ${{ secrets.TOMCAT_DEV }}
 
     steps:
       - uses: actions/checkout@v3
