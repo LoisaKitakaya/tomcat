@@ -692,7 +692,7 @@ get_all_cash_flow_statements = gql(
 get_cash_flow_statement = gql(
     """
     query($uid: String!) {
-        getCashFlowStatement(id: $id) {
+        getCashFlowStatement(uid: $uid) {
             id
             uid
             account {
@@ -737,7 +737,7 @@ get_all_income_statements = gql(
 get_income_statement = gql(
     """
     query($uid: String!) {
-        getIncomeStatement(id: $id) {
+        getIncomeStatement(uid: $uid) {
             id
             uid
             account {

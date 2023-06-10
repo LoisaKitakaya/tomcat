@@ -191,4 +191,4 @@ class GenerateIncomeReport:
         NOTE: Consider methods: get_gross_profit() and get_total_operation_expense().
         """
 
-        return gross_profit + total_operation_expense
+        return gross_profit - total_operation_expense

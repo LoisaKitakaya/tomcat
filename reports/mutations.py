@@ -187,7 +187,7 @@ def resolve_generateIncomeReport(*_, account_id, begin_date: str, end_date: str)
         period_end_date=end_date_object,
         revenue=total_revenue,
         gross_profit=gross_profit,
-        operating_expense=total_operation_expense,
+        operating_expenses=total_operation_expense,
         net_income=net_income,
     )
 
