@@ -28,7 +28,6 @@ from controls.queries import *
 from accounts.queries import *
 from invoice.mutations import *
 from reports.mutations import *
-from billing.mutations import *
 from budgets.mutations import *
 from targets.mutations import *
 from inventory.queries import *
@@ -162,8 +161,6 @@ mutation.set_field("deleteTarget", resolve_deleteTarget)
 mutation.set_field("createTransaction", resolve_createTransaction)
 mutation.set_field("updateTransaction", resolve_updateTransaction)
 mutation.set_field("deleteTransaction", resolve_deleteTransaction)
-
-mutation.set_field("subscribeToPlan", resolve_subscribeToPlan)
 
 mutation.set_field("createProduct", resolve_createProduct)
 mutation.set_field("updateProduct", resolve_updateProduct)

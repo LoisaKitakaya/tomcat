@@ -511,28 +511,6 @@ delete_transaction = gql(
     """
 )
 
-subscribe_to_plan = gql(
-    """
-    mutation subscribeToPlan($plan: String!) {
-        subscribeToPlan(plan: $plan) {
-            id
-            customer {
-                id
-                username
-            }
-            order_tracking_id
-            merchant_ref
-            account_ref
-            redirect_url
-            plan
-            currency
-            amount
-            payment_confirmed
-        }
-    }
-    """
-)
-
 create_product = gql(
     """
     mutation createProduct(

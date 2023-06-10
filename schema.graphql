@@ -77,21 +77,6 @@ type Plan {
   updated_at: Datetime!
 }
 
-type PlanBilling {
-  id: ID!
-  customer: User!
-  order_tracking_id: String!
-  merchant_ref: String!
-  account_ref: String!
-  redirect_url: String!
-  plan: String!
-  currency: String!
-  amount: Float!
-  payment_confirmed: Boolean!
-  created_at: Datetime!
-  updated_at: Datetime!
-}
-
 type User {
   id: ID!
   first_name: String!
@@ -282,9 +267,6 @@ type Query {
 
   generateQRCode: Qrcode!
 
-  requestBilling: Boolean!
-  cancelPlan: Boolean!
-
   getTransactionType: [Type!]!
   getTransactionCategory: [TransactionCategory!]!
   getTransactionSubCategory(parent: String!): [TransactionSubCategory!]!
@@ -294,7 +276,6 @@ type Query {
 
   testStandardDecorator: Plan!
   testProDecorator: Plan!
-  testIfIsEmployee: Boolean!
 
   getUser: User!
   getProfile: Profile!
@@ -335,8 +316,6 @@ type Query {
 
 type Mutation {
   verifyOTP(otp: String!): String!
-
-  subscribeToPlan(plan: String!): PlanBilling!
 
   verifyToken(token: String!): VerifyToken!
   refreshToken(token: String!): RefreshToken!

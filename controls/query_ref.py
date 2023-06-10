@@ -418,22 +418,6 @@ get_transaction = gql(
     """
 )
 
-request_billing_history = gql(
-    """
-    query requestBilling {
-        requestBilling
-    }
-    """
-)
-
-cancel_plan = gql(
-    """
-    query cancelPlan {
-        requestBilling
-    }
-    """
-)
-
 get_all_products = gql(
     """
     query getAllProducts($account_id: ID!) {
