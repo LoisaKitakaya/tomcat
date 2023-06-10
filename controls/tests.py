@@ -2,15 +2,12 @@ import json
 from plans.models import Plan
 from users.models import User, Profile
 from django.test import TestCase, Client
-from controls.cash_flow import GenerateCFReport
-from controls.income import GenerateIncomeReport
 from controls.test_ref import explain_status_code
-from controls.balance_sheet import GenerateBSReport
 
 from controls.mutation_ref import token_auth
 from controls.query_ref import (
-    test_standard_decorator,
     test_pro_decorator,
+    test_standard_decorator,
 )
 
 
