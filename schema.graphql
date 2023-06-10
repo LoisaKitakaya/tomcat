@@ -4,16 +4,16 @@ scalar Datetime
 
 input assets {
   item: String!
-  amount: Float!
+  net_worth: String!
 }
 input liabilities {
   item: String!
-  amount: Float!
+  net_worth: String!
 }
 
 input equity {
   item: String!
-  amount: Float!
+  net_worth: String!
 }
 
 type Activity {
