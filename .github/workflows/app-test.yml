@@ -1,8 +1,6 @@
 name: FF Django App CI
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
     branches: ["main"]
 
