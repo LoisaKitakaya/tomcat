@@ -147,3 +147,10 @@ node_modules/
 Dockerfile
 docker-compose.yml
 .dockerignore
+
+# git related files
+.gitignore
+
+# poetry related files
+poetry.lock
+pyproject.toml
