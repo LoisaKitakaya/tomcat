@@ -3,6 +3,8 @@ version: '3'
 services:
   db:
     image: postgres:14.8
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
