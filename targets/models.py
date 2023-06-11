@@ -5,7 +5,7 @@ from transactions.models import TransactionCategory, TransactionSubCategory
 
 
 class Target(models.Model):
-    target_name = models.CharField(max_length=100, blank=False)  # type: ignore
+    target_name = models.CharField(max_length=100, blank=False)
     target_description = models.TextField(blank=False)
     target_is_active = models.BooleanField(default=True, blank=False)
     target_amount = models.FloatField(default=0.0, blank=False)
