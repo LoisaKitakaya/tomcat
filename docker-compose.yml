@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14.8
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - static_volume:/app/static
+
+volumes:
+  postgres_data:
+  static_volume:
