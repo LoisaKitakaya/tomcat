@@ -3,6 +3,7 @@
     "corsheaders",
     "Datetime",
     "dotenv",
+    "gunicorn",
     "Kitloisa",
     "lksdlfsjdlf",
     "mktime",
@@ -18,7 +19,9 @@
     "thisistestpassword",
     "tobytes",
     "totp",
-    "transactiondate"
+    "transactiondate",
+    "whitenoise",
+    "wsgi"
   ],
   "python.analysis.typeCheckingMode": "basic",
   "python.formatting.provider": "black"
