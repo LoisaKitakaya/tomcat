@@ -120,14 +120,6 @@ test_pro_decorator = gql(
     """
 )
 
-test_if_is_employee = gql(
-    """
-    query testIfIsEmployee {
-        testIfIsEmployee
-    }
-    """
-)
-
 get_user = gql(
     """
     query getUser {

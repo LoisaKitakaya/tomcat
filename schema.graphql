@@ -179,6 +179,8 @@ type PaymentAccount {
   bank_account: String!
   mobile_payment_name: String!
   mobile_account: String!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type ClientInformation {
@@ -188,6 +190,8 @@ type ClientInformation {
   client_email: String!
   client_phone_number: String!
   client_address: String!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type Invoice {
@@ -204,6 +208,8 @@ type Invoice {
   additional_notes: String!
   due_date: Datetime!
   is_paid: Boolean!
+  created_at: Datetime!
+  updated_at: Datetime!
 }
 
 type CashFlowRecord {

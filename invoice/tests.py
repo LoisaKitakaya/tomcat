@@ -597,7 +597,7 @@ class TestAppMutations(TestCase):
             data["data"]["updateInvoice"]["additional_notes"],
             "Here are additional notes for this invoice.",
         )
-        self.assertEqual(data["data"]["updateInvoice"]["due_date"], "1682170200.0")
+        self.assertEqual(data["data"]["updateInvoice"]["due_date"], "1682159400.0")
 
     def test_delete_invoice(self):
         variables = {
@@ -1024,7 +1024,7 @@ class TestAppQueries(TestCase):
             data["data"]["getAllInvoices"][0]["additional_notes"],
             "Here are additional notes for this invoice.",
         )
-        self.assertEqual(data["data"]["getAllInvoices"][0]["due_date"], "1682170200.0")
+        self.assertEqual(data["data"]["getAllInvoices"][0]["due_date"], "1682159400.0")
 
     def test_get_invoice(self):
         variables = {"id": self.invoice_id}
@@ -1066,4 +1066,4 @@ class TestAppQueries(TestCase):
             data["data"]["getInvoice"]["additional_notes"],
             "Here are additional notes for this invoice.",
         )
-        self.assertEqual(data["data"]["getInvoice"]["due_date"], "1682170200.0")
+        self.assertEqual(data["data"]["getInvoice"]["due_date"], "1682159400.0")

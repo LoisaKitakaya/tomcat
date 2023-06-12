@@ -5,7 +5,7 @@ from users.models import Profile
 class Account(models.Model):
     account_name = models.CharField(max_length=100, blank=False)
     account_type = models.CharField(max_length=50, blank=False)
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)  # type: ignore
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     currency_code = models.CharField(max_length=3, blank=False)
     account_balance = models.FloatField(default=0.0, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.conf import settings
 from django.utils import timezone
 from accounts.models import Account
 from ariadne_jwt.decorators import login_required
@@ -31,7 +32,9 @@ def resolve_createTransaction(
     )
 
     date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
-    date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
+
+    with timezone.override(settings.CUSTOM_TIME_ZONE):
+        date_object = timezone.make_aware(date_object, timezone.get_current_timezone())
 
     new_transaction = Transaction.objects.create(
         transaction_type=type,
@@ -93,7 +96,11 @@ def resolve_updateTransaction(
 
     if transaction_date:
         date_object = datetime.strptime(transaction_date, "%Y-%m-%dT%H:%M")
-        date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
+
+        with timezone.override(settings.CUSTOM_TIME_ZONE):
+            date_object = timezone.make_aware(
+                date_object, timezone.get_current_timezone()
+            )
 
     else:
         date_object = transaction.transaction_date

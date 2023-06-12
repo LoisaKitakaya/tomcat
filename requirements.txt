@@ -11,6 +11,7 @@ Django==4.2.2
 django-cors-headers==4.0.0
 exceptiongroup==1.1.1
 graphql-core==3.2.3
+gunicorn==20.1.0
 idna==3.4
 mypy-extensions==1.0.0
 packaging==23.1

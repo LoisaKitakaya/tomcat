@@ -1,6 +1,7 @@
 from uuid import uuid4
 from datetime import datetime
 from django.db.models import Q
+from django.conf import settings
 from django.utils import timezone
 from accounts.models import Account
 from inventory.models import Product
@@ -23,14 +24,18 @@ def resolve_generateCashFlowReport(*_, account_id, begin_date: str, end_date: st
     account = Account.objects.get(id=account_id)
 
     begin_date_object = datetime.strptime(begin_date, "%Y-%m-%dT%H:%M")
-    begin_date_object = timezone.make_aware(
-        begin_date_object, timezone.get_default_timezone()
-    )
+
+    with timezone.override(settings.CUSTOM_TIME_ZONE):
+        begin_date_object = timezone.make_aware(
+            begin_date_object, timezone.get_current_timezone()
+        )
 
     end_date_object = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")
-    end_date_object = timezone.make_aware(
-        end_date_object, timezone.get_default_timezone()
-    )
+
+    with timezone.override(settings.CUSTOM_TIME_ZONE):
+        end_date_object = timezone.make_aware(
+            end_date_object, timezone.get_current_timezone()
+        )
 
     query = (
         Q(transaction_date__gte=begin_date_object)
@@ -117,14 +122,18 @@ def resolve_generateIncomeReport(*_, account_id, begin_date: str, end_date: str)
     account = Account.objects.get(id=account_id)
 
     begin_date_object = datetime.strptime(begin_date, "%Y-%m-%dT%H:%M")
-    begin_date_object = timezone.make_aware(
-        begin_date_object, timezone.get_default_timezone()
-    )
+
+    with timezone.override(settings.CUSTOM_TIME_ZONE):
+        begin_date_object = timezone.make_aware(
+            begin_date_object, timezone.get_current_timezone()
+        )
 
     end_date_object = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")
-    end_date_object = timezone.make_aware(
-        end_date_object, timezone.get_default_timezone()
-    )
+
+    with timezone.override(settings.CUSTOM_TIME_ZONE):
+        end_date_object = timezone.make_aware(
+            end_date_object, timezone.get_current_timezone()
+        )
 
     query = (
         Q(transaction_date__gte=begin_date_object)

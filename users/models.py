@@ -1,4 +1,3 @@
-import pyotp
 from django.db import models
 from plans.models import Plan
 from django.contrib.auth.models import AbstractUser

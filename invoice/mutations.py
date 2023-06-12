@@ -1,5 +1,6 @@
 from datetime import datetime
 from users.models import Profile
+from django.conf import settings
 from django.utils import timezone
 from ariadne_jwt.decorators import login_required
 from invoice.models import PaymentAccount, ClientInformation, Invoice
@@ -180,7 +181,9 @@ def resolve_createInvoice(
     )
 
     date_object = datetime.strptime(due_date, "%Y-%m-%dT%H:%M")
-    date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
+
+    with timezone.override(settings.CUSTOM_TIME_ZONE):
+        date_object = timezone.make_aware(date_object, timezone.get_current_timezone())
 
     invoice_total = int(quantity) * float(amount)
 
@@ -241,7 +244,11 @@ def resolve_updateInvoice(
 
     if due_date:
         date_object = datetime.strptime(due_date, "%Y-%m-%dT%H:%M")
-        date_object = timezone.make_aware(date_object, timezone.get_default_timezone())
+
+        with timezone.override(settings.CUSTOM_TIME_ZONE):
+            date_object = timezone.make_aware(
+                date_object, timezone.get_current_timezone()
+            )
 
     else:
         date_object = invoice.due_date
