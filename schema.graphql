@@ -270,8 +270,9 @@ type BalanceSheetStatement {
 
 type Query {
   generateOTP(environment: String): Otp!
-
   generateQRCode: Qrcode!
+
+  tokenAuth(username: String!, password: String!): TokenAuth!
 
   getTransactionType: [Type!]!
   getTransactionCategory: [TransactionCategory!]!
@@ -285,6 +286,13 @@ type Query {
 
   getUser: User!
   getProfile: Profile!
+  validateOrCreateUser(
+    email: String!
+    first_name: String!
+    last_name: String
+    password: String!
+    password2: String!
+  ): User!
 
   getAllAccounts: [Account!]!
   getAccount(id: ID!): Account!
