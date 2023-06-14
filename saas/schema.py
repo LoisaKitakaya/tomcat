@@ -88,6 +88,8 @@ mutation = MutationType()
 query.set_field("generateOTP", resolve_generateOTP)
 query.set_field("generateQRCode", resolve_generateQRCode)
 
+query.set_field("tokenAuth", resolve_token_auth)
+
 query.set_field("getProductCategory", resolve_getProductCategory)
 query.set_field("getProductSubCategory", resolve_getProductSubCategory)
 query.set_field("getTransactionType", resolve_getTransactionType)
@@ -99,6 +101,7 @@ query.set_field("testStandardDecorator", resolve_testStandardDecorator)
 
 query.set_field("getUser", resolve_getUser)
 query.set_field("getProfile", resolve_getProfile)
+query.set_field("validateOrCreateUser", resolve_validateOrCreateUser)
 
 query.set_field("getAllAccounts", resolve_getAllAccounts)
 query.set_field("getAccount", resolve_getAccount)
